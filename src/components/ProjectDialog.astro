@@ -1,13 +1,14 @@
 ---
-import type { MiradaId, Project } from '../data/projects';
+import type { Project } from '../data/projects';
 import { areaLabels } from '../data/projects';
+import { miradaOptions } from '../data/miradas';
 
 interface Props {
   project: Project;
 }
 
 const { project } = Astro.props;
-const miradas: MiradaId[] = ['integral', 'ux', 'codigo'];
+const miradas = miradaOptions.map((mirada) => mirada.id);
 const imageCount = project.media.type === 'images' ? project.media.images.length : 0;
 ---
 

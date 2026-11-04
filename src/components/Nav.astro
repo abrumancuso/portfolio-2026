@@ -56,7 +56,10 @@ import { navLinks, site } from '../data/site';
     links.forEach((link) => link.addEventListener('click', closeMenu));
 
     document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape') closeMenu();
+      if (event.key === 'Escape' && toggle?.getAttribute('aria-expanded') === 'true') {
+        closeMenu();
+        toggle.focus();
+      }
     });
 
     document.addEventListener('click', (event) => {

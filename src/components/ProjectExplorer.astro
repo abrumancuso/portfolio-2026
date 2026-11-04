@@ -1,10 +1,10 @@
 ---
 import { filterAreas, projects } from '../data/projects';
-import { miradaLabels, type MiradaId } from '../data/miradas';
+import { miradaLabels, miradaOptions, type MiradaId } from '../data/miradas';
 import ProjectCard from './ProjectCard.astro';
 import ProjectDialog from './ProjectDialog.astro';
 
-const miradas: MiradaId[] = ['integral', 'ux', 'codigo'];
+const miradas: MiradaId[] = miradaOptions.map((mirada) => mirada.id);
 
 const miradaNotes: Record<MiradaId, string> = {
   integral:

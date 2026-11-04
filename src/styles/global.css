@@ -311,10 +311,7 @@ p {
   color: var(--color-ink-text);
 }
 
-/* --- Paneles de "Mirada" ---
-   El selector de Mirada escribe data-mirada en <html>. Estas reglas
-   muestran únicamente el bloque correspondiente. El atributo hidden
-   también se actualiza por JS para lectores de pantalla. */
+/* --- Utilidad de ocultamiento --- */
 [hidden] {
   display: none !important;
 }
@@ -333,7 +330,7 @@ html[data-mirada='codigo'] [data-mirada-panel='codigo'] {
 }
 
 .is-highlighted {
-  outline: 2px solid var(--color-accent);
+  outline: 2px solid var(--color-accent-deep);
   outline-offset: 4px;
-  background: rgba(196, 167, 125, 0.14);
+  background: rgba(196, 167, 125, 0.18);
 }

@@ -1,14 +1,14 @@
 ---
-import type { MiradaId, Project } from '../data/projects';
+import type { Project } from '../data/projects';
 import { areaLabels } from '../data/projects';
-import { miradaLabels } from '../data/miradas';
+import { miradaOptions } from '../data/miradas';
 
 interface Props {
   project: Project;
 }
 
 const { project } = Astro.props;
-const miradas: MiradaId[] = ['integral', 'ux', 'codigo'];
+const miradas = miradaOptions.map((mirada) => mirada.id);
 
 const searchText = [
   project.title,
@@ -28,7 +28,7 @@ const searchText = [
   data-project-card
   data-areas={project.areas.join(' ')}
   data-search={searchText}
-  aria-labelledby={`card-title-${project.id}`}
+  aria-label={project.title}
 >
   <!-- Vista Galería Visual -->
   <div class="project-card__gallery">
@@ -71,7 +71,7 @@ const searchText = [
         <span class="project-card__year">{project.year}</span>
       </div>
 
-      <h3 id={`card-title-${project.id}`}>{project.title}</h3>
+      <h3>{project.title}</h3>
 
       {miradas.map((mode) => (
         <p class="project-card__focus" data-mirada-panel={mode}>
@@ -110,6 +110,15 @@ const searchText = [
       </div>
       <span class="project-card__year">{project.year}</span>
     </header>
+
+    <div class="project-card__technical-focus">
+      {miradas.map((mode) => (
+        <p data-mirada-panel={mode}>
+          <strong>{project.miradas[mode].focus}</strong>
+          <span>{project.miradas[mode].detail}</span>
+        </p>
+      ))}
+    </div>
 
     <div class="project-card__technical-grid">
       <div>
@@ -341,6 +350,25 @@ const searchText = [
 
   .project-card__technical-head h3 {
     margin-top: 8px;
+  }
+
+  .project-card__technical-focus {
+    padding: 14px 16px;
+    border-left: 3px solid var(--color-accent-deep);
+    border-radius: var(--radius-sm);
+    background: var(--color-bg-alt);
+  }
+
+  .project-card__technical-focus strong {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--color-text);
+  }
+
+  .project-card__technical-focus span {
+    color: var(--color-text-muted);
+    font-size: 0.88rem;
+    line-height: 1.65;
   }
 
   .project-card__technical-grid {

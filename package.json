@@ -11,5 +11,8 @@
   },
   "devDependencies": {
     "astro": "^6.4.8"
+  },
+  "engines": {
+    "node": ">=22.12.0"
   }
 }
