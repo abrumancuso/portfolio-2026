@@ -1,0 +1,15 @@
+{
+  "name": "abril-mancuso-portfolio",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Portfolio multimedial de Abril Mancuso construido con AstroJS.",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "devDependencies": {
+    "astro": "^6.4.8"
+  }
+}

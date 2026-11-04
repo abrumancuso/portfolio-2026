@@ -1,0 +1,322 @@
+/* ============================================================
+   ABRIL MANCUSO — PORTFOLIO MULTIMEDIAL
+   Sistema visual global
+   ------------------------------------------------------------
+   Este archivo concentra los tokens de diseño (color, tipografía,
+   espaciado), el reset y los patrones compartidos por todas las
+   páginas. Los estilos específicos viven dentro de cada componente
+   .astro para que sea fácil ubicarlos y modificarlos en vivo.
+   ============================================================ */
+
+:root {
+  /* --- Paleta cálida, heredada de la versión anterior --- */
+  --color-bg: #fdfbf9;
+  --color-bg-alt: #f7f3ef;
+  --color-surface: #ffffff;
+  --color-text: #1a1816;
+  --color-text-muted: #5f5852;
+  --color-border: #e5dfd6;
+
+  /* Acentos: `accent` es decorativo; `accent-deep` garantiza contraste AA */
+  --color-accent: #c4a77d;
+  --color-accent-light: #ede5db;
+  --color-accent-deep: #74552f;
+  --color-accent-coral: #b97d6f;
+
+  /* Superficies oscuras */
+  --color-ink: #1c1917;
+  --color-ink-soft: #292522;
+  --color-ink-text: #fdfbf9;
+  --color-ink-muted: #cfc5ba;
+
+  /* --- Tipografía --- */
+  --font-display: 'Instrument Sans', system-ui, -apple-system, sans-serif;
+  --font-body: 'DM Sans', system-ui, -apple-system, sans-serif;
+  --font-mono: 'SFMono-Regular', ui-monospace, 'Cascadia Code', monospace;
+
+  /* --- Forma y movimiento --- */
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --container-width: 1200px;
+  --nav-height: 72px;
+  --mode-bar-height: 52px;
+}
+
+/* --- Reset --- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+  scroll-padding-top: calc(var(--nav-height) + var(--mode-bar-height) + 16px);
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body.is-locked {
+  overflow: hidden;
+}
+
+img,
+video {
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+/* --- Accesibilidad: foco visible y movimiento reducido --- */
+:focus-visible {
+  outline: 3px solid var(--color-accent-deep);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: var(--color-ink);
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 4000;
+  transform: translateY(-200%);
+  padding: 12px 20px;
+  border-radius: var(--radius-sm);
+  background: var(--color-ink);
+  color: var(--color-ink-text);
+  font-family: var(--font-display);
+  font-weight: 600;
+  transition: transform var(--transition);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* --- Layout compartido --- */
+.container {
+  width: 100%;
+  max-width: var(--container-width);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.section {
+  padding: clamp(64px, 9vw, 112px) 24px;
+}
+
+.section--alt {
+  background: var(--color-bg-alt);
+}
+
+.section--ink {
+  background: var(--color-ink);
+  color: var(--color-ink-text);
+}
+
+.section-header {
+  max-width: 720px;
+  margin: 0 auto clamp(32px, 5vw, 56px);
+  text-align: center;
+}
+
+.section-header__eyebrow {
+  display: inline-block;
+  margin-bottom: 12px;
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-accent-deep);
+}
+
+.section--ink .section-header__eyebrow {
+  color: var(--color-accent);
+}
+
+.section-header h2 {
+  font-size: clamp(1.85rem, 4.5vw, 3rem);
+  margin-bottom: 14px;
+}
+
+.section-header p {
+  color: var(--color-text-muted);
+  font-size: clamp(1rem, 1.6vw, 1.125rem);
+}
+
+.section--ink .section-header p {
+  color: var(--color-ink-muted);
+}
+
+/* --- Botones --- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 46px;
+  padding: 12px 22px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  transition: transform var(--transition), background var(--transition),
+    border-color var(--transition), color var(--transition);
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+.btn--primary {
+  background: var(--color-accent-deep);
+  color: #fff;
+}
+
+.btn--primary:hover {
+  background: #5e4325;
+}
+
+.btn--ghost {
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.btn--ghost:hover {
+  border-color: var(--color-accent-deep);
+}
+
+.btn--on-dark {
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  color: var(--color-ink-text);
+}
+
+.btn--on-dark:hover {
+  border-color: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.btn--behance {
+  background: #053eff;
+  color: #fff;
+}
+
+.btn--behance:hover {
+  background: #0031d6;
+}
+
+/* --- Etiquetas --- */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 5px 12px;
+  border-radius: 100px;
+  background: var(--color-accent-light);
+  color: #4b3a24;
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.tag--dark {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--color-ink-text);
+}
+
+/* --- Paneles de "Mirada" ---
+   El selector de Mirada escribe data-mirada en <html>. Estas reglas
+   muestran únicamente el bloque correspondiente. El atributo hidden
+   también se actualiza por JS para lectores de pantalla. */
+[data-mirada-panel][hidden] {
+  display: none !important;
+}
+
+.is-highlighted {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 4px;
+  background: rgba(196, 167, 125, 0.14);
+}
