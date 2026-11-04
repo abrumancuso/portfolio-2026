@@ -4,7 +4,7 @@ import { navLinks, site } from '../data/site';
 
 <nav class="nav" aria-label="Navegación principal" data-nav>
   <div class="nav__inner">
-    <a class="nav__logo" href="#inicio" aria-label={`${site.name}, ir al inicio`}>
+    <a class="nav__logo" href="/#inicio" aria-label={`${site.name}, ir al inicio`}>
       {site.shortName}
     </a>
 
@@ -73,17 +73,27 @@ import { navLinks, site } from '../data/site';
     /* --- Indicador de sección activa ---
        Recorre las secciones enlazadas y marca la última que pasó
        el umbral superior. Así el usuario siempre sabe dónde está. */
-    const sections = links
-      .map((link) => {
-        const id = link.getAttribute('href');
-        const section = id ? document.querySelector<HTMLElement>(id) : null;
-        return section ? { link, section } : null;
-      })
-      .filter((item): item is { link: HTMLAnchorElement; section: HTMLElement } => Boolean(item));
+    const isHome = window.location.pathname === '/';
+    const sections = isHome
+      ? links
+          .map((link) => {
+            const href = link.getAttribute('href');
+            const hash = href?.includes('#') ? `#${href.split('#')[1]}` : null;
+            const section = hash ? document.querySelector<HTMLElement>(hash) : null;
+            return section ? { link, section } : null;
+          })
+          .filter((item): item is { link: HTMLAnchorElement; section: HTMLElement } => Boolean(item))
+      : [];
+
+    if (!isHome && window.location.pathname.startsWith('/proyectos/')) {
+      const projectsLink = links.find((link) => link.getAttribute('href')?.endsWith('#proyectos'));
+      projectsLink?.setAttribute('aria-current', 'page');
+    }
 
     let ticking = false;
 
     const updateActiveLink = () => {
+      if (sections.length === 0) return;
       const threshold = window.scrollY + 160;
       let active = sections[0];
 
@@ -187,12 +197,14 @@ import { navLinks, site } from '../data/site';
   }
 
   .nav__link:hover,
-  .nav__link[aria-current='location'] {
+  .nav__link[aria-current='location'],
+  .nav__link[aria-current='page'] {
     color: var(--color-accent-deep);
   }
 
   .nav__link:hover::after,
-  .nav__link[aria-current='location']::after {
+  .nav__link[aria-current='location']::after,
+  .nav__link[aria-current='page']::after {
     transform: scaleX(1);
   }
 

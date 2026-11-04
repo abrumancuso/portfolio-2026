@@ -7,7 +7,6 @@ import {
   type MiradaId,
 } from '../data/miradas';
 import ProjectCard from './ProjectCard.astro';
-import ProjectDialog from './ProjectDialog.astro';
 
 const defaultMirada: MiradaId = 'producto';
 ---
@@ -17,19 +16,21 @@ const defaultMirada: MiradaId = 'producto';
     <header class="projects__header">
       <div class="projects__intro">
         <span class="section-header__eyebrow">Proyectos</span>
-        <h2 id="proyectos-title">Selección de algunos proyectos destacados</h2>
+        <h2 id="proyectos-title">Selección de proyectos destacados</h2>
         <p>
-          Cuatro trabajos que muestran distintas capas de mi práctica: motion graphics,
-          visualización 3D, diseño estratégico e identidad visual. El switch de mirada
-          cambia el foco de lectura de cada caso.
+          Una selección de trabajos que muestra distintas capas de mi práctica:
+          motion graphics, visualización 3D, diseño estratégico e identidad visual.
+          El selector de enfoque permite leer cada caso desde la gestión de proyectos
+          o desde el diseño de experiencia. Cada proyecto se abre en su propia página
+          para ver el caso completo, las dos lecturas y el proceso técnico.
         </p>
       </div>
 
       <aside class="projects__note" aria-label="Sobre esta selección de proyectos">
         <p>
-          <strong>Esta es una selección de algunos proyectos</strong> donde apliqué
-          diseño de experiencia, estrategia y desarrollo. Podés ver más trabajos de
-          diseño e identidad en mi Behance.
+          <strong>La selección presentada reúne algunos de los proyectos</strong> en
+          los que apliqué diseño de experiencia, estrategia y desarrollo. El portfolio
+          completo de diseño e identidad está disponible en Behance.
         </p>
         <a
           class="btn btn--behance"
@@ -130,8 +131,8 @@ const defaultMirada: MiradaId = 'producto';
       <div class="explorer__empty" data-empty hidden>
         <p class="explorer__empty-title">No encontramos proyectos con esos filtros.</p>
         <p>
-          Probá con otra área o palabra clave. También podés ver la selección completa
-          en Behance.
+          Se puede intentar con otra área o palabra clave. La selección completa de
+          diseño e identidad está disponible en Behance.
         </p>
         <div class="explorer__empty-actions">
           <button class="btn btn--primary" type="button" data-reset>
@@ -150,8 +151,6 @@ const defaultMirada: MiradaId = 'producto';
     </div>
   </div>
 </section>
-
-{projects.map((project) => <ProjectDialog project={project} />)}
 
 <script>
   const explorer = document.querySelector<HTMLElement>('[data-explorer]');
@@ -224,16 +223,6 @@ const defaultMirada: MiradaId = 'producto';
       } catch {
         /* El portfolio sigue funcionando si el navegador bloquea localStorage. */
       }
-
-      document.dispatchEvent(
-        new CustomEvent('mirada:change', {
-          detail: {
-            mirada: mode,
-            label: miradaLabels[mode],
-            description: miradaDescriptions[mode],
-          },
-        }),
-      );
     };
 
     const applyFilters = () => {
@@ -323,83 +312,6 @@ const defaultMirada: MiradaId = 'producto';
     applyMode(initialMode, false);
   }
 
-  /* --- Diálogos de caso completo y carruseles --- */
-  const dialogs = Array.from(document.querySelectorAll<HTMLDialogElement>('dialog[data-dialog]'));
-
-  const lockBody = () => {
-    document.body.classList.add('is-locked');
-  };
-
-  const unlockBodyIfNeeded = () => {
-    const anyOpen = Array.from(document.querySelectorAll<HTMLDialogElement>('dialog[data-dialog]')).some(
-      (dialog) => dialog.open,
-    );
-    if (!anyOpen) document.body.classList.remove('is-locked');
-  };
-
-  dialogs.forEach((dialog) => {
-    const carousel = dialog.querySelector<HTMLElement>('[data-carousel]');
-
-    if (carousel) {
-      const slides = Array.from(carousel.querySelectorAll<HTMLImageElement>('[data-slide]'));
-      const current = carousel.querySelector<HTMLElement>('[data-carousel-current]');
-      let index = 0;
-
-      const showSlide = (nextIndex: number) => {
-        if (slides.length === 0) return;
-        index = (nextIndex + slides.length) % slides.length;
-        slides.forEach((slide, slideIndex) => {
-          slide.hidden = slideIndex !== index;
-        });
-        if (current) current.textContent = String(index + 1);
-      };
-
-      carousel.querySelector('[data-carousel-prev]')?.addEventListener('click', () => showSlide(index - 1));
-      carousel.querySelector('[data-carousel-next]')?.addEventListener('click', () => showSlide(index + 1));
-
-      dialog.addEventListener('keydown', (event) => {
-        if (event.key === 'ArrowLeft') {
-          event.preventDefault();
-          showSlide(index - 1);
-        }
-        if (event.key === 'ArrowRight') {
-          event.preventDefault();
-          showSlide(index + 1);
-        }
-      });
-
-      dialog.addEventListener('close', () => showSlide(0));
-    }
-
-    dialog.addEventListener('click', (event) => {
-      if (event.target === dialog) dialog.close();
-    });
-
-    dialog.addEventListener('close', () => {
-      dialog.querySelectorAll('video').forEach((video) => video.pause());
-      unlockBodyIfNeeded();
-    });
-  });
-
-  document.addEventListener('click', (event) => {
-    const target = event.target as HTMLElement;
-
-    const opener = target.closest<HTMLElement>('[data-open-dialog]');
-    if (opener) {
-      const id = opener.dataset.openDialog;
-      const dialog = id ? document.getElementById(`dialog-${id}`) as HTMLDialogElement | null : null;
-      if (dialog && !dialog.open) {
-        dialog.showModal();
-        lockBody();
-      }
-      return;
-    }
-
-    const closer = target.closest<HTMLElement>('[data-dialog-close]');
-    if (closer) {
-      closer.closest('dialog')?.close();
-    }
-  });
 </script>
 
 <style>

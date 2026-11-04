@@ -1,5 +1,5 @@
 ---
-import { heroAreas, heroBody, heroGreeting } from '../data/site';
+import { heroAreas, heroBody, heroEyebrow, heroFirstName, heroLastName, heroRole } from '../data/site';
 ---
 
 <section class="hero" id="inicio" aria-labelledby="hero-title">
@@ -7,10 +7,11 @@ import { heroAreas, heroBody, heroGreeting } from '../data/site';
 
   <div class="hero__inner">
     <div class="hero__content">
-      <p class="hero__eyebrow">Portfolio · UX/UI + Digital PM · 2026</p>
+      <p class="hero__eyebrow">{heroEyebrow}</p>
       <h1 class="hero__title" id="hero-title">
-        {heroGreeting.replace('Abru Mancuso.', '')}<span>Abru Mancuso.</span>
+        {heroFirstName} <span>{heroLastName}</span>
       </h1>
+      <p class="hero__role">{heroRole}</p>
       <p class="hero__thesis">{heroBody}</p>
 
       <div class="hero__actions">
@@ -105,6 +106,15 @@ import { heroAreas, heroBody, heroGreeting } from '../data/site';
 
   .hero__title span {
     display: block;
+    color: var(--color-accent);
+  }
+
+  .hero__role {
+    margin: -8px 0 18px;
+    font-family: var(--font-display);
+    font-size: clamp(1rem, 2vw, 1.25rem);
+    font-weight: 500;
+    letter-spacing: 0.02em;
     color: var(--color-accent);
   }
 

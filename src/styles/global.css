@@ -67,10 +67,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-body.is-locked {
-  overflow: hidden;
-}
-
 img,
 video {
   max-width: 100%;

@@ -1,0 +1,198 @@
+---
+import type { Project } from '../data/projects';
+
+interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+const imageCount = project.media.type === 'images' ? project.media.images.length : 0;
+---
+
+<div class="project-media" data-project-media>
+  {project.media.type === 'video' ? (
+    <>
+      <div class="project-media__video">
+        <video controls preload="metadata" poster={project.media.poster} width="1080" height="1920">
+          <source src={project.media.src} type="video/mp4" />
+          Tu navegador no puede reproducir este video.
+        </video>
+      </div>
+      <p class="project-media__caption">{project.media.caption}</p>
+      <p class="project-media__note">
+        Nota de accesibilidad: el video no cuenta con subtítulos ni audiodescripción.
+      </p>
+    </>
+  ) : (
+    <>
+      <div class="project-media__carousel" data-carousel aria-label={`Galería de ${project.title}`}>
+        <div class="project-media__slides">
+          {project.media.images.map((image, index) => (
+            <img
+              class="project-media__slide"
+              src={image}
+              alt={`${project.media.alt} — imagen ${index + 1} de ${imageCount}`}
+              loading={index === 0 ? 'eager' : 'lazy'}
+              decoding="async"
+              hidden={index !== 0}
+              data-slide
+            />
+          ))}
+        </div>
+
+        <div class="project-media__controls">
+          <button type="button" aria-label="Imagen anterior" data-carousel-prev>
+            <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="m15 18-6-6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+          <p class="project-media__counter" aria-live="polite">
+            <span data-carousel-current>1</span> / {imageCount}
+          </p>
+          <button type="button" aria-label="Imagen siguiente" data-carousel-next>
+            <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="m9 18 6-6-6-6" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+        </div>
+      </div>
+      <p class="project-media__caption">{project.media.caption}</p>
+    </>
+  )}
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-project-media]').forEach((root) => {
+    const carousel = root.querySelector<HTMLElement>('[data-carousel]');
+    if (!carousel) return;
+
+    const slides = Array.from(carousel.querySelectorAll<HTMLImageElement>('[data-slide]'));
+    const current = carousel.querySelector<HTMLElement>('[data-carousel-current]');
+    let index = 0;
+
+    const showSlide = (nextIndex: number) => {
+      if (slides.length === 0) return;
+      index = (nextIndex + slides.length) % slides.length;
+      slides.forEach((slide, slideIndex) => {
+        slide.hidden = slideIndex !== index;
+      });
+      if (current) current.textContent = String(index + 1);
+    };
+
+    carousel.querySelector('[data-carousel-prev]')?.addEventListener('click', () => showSlide(index - 1));
+    carousel.querySelector('[data-carousel-next]')?.addEventListener('click', () => showSlide(index + 1));
+
+    carousel.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowLeft') {
+        event.preventDefault();
+        showSlide(index - 1);
+      }
+      if (event.key === 'ArrowRight') {
+        event.preventDefault();
+        showSlide(index + 1);
+      }
+    });
+
+    showSlide(0);
+  });
+</script>
+
+<style>
+  .project-media {
+    margin-bottom: clamp(32px, 5vw, 52px);
+  }
+
+  .project-media__video {
+    display: flex;
+    justify-content: center;
+    padding: clamp(14px, 2vw, 22px);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-ink);
+  }
+
+  .project-media__video video {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    max-height: 76vh;
+    border-radius: var(--radius-md);
+  }
+
+  .project-media__carousel {
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-ink);
+  }
+
+  .project-media__slides {
+    display: grid;
+    place-items: center;
+    min-height: 280px;
+  }
+
+  .project-media__slide {
+    display: block;
+    width: 100%;
+    max-height: 76vh;
+    object-fit: contain;
+  }
+
+  .project-media__controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    padding: 12px;
+    background: var(--color-ink);
+    color: var(--color-ink-text);
+  }
+
+  .project-media__controls button {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--color-ink-text);
+    transition: background var(--transition);
+  }
+
+  .project-media__controls button:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  .project-media__counter {
+    margin: 0;
+    min-width: 56px;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    text-align: center;
+  }
+
+  .project-media__caption {
+    margin-top: 10px;
+    font-size: 0.84rem;
+    line-height: 1.6;
+    color: var(--color-text-muted);
+  }
+
+  .project-media__note {
+    margin-top: 4px;
+    font-size: 0.78rem;
+    line-height: 1.55;
+    color: var(--color-text-muted);
+  }
+
+  @media (max-width: 640px) {
+    .project-media__slides {
+      min-height: 220px;
+    }
+
+    .project-media__video {
+      padding: 10px;
+    }
+  }
+</style>

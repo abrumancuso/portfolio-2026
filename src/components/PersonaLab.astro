@@ -1,0 +1,988 @@
+---
+import SectionHeading from './SectionHeading.astro';
+import {
+  DEFAULT_CONTEXT,
+  PERSONA_API_URL,
+  fallbackPersonas,
+  researchContexts,
+  type PersonaApiResult,
+  type ResearchContext,
+} from '../data/personas';
+
+const defaultContext = researchContexts.find((context) => context.id === DEFAULT_CONTEXT) ?? researchContexts[0];
+---
+
+<section class="persona-lab section section--alt" id="laboratorio" aria-labelledby="laboratorio-title">
+  <div class="container">
+    <SectionHeading
+      eyebrow="Laboratorio de research"
+      title="Proto-personas para empezar a preguntar"
+      description="Un ejercicio de research para alinear al equipo antes de salir a hablar con usuarios. La API genera perfiles ficticios; el contexto del proyecto les asigna una hipótesis, una fricción y una pregunta de investigación."
+      id="laboratorio-title"
+    />
+
+    <div class="persona-lab__panel" data-persona-lab data-state="loading" aria-busy="true">
+      <div class="persona-lab__statusbar">
+        <span class="persona-lab__badge" data-badge data-state="loading">
+          <span class="persona-lab__badge-dot" aria-hidden="true"></span>
+          <span data-badge-text>Generando proto-personas…</span>
+        </span>
+        <code class="persona-lab__endpoint">GET randomuser.me/api/?results=4&amp;nat=es,us,gb</code>
+      </div>
+
+      <form class="persona-lab__form" data-form>
+        <div class="persona-lab__field">
+          <label for="persona-context">Contexto de research</label>
+          <select id="persona-context" data-context>
+            {researchContexts.map((context) => (
+              <option value={context.id} selected={context.id === DEFAULT_CONTEXT}>
+                {context.label}
+              </option>
+            ))}
+          </select>
+          <p class="persona-lab__help" data-context-help>{defaultContext.description}</p>
+        </div>
+
+        <button class="btn btn--primary persona-lab__submit" type="submit">
+          Generar proto-personas
+        </button>
+      </form>
+
+      <div class="persona-lab__meta">
+        <p class="persona-lab__status" role="status" aria-live="polite" data-status>
+          Consultando Random User API…
+        </p>
+        <p class="persona-lab__updated" data-updated>Consultando la API…</p>
+      </div>
+
+      <div class="persona-lab__loading" data-loading aria-hidden="true">
+        {[0, 1, 2, 3].map(() => (
+          <div class="persona-lab__skeleton">
+            <span class="persona-lab__skeleton-avatar"></span>
+            <span class="persona-lab__skeleton-line persona-lab__skeleton-line--title"></span>
+            <span class="persona-lab__skeleton-line"></span>
+            <span class="persona-lab__skeleton-line persona-lab__skeleton-line--short"></span>
+          </div>
+        ))}
+      </div>
+
+      <div class="persona-lab__content" data-content hidden>
+        <div class="persona-lab__grid" data-grid></div>
+      </div>
+
+      <div class="persona-lab__empty" data-empty hidden>
+        <p class="persona-lab__empty-title" data-empty-title>No hay proto-personas para mostrar.</p>
+        <p class="persona-lab__empty-message" data-empty-message>
+          Se puede reintentar la consulta o usar el set de respaldo para seguir trabajando.
+        </p>
+        <div class="persona-lab__actions">
+          <button class="btn btn--primary" type="button" data-retry>Reintentar consulta</button>
+          <button class="btn btn--ghost" type="button" data-fallback>Usar set de respaldo</button>
+        </div>
+      </div>
+
+      <div class="persona-lab__error" data-error hidden>
+        <p class="persona-lab__error-title" data-error-title>No fue posible generar las proto-personas.</p>
+        <p class="persona-lab__error-message" data-error-message></p>
+        <div class="persona-lab__actions">
+          <button class="btn btn--primary" type="button" data-retry>Reintentar consulta</button>
+          <button class="btn btn--ghost" type="button" data-fallback>Usar set de respaldo</button>
+        </div>
+      </div>
+
+      <details class="persona-lab__demo">
+        <summary>Estados de la API y herramientas de demostración</summary>
+        <p>
+          El laboratorio contempla carga, éxito, vacío, error y respaldo local.
+          Estas acciones permiten verificar cada estado sin modificar el código.
+        </p>
+        <div class="persona-lab__demo-actions">
+          <button type="button" data-retry>Reintentar consulta</button>
+          <button type="button" data-simulate-error>Simular error</button>
+          <button type="button" data-fallback>Usar set de respaldo</button>
+        </div>
+      </details>
+    </div>
+
+    <div class="persona-lab__footer">
+      <p>
+        Random User API genera datos ficticios. Las proto-personas son hipótesis
+        para ordenar supuestos, no evidencia de investigación. La validación se
+        hace con personas reales.
+      </p>
+      <a
+        class="persona-lab__link"
+        href="https://randomuser.me"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Documentación de Random User API
+      </a>
+    </div>
+
+    <noscript>
+      <style is:inline>
+        [data-persona-lab] {
+          display: none;
+        }
+      </style>
+      <p class="persona-lab__noscript">
+        Activá JavaScript para generar proto-personas con Random User API.
+        <a href="https://randomuser.me" target="_blank" rel="noopener noreferrer"
+          >Consultar la API directamente</a
+        >.
+      </p>
+    </noscript>
+  </div>
+</section>
+
+<script>
+  import {
+    DEFAULT_CONTEXT,
+    PERSONA_API_URL,
+    fallbackPersonas,
+    researchContextLabel,
+    researchContexts,
+    type PersonaApiResult,
+    type PersonaSetResponse,
+    type ResearchContext,
+  } from '../data/personas';
+
+  const panel = document.querySelector<HTMLElement>('[data-persona-lab]');
+
+  if (panel) {
+    const get = <T extends HTMLElement>(selector: string) => panel.querySelector<T>(selector);
+
+    const form = get<HTMLFormElement>('[data-form]');
+    const contextSelect = get<HTMLSelectElement>('[data-context]');
+    const contextHelp = get<HTMLElement>('[data-context-help]');
+    const badge = get<HTMLElement>('[data-badge]');
+    const badgeText = get<HTMLElement>('[data-badge-text]');
+    const status = get<HTMLElement>('[data-status]');
+    const updated = get<HTMLElement>('[data-updated]');
+    const loading = get<HTMLElement>('[data-loading]');
+    const content = get<HTMLElement>('[data-content]');
+    const grid = get<HTMLElement>('[data-grid]');
+    const empty = get<HTMLElement>('[data-empty]');
+    const emptyTitle = get<HTMLElement>('[data-empty-title]');
+    const emptyMessage = get<HTMLElement>('[data-empty-message]');
+    const error = get<HTMLElement>('[data-error]');
+    const errorTitle = get<HTMLElement>('[data-error-title]');
+    const errorMessage = get<HTMLElement>('[data-error-message]');
+    const retryButtons = Array.from(panel.querySelectorAll<HTMLButtonElement>('[data-retry]'));
+    const fallbackButtons = Array.from(panel.querySelectorAll<HTMLButtonElement>('[data-fallback]'));
+    const simulateErrorButton = get<HTMLButtonElement>('[data-simulate-error]');
+
+    type ViewState = 'loading' | 'success' | 'empty' | 'error';
+    type Source = 'api' | 'fallback';
+
+    let requestId = 0;
+    let controller: AbortController | null = null;
+    let source: Source = 'api';
+    let currentContext = DEFAULT_CONTEXT;
+
+    const badgeMessages: Record<ViewState, string> = {
+      loading: 'Generando proto-personas…',
+      success: 'Proto-personas generadas',
+      empty: 'Sin resultados',
+      error: 'Error de conexión',
+    };
+
+    const getContext = (id: string): ResearchContext =>
+      researchContexts.find((context) => context.id === id) ?? researchContexts[0];
+
+    const updateBadge = (view: ViewState) => {
+      if (!badge || !badgeText) return;
+
+      const fallback = view === 'success' && source === 'fallback';
+      badge.dataset.state = fallback ? 'fallback' : view;
+      badgeText.textContent = fallback ? 'Set de respaldo local' : badgeMessages[view];
+    };
+
+    const setView = (view: ViewState) => {
+      panel.dataset.state = view;
+      panel.setAttribute('aria-busy', String(view === 'loading'));
+      loading.hidden = view !== 'loading';
+      content.hidden = view !== 'success';
+      empty.hidden = view !== 'empty';
+      error.hidden = view !== 'error';
+      updateBadge(view);
+    };
+
+    const setSource = (type: Source) => {
+      source = type;
+      if (panel.dataset.state === 'success') updateBadge('success');
+    };
+
+    const formatTime = () =>
+      new Intl.DateTimeFormat('es-AR', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+      }).format(new Date());
+
+    const createElement = <K extends keyof HTMLElementTagNameMap>(
+      tag: K,
+      className?: string,
+      text?: string,
+    ) => {
+      const element = document.createElement(tag);
+      if (className) element.className = className;
+      if (text !== undefined) element.textContent = text;
+      return element;
+    };
+
+    const personaName = (persona: PersonaApiResult) =>
+      `${persona.name.first} ${persona.name.last}`.trim();
+
+    const personaInitials = (persona: PersonaApiResult) =>
+      `${persona.name.first.charAt(0)}${persona.name.last.charAt(0)}`.toUpperCase();
+
+    const personaLocation = (persona: PersonaApiResult) =>
+      `${persona.location.city}, ${persona.location.country}`;
+
+    const createCard = (persona: PersonaApiResult, context: ResearchContext, index: number) => {
+      const name = personaName(persona);
+      const hypothesis = context.hypotheses[index % context.hypotheses.length];
+
+      const card = createElement('article', 'persona-card');
+      card.setAttribute('aria-label', `Proto-persona ${name}`);
+
+      const portrait = createElement('div', 'persona-card__portrait');
+      const initials = createElement('span', 'persona-card__initials', personaInitials(persona));
+      initials.hidden = Boolean(persona.picture.large);
+
+      if (persona.picture.large) {
+        const photo = createElement('img', 'persona-card__photo');
+        photo.src = persona.picture.large;
+        photo.alt = `Retrato ficticio de ${name}`;
+        photo.loading = 'lazy';
+        photo.decoding = 'async';
+        photo.addEventListener('error', () => {
+          photo.hidden = true;
+          initials.hidden = false;
+        });
+        portrait.append(photo, initials);
+      } else {
+        portrait.append(initials);
+      }
+
+      const body = createElement('div', 'persona-card__body');
+      const tag = createElement('span', 'persona-card__tag', researchContextLabel(context.id));
+      const title = createElement('h3', undefined, name);
+      const meta = createElement(
+        'p',
+        'persona-card__meta',
+        `${persona.dob.age} años · ${personaLocation(persona)}`,
+      );
+      const email = createElement('p', 'persona-card__email', persona.email);
+
+      const hypothesisBox = createElement('div', 'persona-card__hypothesis');
+      hypothesisBox.append(createElement('h4', undefined, 'Hipótesis de research'));
+
+      const hypothesisList = createElement('dl', 'persona-card__hypothesis-list');
+      const addRow = (label: string, value: string) => {
+        const row = createElement('div');
+        row.append(createElement('dt', undefined, label), createElement('dd', undefined, value));
+        hypothesisList.append(row);
+      };
+      addRow('Objetivo', hypothesis.goal);
+      addRow('Fricción', hypothesis.pain);
+      addRow('Pregunta', hypothesis.question);
+      hypothesisBox.append(hypothesisList);
+
+      const copy = createElement('button', 'persona-card__copy', 'Copiar ficha');
+      copy.type = 'button';
+      copy.dataset.copyPersona = [
+        name,
+        `${persona.dob.age} años`,
+        personaLocation(persona),
+        persona.email,
+        `Contexto: ${context.label}`,
+        `Objetivo: ${hypothesis.goal}`,
+        `Fricción: ${hypothesis.pain}`,
+        `Pregunta: ${hypothesis.question}`,
+      ].join('\n');
+      copy.setAttribute('aria-label', `Copiar ficha de ${name}`);
+
+      body.append(tag, title, meta, email, hypothesisBox, copy);
+      card.append(portrait, body);
+
+      return card;
+    };
+
+    const renderPersonas = (personas: PersonaApiResult[], context: ResearchContext) => {
+      currentContext = context.id;
+      setView('success');
+      grid.replaceChildren(...personas.map((persona, index) => createCard(persona, context, index)));
+      status.textContent = `${personas.length} proto-personas generadas para ${context.label.toLowerCase()}. Son hipótesis ficticias para iniciar research.`;
+      updated.textContent = `Actualizado ${formatTime()} · ${
+        source === 'fallback' ? 'datos de respaldo' : 'Random User API'
+      }`;
+    };
+
+    const showEmpty = (title: string, message: string) => {
+      setView('empty');
+      emptyTitle.textContent = title;
+      emptyMessage.textContent = message;
+      status.textContent = title;
+      updated.textContent = 'Sin datos';
+    };
+
+    const showError = (title: string, message: string) => {
+      setView('error');
+      errorTitle.textContent = title;
+      errorMessage.textContent = message;
+      status.textContent = title;
+      updated.textContent = 'Sin datos en vivo';
+    };
+
+    const isValidPersona = (value: unknown): value is PersonaApiResult => {
+      const persona = value as PersonaApiResult;
+      return Boolean(
+        persona &&
+          typeof persona.login?.uuid === 'string' &&
+          typeof persona.name?.first === 'string' &&
+          typeof persona.name?.last === 'string' &&
+          typeof persona.location?.city === 'string' &&
+          typeof persona.location?.country === 'string' &&
+          typeof persona.email === 'string' &&
+          typeof persona.dob?.age === 'number' &&
+          typeof persona.picture?.large === 'string',
+      );
+    };
+
+    const loadPersonas = async (context: ResearchContext) => {
+      const currentRequest = ++requestId;
+      controller?.abort();
+      const localController = new AbortController();
+      controller = localController;
+
+      const timeout = window.setTimeout(() => localController.abort(), 10000);
+      const url = `${PERSONA_API_URL}&seed=${Date.now()}`;
+
+      currentContext = context.id;
+      setSource('api');
+      setView('loading');
+      status.textContent = `Consultando Random User API para ${context.label.toLowerCase()}…`;
+      updated.textContent = 'Consultando la API…';
+
+      try {
+        const response = await fetch(url, {
+          headers: { Accept: 'application/json' },
+          cache: 'no-store',
+          signal: localController.signal,
+        });
+
+        if (currentRequest !== requestId) return;
+        if (!response.ok) throw new Error(`La API respondió con el estado ${response.status}.`);
+
+        const data = (await response.json()) as PersonaSetResponse;
+
+        if (currentRequest !== requestId) return;
+
+        if (!Array.isArray(data.results) || data.results.length === 0) {
+          showEmpty(
+            'La API no devolvió proto-personas.',
+            'Se puede reintentar la consulta o usar el set de respaldo.',
+          );
+          return;
+        }
+
+        const personas = data.results.filter(isValidPersona);
+
+        if (personas.length === 0) {
+          showEmpty(
+            'La respuesta no contiene perfiles válidos.',
+            'Se puede reintentar la consulta o usar el set de respaldo.',
+          );
+          return;
+        }
+
+        renderPersonas(personas, context);
+      } catch (caught) {
+        if (currentRequest !== requestId) return;
+
+        const caughtError = caught as Error;
+
+        if (caughtError.name === 'AbortError') {
+          showError(
+            'La consulta tardó demasiado.',
+            'Random User API no respondió en 10 segundos. Se puede reintentar o usar el set de respaldo.',
+          );
+        } else {
+          showError(
+            'No fue posible generar las proto-personas.',
+            caughtError.message || 'Ocurrió un error inesperado al consultar la API.',
+          );
+        }
+      } finally {
+        window.clearTimeout(timeout);
+      }
+    };
+
+    const useFallback = () => {
+      requestId += 1;
+      controller?.abort();
+      const context = getContext(contextSelect.value);
+      setSource('fallback');
+      renderPersonas(fallbackPersonas, context);
+    };
+
+    const simulateError = () => {
+      requestId += 1;
+      controller?.abort();
+      showError(
+        'Error simulado para la demostración.',
+        'Este estado se activó desde el panel de herramientas. La interfaz aplica el mismo tratamiento que un error real: mensaje, reintento y opción de usar datos de respaldo.',
+      );
+    };
+
+    const updateContextHelp = () => {
+      if (!contextHelp) return;
+      const context = getContext(contextSelect.value);
+      contextHelp.textContent = context.description;
+    };
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const context = getContext(contextSelect.value);
+      loadPersonas(context);
+    });
+
+    contextSelect.addEventListener('change', () => {
+      updateContextHelp();
+      form.requestSubmit();
+    });
+
+    retryButtons.forEach((button) => {
+      button.addEventListener('click', () => loadPersonas(getContext(currentContext)));
+    });
+
+    fallbackButtons.forEach((button) => {
+      button.addEventListener('click', useFallback);
+    });
+
+    simulateErrorButton?.addEventListener('click', simulateError);
+
+    panel.addEventListener('click', async (event) => {
+      const target = event.target as HTMLElement;
+      const button = target.closest<HTMLButtonElement>('[data-copy-persona]');
+      if (!button) return;
+
+      const text = button.dataset.copyPersona;
+      if (!text) return;
+
+      try {
+        if (navigator.clipboard?.writeText) {
+          await navigator.clipboard.writeText(text);
+        } else {
+          const helper = document.createElement('textarea');
+          helper.value = text;
+          helper.setAttribute('readonly', '');
+          helper.style.position = 'fixed';
+          helper.style.opacity = '0';
+          document.body.append(helper);
+          helper.select();
+          document.execCommand('copy');
+          helper.remove();
+        }
+
+        status.textContent = 'Ficha de proto-persona copiada al portapapeles.';
+        const original = button.textContent;
+        button.textContent = 'Copiado';
+        window.setTimeout(() => {
+          button.textContent = original;
+        }, 1600);
+      } catch {
+        status.textContent = 'No fue posible copiar la ficha.';
+      }
+    });
+
+    updateContextHelp();
+    loadPersonas(getContext(DEFAULT_CONTEXT));
+  }
+</script>
+
+<style>
+  .persona-lab__panel {
+    margin-top: 32px;
+    padding: clamp(18px, 3vw, 28px);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    box-shadow: 0 18px 40px rgba(116, 85, 47, 0.08);
+  }
+
+  .persona-lab__statusbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+
+  .persona-lab__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 32px;
+    padding: 6px 12px;
+    border: 1px solid var(--color-border);
+    border-radius: 100px;
+    background: var(--color-bg-alt);
+    font-family: var(--font-display);
+    font-size: 0.76rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+  }
+
+  .persona-lab__badge-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  .persona-lab__badge[data-state='success'] {
+    border-color: #3f7a4f;
+    color: #2f5d3b;
+  }
+
+  .persona-lab__badge[data-state='loading'] {
+    border-color: var(--color-accent);
+    color: var(--color-accent-deep);
+  }
+
+  .persona-lab__badge[data-state='empty'] {
+    border-color: #8a817a;
+    color: #6b625b;
+  }
+
+  .persona-lab__badge[data-state='error'] {
+    border-color: #a33a32;
+    color: #8c2d27;
+  }
+
+  .persona-lab__badge[data-state='fallback'] {
+    border-color: #9a6b2f;
+    color: #7a5222;
+  }
+
+  .persona-lab__endpoint {
+    padding: 6px 10px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: var(--color-bg-alt);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--color-text-muted);
+    overflow-wrap: anywhere;
+  }
+
+  .persona-lab__form {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 16px;
+    align-items: start;
+  }
+
+  .persona-lab__field {
+    display: grid;
+    gap: 8px;
+  }
+
+  .persona-lab__field label {
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .persona-lab__field select {
+    width: 100%;
+    min-height: 46px;
+    padding: 10px 14px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: var(--color-bg);
+    font-family: var(--font-body);
+    font-size: 0.92rem;
+    color: var(--color-text);
+  }
+
+  .persona-lab__help {
+    margin: 0;
+    font-size: 0.8rem;
+    line-height: 1.55;
+    color: var(--color-text-muted);
+  }
+
+  .persona-lab__submit {
+    margin-top: 24px;
+    white-space: nowrap;
+  }
+
+  .persona-lab__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 20px 0 16px;
+    padding-top: 14px;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .persona-lab__status,
+  .persona-lab__updated {
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+  }
+
+  .persona-lab__updated {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+  }
+
+  .persona-lab__loading,
+  .persona-lab__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .persona-lab__skeleton {
+    display: grid;
+    gap: 10px;
+    padding: 18px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-bg-alt);
+  }
+
+  .persona-lab__skeleton-avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(90deg, #e8e0d7 25%, #f4efe9 50%, #e8e0d7 75%);
+    background-size: 200% 100%;
+    animation: persona-lab-shimmer 1.6s infinite linear;
+  }
+
+  .persona-lab__skeleton-line {
+    height: 10px;
+    border-radius: 100px;
+    background: linear-gradient(90deg, #e8e0d7 25%, #f4efe9 50%, #e8e0d7 75%);
+    background-size: 200% 100%;
+    animation: persona-lab-shimmer 1.6s infinite linear;
+  }
+
+  .persona-lab__skeleton-line--title {
+    width: 60%;
+    height: 14px;
+  }
+
+  .persona-lab__skeleton-line--short {
+    width: 40%;
+  }
+
+  .persona-card {
+    display: grid;
+    grid-template-columns: 72px minmax(0, 1fr);
+    gap: 16px;
+    padding: 18px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-bg-alt);
+    transition: border-color var(--transition), transform var(--transition), box-shadow var(--transition);
+  }
+
+  .persona-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--color-accent);
+    box-shadow: 0 14px 30px rgba(116, 85, 47, 0.1);
+  }
+
+  .persona-card__portrait {
+    display: grid;
+    place-items: center;
+    width: 72px;
+    height: 72px;
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    border-radius: 50%;
+    background: var(--color-accent-light);
+  }
+
+  .persona-card__photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .persona-card__initials {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--color-accent-deep);
+  }
+
+  .persona-card__body {
+    min-width: 0;
+  }
+
+  .persona-card__tag {
+    display: inline-block;
+    margin-bottom: 6px;
+    font-family: var(--font-display);
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-accent-deep);
+  }
+
+  .persona-card h3 {
+    margin: 0 0 4px;
+    font-size: 1.15rem;
+  }
+
+  .persona-card__meta,
+  .persona-card__email {
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    overflow-wrap: anywhere;
+  }
+
+  .persona-card__email {
+    margin-top: 2px;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+  }
+
+  .persona-card__hypothesis {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .persona-card__hypothesis h4 {
+    margin: 0 0 8px;
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .persona-card__hypothesis-list {
+    display: grid;
+    gap: 8px;
+    margin: 0;
+  }
+
+  .persona-card__hypothesis-list div {
+    display: grid;
+    gap: 2px;
+  }
+
+  .persona-card__hypothesis-list dt {
+    font-family: var(--font-display);
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--color-accent-deep);
+  }
+
+  .persona-card__hypothesis-list dd {
+    margin: 0;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    color: var(--color-text);
+  }
+
+  .persona-card__copy {
+    margin-top: 14px;
+    min-height: 36px;
+    padding: 7px 12px;
+    border: 1px solid var(--color-border);
+    border-radius: 100px;
+    background: var(--color-surface);
+    font-family: var(--font-display);
+    font-size: 0.74rem;
+    font-weight: 600;
+    color: var(--color-accent-deep);
+    transition: background var(--transition), border-color var(--transition);
+  }
+
+  .persona-card__copy:hover {
+    border-color: var(--color-accent-deep);
+    background: var(--color-accent-light);
+  }
+
+  .persona-lab__empty,
+  .persona-lab__error {
+    padding: clamp(22px, 4vw, 34px);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-bg-alt);
+  }
+
+  .persona-lab__empty-title,
+  .persona-lab__error-title {
+    margin-bottom: 6px;
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: 600;
+  }
+
+  .persona-lab__empty-message,
+  .persona-lab__error-message {
+    margin-bottom: 16px;
+    color: var(--color-text-muted);
+    line-height: 1.6;
+  }
+
+  .persona-lab__actions,
+  .persona-lab__demo-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .persona-lab__demo {
+    margin-top: 18px;
+    padding: 14px 16px;
+    border: 1px dashed var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-bg-alt);
+  }
+
+  .persona-lab__demo summary {
+    cursor: pointer;
+    font-family: var(--font-display);
+    font-size: 0.84rem;
+    font-weight: 600;
+    color: var(--color-accent-deep);
+  }
+
+  .persona-lab__demo p {
+    margin: 10px 0 12px;
+    font-size: 0.82rem;
+    line-height: 1.6;
+    color: var(--color-text-muted);
+  }
+
+  .persona-lab__demo-actions button {
+    min-height: 38px;
+    padding: 8px 12px;
+    border: 1px solid var(--color-border);
+    border-radius: 100px;
+    background: var(--color-surface);
+    font-family: var(--font-display);
+    font-size: 0.76rem;
+    font-weight: 600;
+    color: var(--color-accent-deep);
+    transition: background var(--transition), border-color var(--transition);
+  }
+
+  .persona-lab__demo-actions button:hover {
+    border-color: var(--color-accent-deep);
+    background: var(--color-accent-light);
+  }
+
+  .persona-lab__footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    margin-top: 18px;
+    padding: 0 4px;
+  }
+
+  .persona-lab__footer p {
+    max-width: 720px;
+    margin: 0;
+    font-size: 0.78rem;
+    line-height: 1.6;
+    color: var(--color-text-muted);
+  }
+
+  .persona-lab__link {
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--color-accent-deep);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .persona-lab__noscript {
+    margin-top: 16px;
+    padding: 16px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+  }
+
+  @keyframes persona-lab-shimmer {
+    0% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -200% 0;
+    }
+  }
+
+  @media (max-width: 900px) {
+    .persona-lab__form {
+      grid-template-columns: 1fr;
+    }
+
+    .persona-lab__submit {
+      margin-top: 0;
+      justify-self: start;
+    }
+  }
+
+  @media (max-width: 700px) {
+    .persona-lab__statusbar,
+    .persona-lab__meta,
+    .persona-lab__footer {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .persona-lab__actions,
+    .persona-lab__demo-actions {
+      flex-direction: column;
+    }
+
+    .persona-lab__actions .btn,
+    .persona-lab__demo-actions button {
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 620px) {
+    .persona-lab__loading,
+    .persona-lab__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .persona-card {
+      grid-template-columns: 56px minmax(0, 1fr);
+      padding: 14px;
+    }
+
+    .persona-card__portrait {
+      width: 56px;
+      height: 56px;
+    }
+  }
+</style>

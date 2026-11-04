@@ -1,8 +1,8 @@
-# Portfolio multimedial — Abru Mancuso
+# Portfolio multimedial — Abril Mancuso
 
-Portfolio personal y académico construido con AstroJS para la materia **Programación Multimedial IV (2026)**. El foco profesional es **Diseño UX/UI + Gestión de Proyectos Digitales (Digital PM)**, con una base técnica en programación multimedial, desarrollo web/mobile y producción audiovisual.
+Portfolio personal y académico construido con AstroJS para la materia **Programación Multimedial IV (2026)**. El posicionamiento profesional es **Project Manager & Diseñadora UX/UI**, con formación técnica multimedial y experiencia en el ciclo completo de productos digitales.
 
-El sitio no presenta una lista de piezas: muestra **cómo se investiga, se estructura, se diseña y se gestiona un producto digital**. Para eso incluye tres componentes propios con lógica real: un explorador de proyectos con switch de rol, un simulador de proceso de trabajo y un panel en vivo conectado a una API externa.
+El sitio no se limita a mostrar piezas: presenta **cómo se investiga, se planifica, se diseña y se implementa un producto digital**. Para eso incluye tres componentes propios con lógica real, páginas individuales para cada proyecto y un laboratorio de research conectado a una API pública.
 
 ---
 
@@ -10,15 +10,15 @@ El sitio no presenta una lista de piezas: muestra **cómo se investiga, se estru
 
 | Campo | Valor |
 | --- | --- |
-| Autora | Abru Mancuso (Abril Mancuso) |
+| Autora | Abril Mancuso |
 | Materia | Programación Multimedial IV |
 | Año | 2026 |
 | Tipo | Proyecto individual |
 | Repositorio | `<COMPLETAR_URL_DEL_REPO>` |
 | Deploy | `<COMPLETAR_URL_DEL_DEPLOY>` |
 | Stack principal | AstroJS 6.4.8, HTML, CSS, TypeScript/JavaScript |
-| API externa | GitHub REST API |
-| Componentes propios | `ProjectExplorer`, `WorkflowSimulator`, `LiveApiDashboard` |
+| API externa | Random User API |
+| Componentes propios | `ProjectExplorer`, `WorkflowSimulator`, `PersonaLab` |
 
 > Los placeholders de repositorio y deploy se completan al publicar. El proyecto genera una build estática lista para cualquier hosting.
 
@@ -26,16 +26,18 @@ El sitio no presenta una lista de piezas: muestra **cómo se investiga, se estru
 
 ## 2. Descripción general
 
-El portfolio es una experiencia de una sola página con seis bloques:
+El portfolio es una experiencia de una sola página con seis bloques y páginas individuales para los casos:
 
-1. **Hero** (`#inicio`): presentación directa y foco profesional.
-2. **Sobre mí** (`#sobre-mi`): una única sección personal, sin dividir la presentación en tres bloques.
-3. **Proyectos** (`#proyectos`): selección de cuatro casos con switch de mirada, filtros, búsqueda, dos vistas y diálogos.
+1. **Hero** (`#inicio`): presentación profesional de Abril Mancuso.
+2. **Sobre mí** (`#sobre-mi`): perfil, diferencial y propuesta de valor.
+3. **Proyectos** (`#proyectos`): selección de cuatro casos con selector de enfoque, filtros, búsqueda y dos vistas.
 4. **Proceso** (`#proceso`): simulador interactivo de las cinco etapas de trabajo.
-5. **Live API** (`#actividad`): panel en vivo con repositorios reales de GitHub.
+5. **Laboratorio** (`#laboratorio`): generador de proto-personas con Random User API.
 6. **Contacto** (`#contacto`): email, Behance, LinkedIn y GitHub.
 
-La sección de proyectos aclara de forma visible que se trata de **una selección de algunos proyectos**, no de la totalidad. El portfolio completo de diseño e identidad vive en Behance.
+Cada proyecto tiene además una **página propia** en `/proyectos/[id]` con el caso completo, la galería o el video, las dos lecturas del proyecto, el proceso técnico, las métricas, los aprendizajes y la navegación al proyecto anterior y siguiente.
+
+La sección de proyectos aclara de forma visible que se trata de **una selección de algunos proyectos**, no de la totalidad. El portfolio completo de diseño e identidad está disponible en Behance.
 
 ### Proyectos incluidos
 
@@ -43,6 +45,17 @@ La sección de proyectos aclara de forma visible que se trata de **una selecció
 - **MacBook Pro 3D**: visualización y renders 3D.
 - **MaimoConecta**: proyecto de diseño estratégico y UX con 45 slides.
 - **Tini — Manual de Marca**: sistema de identidad visual de 9 páginas.
+
+### Páginas individuales
+
+| Proyecto | Ruta |
+| --- | --- |
+| Billie Eilish Argentina Tour | `/proyectos/billie-animation` |
+| MacBook Pro Model | `/proyectos/macbook-3d` |
+| MaimoConecta | `/proyectos/maimoconecta` |
+| Tini — Manual de Marca | `/proyectos/manual-marea` |
+
+Las rutas se generan en build time con `getStaticPaths()` a partir de `src/data/projects.ts`.
 
 ---
 
@@ -53,13 +66,14 @@ La sección de proyectos aclara de forma visible que se trata de **una selecció
 Astro permite construir un sitio **estático, rápido y con muy poco JavaScript**, pero con arquitectura de componentes. Es el equilibrio adecuado para un portfolio: el contenido pesa más que la aplicación y la interactividad se concentra solo donde aporta valor.
 
 - `output: 'static'`: genera HTML, CSS y JS listos para cualquier hosting de archivos.
-- Componentes `.astro`: reutilización de secciones, tarjetas, diálogos y datos.
+- Componentes `.astro`: reutilización de secciones, tarjetas, páginas de proyecto y datos.
+- Rutas dinámicas estáticas: `/proyectos/[id]` con `getStaticPaths()`.
 - Islas de interactividad: los scripts se cargan solo en los componentes que los necesitan.
 - Sin framework de UI adicional: no hay necesidad de React, Vue o Svelte para este alcance.
 
 ### HTML semántico y CSS
 
-- Landmarks (`header`, `nav`, `main`, `section`, `footer`), jerarquía de encabezados y listas reales.
+- Landmarks (`header`, `nav`, `main`, `article`, `section`, `footer`), jerarquía de encabezados y listas reales.
 - CSS con custom properties para tokens de color, tipografía, radios, transiciones y layout.
 - Grid y flexbox para responsive sin dependencias externas.
 - `clamp()` para tipografía fluida y espaciado.
@@ -67,23 +81,23 @@ Astro permite construir un sitio **estático, rápido y con muy poco JavaScript*
 
 ### TypeScript / JavaScript
 
-- Tipos para `Project`, `MiradaId`, `GitHubRepo` y `WorkflowStage`.
+- Tipos para `Project`, `MiradaId`, `PersonaApiResult`, `PersonaSetResponse` y `WorkflowStage`.
 - Datos centralizados y tipados en `src/data/`.
-- Scripts de cliente para el switch de proyectos, filtros, diálogos, carrusel, tabs del proceso y fetch de la API.
+- Scripts de cliente para el selector de proyectos, filtros, vistas, tabs del proceso, generación de proto-personas, copiado de fichas y carrusel de imágenes.
 
 ### APIs nativas del navegador
 
-- `<dialog>` + `showModal()` para los casos completos.
-- `<video>` para la pieza audiovisual.
-- `fetch` + `AbortController` para la API de GitHub.
-- `localStorage` para recordar la mirada elegida en proyectos.
+- `fetch` + `AbortController` para Random User API.
+- `navigator.clipboard` para copiar fichas de proto-personas.
+- `localStorage` para recordar el enfoque elegido en proyectos.
 - `Intl.DateTimeFormat` para fechas legibles en español.
+- `<video>` para la pieza audiovisual.
 
 ### Git y GitHub
 
 - Historial de commits progresivos que documenta la construcción.
 - Repositorio local nuevo, sin arrastrar el historial anterior.
-- La API de GitHub se usa como fuente de datos real y también como parte de la narrativa técnica del portfolio.
+- GitHub se mantiene como perfil profesional y enlace de contacto, pero no se usa como fuente de datos del portfolio.
 
 ### ¿Por qué no React, Next.js o una SPA?
 
@@ -93,18 +107,18 @@ Porque el problema no lo requiere. El portfolio es principalmente contenido con 
 
 ## 4. Arquitectura de la información
 
-### Estructura de la página
+### Estructura de la página principal
 
 ```
 Inicio (#inicio)
   └── Sobre mí (#sobre-mi)
         └── Proyectos (#proyectos)
               └── Proceso (#proceso)
-                    └── Live API (#actividad)
+                    └── Laboratorio (#laboratorio)
                           └── Contacto (#contacto)
 ```
 
-La navegación es fija, indica la sección activa con `aria-current="location"` y en mobile se transforma en un menú desplegable.
+La navegación es fija, indica la sección activa con `aria-current="location"` y en mobile se transforma en un menú desplegable. En las páginas de proyecto, el link de Proyectos queda marcado con `aria-current="page"` y los enlaces vuelven al inicio con rutas absolutas (`/#...`).
 
 La presentación se resolvió en **Hero + una sola sección “Sobre mí”**. No hay secciones separadas de perfil, enfoque y trayectoria: el texto personal está unificado y el proceso de trabajo vive en un componente interactivo propio.
 
@@ -112,12 +126,13 @@ La presentación se resolvió en **Hero + una sola sección “Sobre mí”**. N
 
 | Capa | Archivos | Responsabilidad |
 | --- | --- | --- |
-| Datos | `src/data/site.ts`, `projects.ts`, `miradas.ts`, `workflow.ts`, `github.ts` | Contenido editorial, proyectos, modos de lectura, etapas de proceso y respaldo de la API. |
+| Datos | `src/data/site.ts`, `projects.ts`, `miradas.ts`, `workflow.ts`, `personas.ts` | Contenido editorial, proyectos, enfoques de lectura, etapas de proceso, configuración de la API y respaldo. |
 | Layout | `src/layouts/BaseLayout.astro` | Documento, fuentes, skip link, navegación y footer. |
 | Presentación | `src/components/Hero.astro`, `About.astro` | Hero y sección única “Sobre mí”. |
-| Proyectos | `ProjectExplorer.astro`, `ProjectCard.astro`, `ProjectDialog.astro` | Switch de mirada, filtros, búsqueda, vistas, tarjetas, diálogos y carrusel. |
+| Proyectos | `ProjectExplorer.astro`, `ProjectCard.astro`, `ProjectMedia.astro` | Selector de enfoque, filtros, búsqueda, vistas, tarjetas, galería y video. |
+| Páginas de proyecto | `src/pages/proyectos/[id].astro` | Caso completo, dos lecturas, métricas, aprendizajes y navegación entre proyectos. |
 | Proceso | `WorkflowSimulator.astro` | Tablero/timeline interactivo de las cinco etapas de trabajo. |
-| API | `LiveApiDashboard.astro` | Fetch, badge de conexión, estados asíncronos, filtros, pruebas y respaldo local. |
+| API | `PersonaLab.astro` | Generación de proto-personas, estados asíncronos, copiado y respaldo local. |
 | Sistema visual | `src/styles/global.css` + estilos scoped | Tokens, reset, utilidades, accesibilidad y patrones compartidos. |
 | Assets | `public/media/`, `public/perfil.jpg` | Imágenes, posters y video de los proyectos. |
 
@@ -125,31 +140,31 @@ La presentación se resolvió en **Hero + una sola sección “Sobre mí”**. N
 
 1. Los datos editoriales viven en módulos TypeScript.
 2. Los componentes `.astro` los importan en build time y generan HTML estático.
-3. Los scripts de cliente agregan comportamiento sobre ese HTML ya renderizado.
-4. La API de GitHub se consulta en el navegador; si falla, se usa el respaldo local.
+3. `getStaticPaths()` genera una página por cada proyecto.
+4. Los scripts de cliente agregan comportamiento sobre ese HTML ya renderizado.
+5. Random User API se consulta en el navegador; si falla, se usa el set de respaldo local.
 
 ---
 
 ## 5. Los tres componentes propios relevantes
 
-### 5.1 `ProjectExplorer` — Matriz interactiva de proyectos + switch de rol
+### 5.1 `ProjectExplorer` — Matriz interactiva de proyectos y selector de enfoque
 
 **Archivos:**
 
 - `src/components/ProjectExplorer.astro`
 - `src/components/ProjectCard.astro`
-- `src/components/ProjectDialog.astro`
 - `src/data/projects.ts`
 - `src/data/miradas.ts`
 
 **Responsabilidad:** explorar la selección de proyectos y cambiar el foco de lectura según el rol profesional.
 
-**Interacción significativa obligatoria:** arriba de los proyectos hay un switch visible con dos estados:
+**Interacción significativa obligatoria:** arriba de los proyectos hay un selector visible con dos estados:
 
 - **Mirada UX/UI & Producto**: destaca el problema de usuario, los flujos, las decisiones de interfaz y los criterios de experiencia.
 - **Mirada Gestión & Arquitectura Técnica**: destaca el alcance, la organización, las prioridades, el stack, el proceso y la implementación.
 
-El switch escribe `data-mirada` en `<html>`, actualiza `aria-pressed`, resalta metadatos con `data-mirada-highlight`, cambia la descripción visible y persiste la elección en `localStorage` con la clave `portfolio-mirada`. El cambio se resuelve con CSS para los paneles `data-mirada-panel` y con JavaScript para los resaltados.
+El selector escribe `data-mirada` en `<html>`, actualiza `aria-pressed`, resalta metadatos con `data-mirada-highlight`, cambia la descripción visible y persiste la elección en `localStorage` con la clave `portfolio-mirada`. El cambio se resuelve con CSS para los paneles `data-mirada-panel` y con JavaScript para los resaltados.
 
 Además incluye:
 
@@ -159,13 +174,11 @@ Además incluye:
 - Contador de resultados con `role="status"` y `aria-live="polite"`.
 - Estado vacío si una combinación de filtros no tiene resultados.
 - Botón para limpiar filtros.
-- Apertura de casos completos en diálogos nativos.
-- Cierre por botón, Escape o click en el backdrop.
-- Bloqueo del scroll del body mientras hay un diálogo abierto.
-- Pausa del video al cerrar el diálogo.
-- Carrusel de imágenes con flechas del teclado.
+- Tarjetas con enlace a la página individual del proyecto.
 
-### 5.2 `WorkflowSimulator` — Tablero / timeline interactivo del proceso
+**Decisión clave:** los proyectos ya no se abren en un modal. Cada tarjeta lleva a `/proyectos/[id]`, una URL propia, compartible e inspeccionable.
+
+### 5.2 `WorkflowSimulator` — Tablero y timeline interactivo del proceso
 
 **Archivos:**
 
@@ -190,37 +203,40 @@ Al seleccionar una etapa, el panel cambia y muestra:
 
 La interacción usa el patrón de **tabs accesibles**: `role="tablist"`, `role="tab"`, `aria-selected`, `aria-controls`, `role="tabpanel"`, `tabindex` y navegación con flechas, Home y End. El panel activo se anuncia con una región `aria-live`.
 
-### 5.3 `LiveApiDashboard` — Panel en vivo conectado a API externa
+### 5.3 `PersonaLab` — Laboratorio de proto-personas conectado a Random User API
 
 **Archivos:**
 
-- `src/components/LiveApiDashboard.astro`
-- `src/data/github.ts`
+- `src/components/PersonaLab.astro`
+- `src/data/personas.ts`
 
-**Responsabilidad:** demostrar consumo de una API externa real, manejo de estados asíncronos y una estrategia de fallback.
+**Responsabilidad:** demostrar consumo de una API externa real, manejo de estados asíncronos y aplicación de criterios de research.
 
-El panel consume la API pública de GitHub y muestra hasta 8 repositorios ordenados por actualización. Incluye:
+El laboratorio genera un set de **cuatro proto-personas ficticias** y les asigna una hipótesis de research según el contexto elegido. Incluye:
 
-- Badge visible con el estado de conexión: `🟢 Conectado en vivo a GitHub API`, `🟡 Conectando...`, `⚪ Sin resultados` o `🔴 Error de conexión`.
+- Badge visible con el estado de conexión: **Proto-personas generadas**, **Generando proto-personas…**, **Sin resultados**, **Error de conexión** o **Set de respaldo local**.
 - Endpoint visible en pantalla para que se entienda qué API se está consumiendo.
-- Tarjetas dinámicas con nombre, descripción, lenguaje, última actualización, estrellas y link.
+- Selector de contexto: **Producto digital**, **Educación** o **Comunidad**.
+- Tarjetas con foto, nombre, edad, ubicación, email y una hipótesis con objetivo, fricción y pregunta de investigación.
+- Copiado de cada ficha al portapapeles.
 - Estado de carga con skeleton y `aria-busy`.
-- Estado de éxito con tarjetas.
-- Estado vacío si el perfil no devuelve repositorios o si el filtro no encuentra resultados.
-- Estado de error con mensaje, botón de reintento y botón para usar datos de respaldo.
-- Detección de rate limit con hora estimada de reintento.
+- Estado de éxito con las cuatro proto-personas.
+- Estado vacío si la API no devuelve resultados válidos.
+- Estado de error con mensaje, reintento y opción de usar datos de respaldo.
 - Timeout de 10 segundos con `AbortController`.
-- Búsqueda por nombre, descripción o lenguaje.
-- Filtros por lenguaje con `aria-pressed`.
-- Enlaces a cada repositorio y al perfil de GitHub.
+- Set de respaldo local en `src/data/personas.ts`.
 - Mensaje `noscript` para quienes navegan sin JavaScript.
 
 **Controles visibles para la defensa:**
 
-- **Refrescar datos**: vuelve a disparar el estado de carga y consulta la API.
+- **Generar proto-personas**: consulta la API con el contexto seleccionado.
+- **Cambiar el contexto**: vuelve a consultar automáticamente.
+- **Copiar ficha**: copia los datos y la hipótesis de cada proto-persona.
 - **Simular error**: fuerza el estado de error con el mismo tratamiento visual que un error real.
-- **Usar datos de respaldo**: carga los repositorios locales de `src/data/github.ts`.
-- **Buscar “zzz”**: permite ver el estado vacío sin modificar el código.
+- **Usar set de respaldo**: carga las proto-personas locales.
+- **Reintentar consulta**: vuelve a llamar a la API.
+
+**Aclaración ética:** Random User API genera datos ficticios. Las proto-personas son hipótesis para ordenar supuestos y alinear al equipo; no son evidencia de investigación. La validación se hace con personas reales.
 
 ---
 
@@ -228,55 +244,76 @@ El panel consume la API pública de GitHub y muestra hasta 8 repositorios ordena
 
 ### Dónde está en la pantalla
 
-La API está en la sección **“Actividad & Repositorios en Tiempo Real (Live API)”**, al final de la página, **después de “Proceso de trabajo” y antes del footer de contacto**. En la navegación se accede con el link **“Live API”** (`#actividad`).
+El laboratorio está en la sección **“Laboratorio de research: proto-personas para empezar a preguntar”**, después de **“Proceso de trabajo”** y antes del footer de contacto. En la navegación se accede con el link **“Laboratorio”** (`#laboratorio`).
 
 ### Dónde está en el código
 
-- Componente: `src/components/LiveApiDashboard.astro`
+- Componente: `src/components/PersonaLab.astro`
 - Renderizado: `src/pages/index.astro` (último componente antes del footer del layout)
-- Datos y respaldo: `src/data/github.ts`
-- Sección HTML: `id="actividad"` y `data-live-api`
+- Datos, contextos y respaldo: `src/data/personas.ts`
+- Sección HTML: `id="laboratorio"` y `data-persona-lab`
 - Badge: `data-badge`
-- Controles de prueba: `data-refresh`, `data-simulate-error`, `data-fallback`
+- Formulario: `data-form`, `data-context`
 - Estados: `data-loading`, `data-content`, `data-empty`, `data-error`
-- Fetch: bloque `loadRepos` dentro del `<script>` del componente
+- Herramientas de demostración: `data-retry`, `data-simulate-error`, `data-fallback`
+- Fetch: bloque `loadPersonas` dentro del `<script>` del componente
 
 ### Endpoint
 
 ```
-GET https://api.github.com/users/abrumancuso/repos?sort=updated&per_page=8
+GET https://randomuser.me/api/?results=4&nat=es,us,gb&inc=name,location,email,dob,picture,login
 ```
 
 - No requiere token para este endpoint.
 - Devuelve JSON público.
 - Tiene CORS habilitado.
-- Límite de 60 solicitudes por hora por IP sin autenticación.
+- Se agrega `seed` en cada consulta para generar un set nuevo.
+
+### Respuesta usada
+
+```json
+{
+  "results": [
+    {
+      "login": { "uuid": "..." },
+      "name": { "first": "Juana", "last": "Muñoz" },
+      "location": { "city": "Elche", "country": "Spain" },
+      "email": "juana.munoz@example.com",
+      "dob": { "age": 30 },
+      "picture": { "large": "https://randomuser.me/api/portraits/women/33.jpg" }
+    }
+  ]
+}
+```
+
+El componente valida que cada perfil tenga `login.uuid`, `name.first`, `name.last`, `location.city`, `location.country`, `email`, `dob.age` y `picture.large`. Si no, lo descarta.
 
 ### Estados implementados
 
-| Estado | Qué muestra | Cómo se resuelve |
-| --- | --- | --- |
-| Carga | Skeleton de tarjetas y mensaje `aria-live` | `data-state="loading"` + `aria-busy="true"` |
-| Éxito | Tarjetas con nombre, descripción, lenguaje, estrellas y fecha | Render con DOM API y `textContent` |
-| Vacío | Mensaje y acciones | Si el array viene vacío o el filtro no encuentra resultados |
-| Error | Título, detalle, reintento y respaldo | `fetch` fallido, timeout, formato inválido o respuesta no OK |
-| Rate limit | Mensaje específico con hora de reintento | `403`/`429` o `x-ratelimit-remaining: 0` |
-| Respaldo | Tarjetas locales marcadas como respaldo | `src/data/github.ts` |
+| Estado | Badge | Qué se ve | Disparador |
+| --- | --- | --- | --- |
+| Carga | `Generando proto-personas…` | Skeleton + `aria-busy` | Al generar o cambiar contexto |
+| Éxito | `Proto-personas generadas` | Cuatro tarjetas con datos e hipótesis | Respuesta válida de la API |
+| Vacío | `Sin resultados` | Mensaje y acciones | Respuesta sin perfiles válidos |
+| Error | `Error de conexión` | Mensaje, reintento y respaldo | Fallo de red, timeout o formato inválido |
+| Respaldo | `Set de respaldo local` | Proto-personas locales | Botón “Usar set de respaldo” |
 
 ### Decisiones técnicas
 
 - **Timeout**: `AbortController` corta la solicitud a los 10 segundos.
-- **Validación**: se verifica que la respuesta sea un array y que cada repo tenga `name` y `html_url`.
+- **Validación**: se verifica la estructura de cada perfil antes de renderizar.
 - **Seguridad**: los datos de la API se insertan con `textContent`, no con `innerHTML`.
-- **Respaldo**: si la API falla, el usuario no queda con una sección rota; puede reintentar o ver datos locales.
+- **Respaldo**: si la API falla, la sección no queda rota; se puede reintentar o usar el set local.
+- **Imágenes**: si la foto falla, se muestran iniciales generadas localmente.
 - **Sin secretos**: no hay claves ni variables de entorno; todo es público.
-- **Cache**: se usa `cache: 'no-store'` para consultar datos frescos al abrir la página.
+- **Cache**: se usa `cache: 'no-store'` para consultar datos frescos.
 
 ### Limitaciones conocidas
 
-- El rate limit es por IP y puede agotarse en redes compartidas.
-- Los datos de respaldo son una foto local y pueden quedar desactualizados.
-- La sección no está pensada para autenticación ni para mostrar repositorios privados.
+- La API puede fallar o tardar; por eso existe el respaldo local.
+- Los datos son ficticios y no representan personas reales.
+- Las proto-personas no reemplazan investigación con usuarios.
+- El servicio es externo y puede cambiar sin aviso.
 
 ---
 
@@ -294,13 +331,12 @@ GET https://api.github.com/users/abrumancuso/repos?sort=updated&per_page=8
 
 - Skip link al contenido principal.
 - Navegación con `aria-label`, `aria-expanded`, `aria-controls` y cierre con Escape.
-- Indicador de sección activa con `aria-current="location"`.
+- Indicador de sección activa con `aria-current="location"` y página activa con `aria-current="page"`.
 - Foco visible con `:focus-visible` y contraste reforzado.
-- Switch de proyectos, filtros y lenguajes con `aria-pressed`.
+- Selector de proyectos, filtros y vistas con `aria-pressed`.
 - Tabs del proceso con `role="tablist"`, `aria-selected`, `aria-controls` y navegación por teclado.
 - Resultados y cambios de estado con `aria-live="polite"`.
-- Diálogos nativos con manejo de foco del navegador.
-- Etiquetas asociadas a inputs de búsqueda.
+- Etiquetas asociadas a inputs de búsqueda y al formulario de proto-personas.
 - Imágenes con `alt` descriptivo; imágenes decorativas con `aria-hidden`.
 - Video con nota explícita de ausencia de subtítulos y audiodescripción.
 - `prefers-reduced-motion` para reducir animaciones.
@@ -311,17 +347,17 @@ GET https://api.github.com/users/abrumancuso/repos?sort=updated&per_page=8
 
 - Hero a dos columnas en desktop y una columna en mobile.
 - Sobre mí con imagen sticky en desktop y estática en mobile.
-- Explorador de proyectos con toolbar flexible, switch de dos columnas y grillas de 2/1 columnas.
+- Explorador de proyectos con toolbar flexible, selector de dos columnas y grillas de 2/1 columnas.
+- Páginas de proyecto con hero, métricas y lecturas en dos columnas; una columna en mobile.
 - Proceso con timeline vertical en desktop y horizontal scrollable en mobile.
-- Live API con grillas de 3/2/1 columnas.
-- Diálogos a pantalla completa en mobile.
+- Laboratorio de proto-personas con formulario de 2/1 columnas y grillas de tarjetas adaptativas.
 - Menú de navegación desplegable por debajo de 900 px.
 
 ### Limitaciones de accesibilidad
 
 - El video no tiene subtítulos ni audiodescripción; se informa en la interfaz.
 - Las fuentes se cargan desde Google Fonts; si fallan, hay fallback del sistema.
-- La sección de GitHub depende de una API externa y de la conexión del usuario.
+- El laboratorio depende de una API externa y de la conexión del usuario.
 - No se realizó una auditoría formal con lector de pantalla; se aplicaron criterios manuales y revisión de contraste.
 
 ---
@@ -334,7 +370,7 @@ GET https://api.github.com/users/abrumancuso/repos?sort=updated&per_page=8
 2. **Definición de arquitectura** y sistema visual.
 3. **Migración de contenido y assets** a la estructura de Astro.
 4. **Construcción de componentes** y datos tipados.
-5. **Refactorización**: unificación de la presentación y creación de los tres componentes propios.
+5. **Refactorización**: unificación de la presentación, creación de los tres componentes propios, páginas individuales de proyecto y reemplazo del laboratorio de color por el laboratorio de proto-personas.
 6. **Ajustes de responsive y accesibilidad**.
 7. **Documentación y cierre**.
 
@@ -349,7 +385,7 @@ La IA se usó como **asistente de programación y documentación**, no como reem
 - La selección de proyectos, los textos, la dirección visual, las métricas y las decisiones de contenido fueron definidas y revisadas por la autora.
 - Ningún dato de proyecto, métrica o experiencia fue inventado por la IA.
 - Cada cambio generado con asistencia fue leído, ajustado y validado en el servidor de desarrollo antes de commitear.
-- La IA no reemplazó la comprensión del código: se usó para escribir más rápido lo que ya estaba decidido, y para detectar problemas que después se verificaron.
+- La IA no reemplazó la comprensión del código: se usó para escribir más rápido lo que ya estaba decidido y para detectar problemas que después se verificaron.
 
 ### Historial de commits
 
@@ -362,7 +398,8 @@ El repositorio tiene commits progresivos que separan:
 5. Sección de actividad de GitHub con estados asíncronos.
 6. Ajustes de responsive y accesibilidad.
 7. Documentación y guía de defensa.
-8. Refactorización: presentación unificada, switch de proyectos, WorkflowSimulator y LiveApiDashboard.
+8. Refactorización: presentación unificada, selector de proyectos, WorkflowSimulator y LiveApiDashboard.
+9. `feat: add project pages and research lab with random user api`: páginas individuales de proyecto, laboratorio de proto-personas y posicionamiento profesional de Abril Mancuso.
 
 ---
 
@@ -382,23 +419,25 @@ portfolio/
 │   │   ├── About.astro
 │   │   ├── Footer.astro
 │   │   ├── Hero.astro
-│   │   ├── LiveApiDashboard.astro
 │   │   ├── Nav.astro
+│   │   ├── PersonaLab.astro
 │   │   ├── ProjectCard.astro
-│   │   ├── ProjectDialog.astro
 │   │   ├── ProjectExplorer.astro
+│   │   ├── ProjectMedia.astro
 │   │   ├── SectionHeading.astro
 │   │   └── WorkflowSimulator.astro
 │   ├── data/
-│   │   ├── github.ts
 │   │   ├── miradas.ts
+│   │   ├── personas.ts
 │   │   ├── projects.ts
 │   │   ├── site.ts
 │   │   └── workflow.ts
 │   ├── layouts/
 │   │   └── BaseLayout.astro
 │   ├── pages/
-│   │   └── index.astro
+│   │   ├── index.astro
+│   │   └── proyectos/
+│   │       └── [id].astro
 │   └── styles/
 │       └── global.css
 ├── astro.config.mjs
@@ -469,11 +508,11 @@ Si se publica en GitHub Pages como project page, hay que configurar el `base` co
 
 ## 12. Créditos y contenido
 
-- Contenido, proyectos, imágenes y textos: **Abru Mancuso**.
+- Contenido, proyectos, imágenes y textos: **Abril Mancuso**.
 - Portfolio completo: [Behance](https://www.behance.net/abrilmancuso).
 - Perfil profesional: [LinkedIn](https://linkedin.com/in/abrilmancuso).
 - Código y actividad: [GitHub](https://github.com/abrumancuso).
 - Tipografías: Instrument Sans y DM Sans (Google Fonts).
-- API de repositorios: GitHub REST API.
+- API de proto-personas: [Random User API](https://randomuser.me).
 
 Los proyectos incluidos son una selección académica y profesional. Las métricas y descripciones corresponden a cada caso y se presentan con fines de portfolio.

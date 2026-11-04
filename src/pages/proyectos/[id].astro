@@ -1,0 +1,517 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectMedia from '../../components/ProjectMedia.astro';
+import { areaLabels, projects, type Project } from '../../data/projects';
+
+export function getStaticPaths() {
+  return projects.map((project) => ({
+    params: { id: project.id },
+    props: { project },
+  }));
+}
+
+interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+const currentIndex = projects.findIndex((item) => item.id === project.id);
+const previous = projects[(currentIndex - 1 + projects.length) % projects.length];
+const next = projects[(currentIndex + 1) % projects.length];
+const productReading = project.miradas.producto;
+const managementReading = project.miradas.gestion;
+---
+
+<BaseLayout
+  title={`${project.title} | Abril Mancuso`}
+  description={`${project.summary} Caso completo de Abril Mancuso, Project Manager y Diseñadora UX/UI.`}
+>
+  <article class="project-page">
+    <div class="project-page__inner">
+      <a class="project-page__back" href="/#proyectos">
+        <span aria-hidden="true">←</span>
+        Volver a la selección de proyectos
+      </a>
+
+      <header class="project-page__header">
+        <div class="project-page__topline">
+          <span class="tag">{project.tag}</span>
+          <span class="project-page__year">{project.year}</span>
+        </div>
+        <h1>{project.title}</h1>
+        <p class="project-page__summary">{project.summary}</p>
+
+        <dl class="project-page__facts">
+          <div>
+            <dt>Áreas</dt>
+            <dd>{project.areas.map((area) => areaLabels[area]).join(' · ')}</dd>
+          </div>
+          <div>
+            <dt>Mi rol</dt>
+            <dd>{project.role}</dd>
+          </div>
+          <div>
+            <dt>Herramientas</dt>
+            <dd>{project.tools.join(' · ')}</dd>
+          </div>
+        </dl>
+      </header>
+
+      <ProjectMedia project={project} />
+
+      <section class="project-page__metrics" aria-labelledby="metricas-title">
+        <h2 class="visually-hidden" id="metricas-title">Métricas del proyecto</h2>
+        <dl>
+          {project.metrics.map((metric) => (
+            <div>
+              <dt>{metric.label}</dt>
+              <dd>{metric.value}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+
+      <section class="project-page__section" aria-labelledby="desafio-title">
+        <p class="project-page__eyebrow">El desafío</p>
+        <h2 id="desafio-title">Qué había que resolver</h2>
+        <p>{project.problem}</p>
+      </section>
+
+      <section class="project-page__section" aria-labelledby="rol-title">
+        <p class="project-page__eyebrow">Mi rol</p>
+        <h2 id="rol-title">Qué hice y con quién</h2>
+        <p>{project.role}</p>
+        <ul class="project-page__roles" aria-label="Responsabilidades del proyecto">
+          {project.roles.map((role) => <li>{role}</li>)}
+        </ul>
+      </section>
+
+      <section class="project-page__readings" aria-labelledby="lecturas-title">
+        <div class="project-page__section-head">
+          <p class="project-page__eyebrow">Dos lecturas</p>
+          <h2 id="lecturas-title">El mismo proyecto desde dos enfoques</h2>
+          <p>
+            La misma evidencia se puede leer desde la experiencia de producto o desde
+            la gestión y la arquitectura técnica. Acá están las dos, sin esconder
+            ninguna.
+          </p>
+        </div>
+
+        <div class="project-page__readings-grid">
+          <article class="project-page__reading project-page__reading--product">
+            <span class="project-page__reading-label">UX/UI & Producto</span>
+            <p class="project-page__focus">{productReading.focus}</p>
+            <p>{productReading.detail}</p>
+
+            <h3>Decisiones de diseño</h3>
+            <ul>
+              {project.decisions.map((decision) => <li>{decision}</li>)}
+            </ul>
+          </article>
+
+          <article class="project-page__reading project-page__reading--management">
+            <span class="project-page__reading-label">Gestión & Arquitectura Técnica</span>
+            <p class="project-page__focus">{managementReading.focus}</p>
+            <p>{managementReading.detail}</p>
+
+            <h3>Proceso técnico</h3>
+            <ol class="project-page__process">
+              {project.process.map((step) => (
+                <li>
+                  <strong>{step.step}</strong>
+                  <span>{step.detail}</span>
+                </li>
+              ))}
+            </ol>
+
+            <h3>Herramientas</h3>
+            <ul class="project-page__tools">
+              {project.tools.map((tool) => <li>{tool}</li>)}
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="project-page__section" aria-labelledby="aprendizajes-title">
+        <p class="project-page__eyebrow">Aprendizajes</p>
+        <h2 id="aprendizajes-title">Qué me dejó el proyecto</h2>
+        <p>{project.learnings}</p>
+      </section>
+
+      <nav class="project-page__pagination" aria-label="Otros proyectos">
+        <a class="project-page__pagination-link" href={`/proyectos/${previous.id}`}>
+          <span>Proyecto anterior</span>
+          <strong>{previous.title}</strong>
+        </a>
+        <a class="project-page__pagination-link project-page__pagination-link--next" href={`/proyectos/${next.id}`}>
+          <span>Proyecto siguiente</span>
+          <strong>{next.title}</strong>
+        </a>
+      </nav>
+
+      <footer class="project-page__footer">
+        <a class="btn btn--behance" href={project.behanceUrl} target="_blank" rel="noopener noreferrer">
+          Ver en Behance
+          <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M7 17 17 7M8 7h9v9" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </a>
+        <a class="btn btn--ghost" href="/#proyectos">Volver a la selección</a>
+      </footer>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .project-page {
+    padding: clamp(40px, 7vw, 84px) 24px clamp(56px, 8vw, 96px);
+  }
+
+  .project-page__inner {
+    max-width: var(--container-width);
+    margin: 0 auto;
+  }
+
+  .project-page__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 28px;
+    font-family: var(--font-display);
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--color-accent-deep);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .project-page__header {
+    max-width: 900px;
+    margin-bottom: clamp(28px, 4vw, 44px);
+  }
+
+  .project-page__topline {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .project-page__year {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--color-text-muted);
+  }
+
+  .project-page h1 {
+    margin-bottom: 16px;
+    font-size: clamp(2.2rem, 6vw, 4.2rem);
+    line-height: 1.02;
+  }
+
+  .project-page__summary {
+    max-width: 70ch;
+    color: var(--color-text-muted);
+    font-size: clamp(1rem, 1.6vw, 1.14rem);
+    line-height: 1.7;
+  }
+
+  .project-page__facts {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+    margin-top: 28px;
+    padding-top: 22px;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .project-page__facts dt {
+    margin-bottom: 4px;
+    font-family: var(--font-display);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .project-page__facts dd {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.55;
+  }
+
+  .project-page__metrics {
+    margin-bottom: clamp(32px, 5vw, 52px);
+    padding: clamp(18px, 3vw, 26px);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-bg-alt);
+  }
+
+  .project-page__metrics dl {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin: 0;
+  }
+
+  .project-page__metrics dt {
+    margin-bottom: 2px;
+    font-family: var(--font-display);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .project-page__metrics dd {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    font-weight: 600;
+    color: var(--color-accent-deep);
+  }
+
+  .project-page__section {
+    max-width: 820px;
+    margin-bottom: clamp(32px, 5vw, 52px);
+  }
+
+  .project-page__eyebrow {
+    margin-bottom: 8px;
+    font-family: var(--font-display);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-accent-deep);
+  }
+
+  .project-page__section h2,
+  .project-page__readings h2 {
+    margin-bottom: 14px;
+    font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+  }
+
+  .project-page__section p {
+    color: var(--color-text-muted);
+    line-height: 1.75;
+  }
+
+  .project-page__roles,
+  .project-page__tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 14px;
+    padding: 0;
+    list-style: none;
+  }
+
+  .project-page__roles li,
+  .project-page__tools li {
+    padding: 6px 11px;
+    border: 1px solid var(--color-border);
+    border-radius: 100px;
+    background: var(--color-surface);
+    font-family: var(--font-display);
+    font-size: 0.74rem;
+    font-weight: 500;
+    color: var(--color-text-muted);
+  }
+
+  .project-page__readings {
+    margin-bottom: clamp(32px, 5vw, 52px);
+  }
+
+  .project-page__section-head {
+    max-width: 760px;
+    margin-bottom: 24px;
+  }
+
+  .project-page__section-head p:last-child {
+    color: var(--color-text-muted);
+    line-height: 1.7;
+  }
+
+  .project-page__readings-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+  }
+
+  .project-page__reading {
+    padding: clamp(20px, 3vw, 28px);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+  }
+
+  .project-page__reading--product {
+    border-top: 4px solid var(--color-accent-deep);
+  }
+
+  .project-page__reading--management {
+    border-top: 4px solid var(--color-ink);
+  }
+
+  .project-page__reading-label {
+    display: inline-block;
+    margin-bottom: 12px;
+    font-family: var(--font-display);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-accent-deep);
+  }
+
+  .project-page__reading--management .project-page__reading-label {
+    color: var(--color-ink);
+  }
+
+  .project-page__focus {
+    margin-bottom: 10px;
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: 600;
+    line-height: 1.45;
+    color: var(--color-text);
+  }
+
+  .project-page__reading p {
+    color: var(--color-text-muted);
+    line-height: 1.7;
+  }
+
+  .project-page__reading h3 {
+    margin: 22px 0 10px;
+    font-size: 0.95rem;
+  }
+
+  .project-page__reading ul,
+  .project-page__reading ol {
+    display: grid;
+    gap: 10px;
+    padding-left: 20px;
+    color: var(--color-text-muted);
+    line-height: 1.65;
+  }
+
+  .project-page__process {
+    counter-reset: process;
+    list-style: none;
+    padding-left: 0 !important;
+  }
+
+  .project-page__process li {
+    display: grid;
+    gap: 2px;
+    padding-left: 18px;
+    border-left: 2px solid var(--color-accent-light);
+  }
+
+  .project-page__process strong {
+    font-family: var(--font-display);
+    font-size: 0.82rem;
+    color: var(--color-text);
+  }
+
+  .project-page__process span {
+    font-size: 0.84rem;
+  }
+
+  .project-page__pagination {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin: clamp(36px, 5vw, 56px) 0 28px;
+    padding-top: 24px;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .project-page__pagination-link {
+    display: grid;
+    gap: 4px;
+    padding: 18px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    transition: border-color var(--transition), transform var(--transition);
+  }
+
+  .project-page__pagination-link:hover {
+    border-color: var(--color-accent-deep);
+    transform: translateY(-2px);
+  }
+
+  .project-page__pagination-link span {
+    font-family: var(--font-display);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .project-page__pagination-link strong {
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--color-text);
+  }
+
+  .project-page__pagination-link--next {
+    text-align: right;
+  }
+
+  .project-page__footer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    padding-top: 12px;
+  }
+
+  @media (max-width: 820px) {
+    .project-page__facts {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .project-page__metrics dl {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .project-page__readings-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .project-page {
+      padding-right: 18px;
+      padding-left: 18px;
+    }
+
+    .project-page__pagination {
+      grid-template-columns: 1fr;
+    }
+
+    .project-page__pagination-link--next {
+      text-align: left;
+    }
+
+    .project-page__footer {
+      flex-direction: column;
+    }
+
+    .project-page__footer .btn {
+      width: 100%;
+    }
+  }
+</style>
