@@ -1,5 +1,6 @@
 ---
-import { site } from '../data/site';
+import { site, heroMiradas } from '../data/site';
+import { miradaOptions } from '../data/miradas';
 ---
 
 <section class="hero" id="inicio" aria-labelledby="hero-title">
@@ -10,11 +11,11 @@ import { site } from '../data/site';
       <p class="hero__eyebrow">Portfolio multimedial · 2026</p>
       <h1 class="hero__title" id="hero-title">{site.name}</h1>
       <p class="hero__role">{site.role}</p>
-      <p class="hero__thesis">
-        Diseño puentes entre la idea, el sistema y la producción. Me interesa
-        entender cómo se conectan la experiencia, el código y la gestión para
-        que un proyecto creativo llegue a buen puerto.
-      </p>
+      {miradaOptions.map((mirada) => (
+        <p class="hero__thesis" data-mirada-panel={mirada.id}>
+          {heroMiradas[mirada.id]}
+        </p>
+      ))}
 
       <div class="hero__actions">
         <a class="btn btn--primary" href="#proyectos">Explorar proyectos</a>
@@ -49,7 +50,7 @@ import { site } from '../data/site';
     position: relative;
     display: flex;
     align-items: center;
-    min-height: calc(100svh - var(--nav-height));
+    min-height: calc(100svh - var(--nav-height) - var(--mode-bar-height));
     padding: clamp(64px, 9vw, 120px) 24px;
     overflow: hidden;
     background: var(--color-ink);

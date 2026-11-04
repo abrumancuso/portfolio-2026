@@ -319,6 +319,19 @@ p {
   display: none !important;
 }
 
+/* --- Paneles de Mirada ---
+   Solo se muestra el panel del modo activo. El atributo data-mirada se
+   escribe en <html> desde el script inline del layout y desde el selector. */
+[data-mirada-panel] {
+  display: none;
+}
+
+html[data-mirada='integral'] [data-mirada-panel='integral'],
+html[data-mirada='ux'] [data-mirada-panel='ux'],
+html[data-mirada='codigo'] [data-mirada-panel='codigo'] {
+  display: block;
+}
+
 .is-highlighted {
   outline: 2px solid var(--color-accent);
   outline-offset: 4px;

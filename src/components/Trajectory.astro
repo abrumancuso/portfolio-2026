@@ -31,7 +31,7 @@ import { skillGroups, timeline } from '../data/site';
         <h3 class="trajectory__label">Herramientas y competencias</h3>
         <div class="trajectory__skill-grid">
           {skillGroups.map((group) => (
-            <article class="trajectory__skill">
+            <article class="trajectory__skill" data-mirada-highlight={group.title === 'Diseño & UX' ? 'ux' : 'codigo'}>
               <h4>{group.title}</h4>
               <ul>
                 {group.items.map((item) => <li>{item}</li>)}

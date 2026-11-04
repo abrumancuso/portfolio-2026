@@ -4,6 +4,8 @@
  * trayectoria y contacto) vive acá para poder editarlo en un solo lugar.
  */
 
+import type { MiradaId } from './miradas';
+
 export const site = {
   name: 'Abril Mancuso',
   shortName: 'AM.',
@@ -25,6 +27,49 @@ export const navLinks = [
   { href: '#actividad', label: 'Actividad' },
   { href: '#contacto', label: 'Contacto' },
 ] as const;
+
+/**
+ * El texto del hero cambia según la Mirada activa. Es una de las formas
+ * en que la interacción modifica la lectura, no solo la decoración.
+ */
+export const heroMiradas: Record<MiradaId, string> = {
+  integral:
+    'Diseño puentes entre la idea, el sistema y la producción. Me interesa entender cómo se conectan la experiencia, el código y la gestión para que un proyecto creativo llegue a buen puerto.',
+  ux: 'Me interesa diseñar experiencias que se entiendan rápido y se sostengan en el tiempo: investigación, sistemas de diseño, accesibilidad y criterios de uso.',
+  codigo:
+    'Me interesa entender cómo se construye lo que diseño: HTML, CSS, JavaScript, Astro, pipelines 3D y producción audiovisual. El código también es una decisión proyectual.',
+};
+
+/**
+ * Tres versiones del perfil. El selector de Mirada muestra una sola,
+ * de modo que el mismo contenido cambia de énfasis sin ocultar la práctica.
+ */
+export const aboutMiradas: Record<MiradaId, { lead: string; paragraphs: string[] }> = {
+  integral: {
+    lead: 'Soy Abril Mancuso, estudiante de Tecnología Multimedial en la Universidad Maimónides y profesional en formación con un perfil híbrido entre diseño, tecnología y producción.',
+    paragraphs: [
+      'Me interesa el punto donde una idea se convierte en sistema: investigar, ordenar la información, definir reglas visuales y después llevarlas a una interfaz, a una pieza audiovisual o a un proyecto coordinado con otras personas.',
+      'Trabajo en el departamento de alumnos de la Universidad de Palermo, donde coordino trámites y múltiples tareas bajo plazos reales. Esa experiencia me dio una mirada de gestión que hoy aplico a los proyectos creativos: planificar, priorizar y sostener la comunicación con el equipo.',
+      'Mi formación combina diseño UI/UX, sistemas de diseño, desarrollo web, producción audiovisual y 3D. No me interesa elegir una sola disciplina: me interesa entender cómo se conectan para que un proyecto llegue a buen puerto.',
+    ],
+  },
+  ux: {
+    lead: 'Mirada Diseño & UX: investigo, ordeno y documento para que la experiencia tenga criterio, no solo apariencia.',
+    paragraphs: [
+      'Me interesa el diseño de sistemas y experiencias: entender a quién le habla una interfaz, qué necesita y cómo se organiza la información para que se entienda sin explicaciones extra.',
+      'En MaimoConecta apliqué Design Thinking y UX Research para definir un canal de comunicación desde las necesidades de los estudiantes. En Tini construí un sistema de identidad que otra persona pueda usar. Ambos proyectos me enseñaron que el diseño se valida cuando funciona en contexto.',
+      'Hoy profundizo en accesibilidad, arquitectura de información y sistemas de diseño, con foco en que las decisiones sean explicables, documentadas y reutilizables.',
+    ],
+  },
+  codigo: {
+    lead: 'Mirada Arquitectura & Código: me interesa el hacer técnico tanto como la idea que lo origina.',
+    paragraphs: [
+      'Trabajo con HTML, CSS y JavaScript, y estoy incorporando Astro y Git/GitHub a mi práctica. Me interesa entender el costo y las posibilidades de cada decisión técnica, desde la estructura de un componente hasta el peso de una animación.',
+      'En 3D recorrí el pipeline de Maya, Substance Painter y Arnold; en animación, el de After Effects y Premiere. Aprender las herramientas me permite dialogar con equipos técnicos y tomar mejores decisiones formales.',
+      'Este portfolio está construido con AstroJS, componentes reutilizables y estados asíncronos. El código también es una forma de ordenar el contenido y de hacerlo accesible.',
+    ],
+  },
+};
 
 export const profile = {
   lead: 'Soy Abril Mancuso, estudiante de Tecnología Multimedial en la Universidad Maimónides y profesional en formación con un perfil híbrido entre diseño, tecnología y producción.',

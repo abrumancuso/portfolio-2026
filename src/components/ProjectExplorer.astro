@@ -1,5 +1,6 @@
 ---
-import { filterAreas, miradaLabels, projects, type MiradaId } from '../data/projects';
+import { filterAreas, projects } from '../data/projects';
+import { miradaLabels, type MiradaId } from '../data/miradas';
 import ProjectCard from './ProjectCard.astro';
 import ProjectDialog from './ProjectDialog.astro';
 
@@ -103,7 +104,7 @@ const miradaNotes: Record<MiradaId, string> = {
 
       <div class="explorer__mode-note">
         {miradas.map((mode) => (
-          <p data-mirada-panel={mode} hidden={mode !== 'integral'}>
+          <p data-mirada-panel={mode}>
             <span>{miradaLabels[mode]}</span> {miradaNotes[mode]}
           </p>
         ))}
@@ -244,6 +245,13 @@ const miradaNotes: Record<MiradaId, string> = {
     });
 
     applyFilters();
+
+    document.addEventListener('mirada:change', (event) => {
+      const detail = (event as CustomEvent<{ label?: string }>).detail;
+      if (status && detail?.label) {
+        status.textContent = `Mirada ${detail.label} activa. Mostrando ${visibleCount} de ${cards.length} proyectos.`;
+      }
+    });
   }
 
   /* --- Diálogos de caso completo y carruseles --- */

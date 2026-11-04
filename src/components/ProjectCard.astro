@@ -1,6 +1,7 @@
 ---
 import type { MiradaId, Project } from '../data/projects';
 import { areaLabels } from '../data/projects';
+import { miradaLabels } from '../data/miradas';
 
 interface Props {
   project: Project;
@@ -73,7 +74,7 @@ const searchText = [
       <h3 id={`card-title-${project.id}`}>{project.title}</h3>
 
       {miradas.map((mode) => (
-        <p class="project-card__focus" data-mirada-panel={mode} hidden={mode !== 'integral'}>
+        <p class="project-card__focus" data-mirada-panel={mode}>
           {project.miradas[mode].focus}
         </p>
       ))}

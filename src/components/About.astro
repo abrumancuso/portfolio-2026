@@ -1,6 +1,7 @@
 ---
 import SectionHeading from './SectionHeading.astro';
-import { profile, site } from '../data/site';
+import { aboutMiradas, profile, site } from '../data/site';
+import { miradaOptions } from '../data/miradas';
 ---
 
 <section class="about section" id="perfil" aria-labelledby="perfil-title">
@@ -27,13 +28,16 @@ import { profile, site } from '../data/site';
         id="perfil-title"
       />
 
-      <p class="about__lead">{profile.lead}</p>
+      {miradaOptions.map((mirada) => (
+        <div class="about__variant" data-mirada-panel={mirada.id}>
+          <p class="about__lead">{aboutMiradas[mirada.id].lead}</p>
+          <div class="about__paragraphs">
+            {aboutMiradas[mirada.id].paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+          </div>
+        </div>
+      ))}
 
-      <div class="about__paragraphs">
-        {profile.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
-      </div>
-
-      <ul class="about__tags" aria-label="Áreas de especialidad">
+      <ul class="about__tags" aria-label="Áreas de especialidad" data-mirada-highlight="ux">
         {profile.tags.map((tag) => <li class="tag">{tag}</li>)}
       </ul>
 

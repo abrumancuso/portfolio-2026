@@ -93,7 +93,7 @@ const imageCount = project.media.type === 'images' ? project.media.images.length
       <div class="project-dialog__content">
         <section class="project-dialog__section" aria-label="Enfoque según la mirada activa">
           {miradas.map((mode) => (
-            <div data-mirada-panel={mode} hidden={mode !== 'integral'}>
+            <div data-mirada-panel={mode}>
               <p class="project-dialog__focus">{project.miradas[mode].focus}</p>
               <p class="project-dialog__detail">{project.miradas[mode].detail}</p>
             </div>

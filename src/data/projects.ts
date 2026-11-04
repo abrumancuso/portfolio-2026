@@ -9,8 +9,11 @@
  * Mirada decide cuál se muestra y qué metadatos se destacan.
  */
 
+import type { MiradaId } from './miradas';
+
+export type { MiradaId } from './miradas';
+
 export type AreaId = 'diseno' | 'audiovisual' | '3d' | 'gestion';
-export type MiradaId = 'integral' | 'ux' | 'codigo';
 
 export interface MiradaContent {
   focus: string;
@@ -336,10 +339,4 @@ export const areaLabels: Record<AreaId, string> = {
   audiovisual: 'Audiovisual',
   '3d': '3D & Producción',
   gestion: 'Gestión',
-};
-
-export const miradaLabels: Record<MiradaId, string> = {
-  integral: 'Integral',
-  ux: 'Diseño & UX',
-  codigo: 'Arquitectura & Código',
 };
