@@ -1,0 +1,164 @@
+---
+import SectionHeading from './SectionHeading.astro';
+import { designDecisions, focusQuestions } from '../data/site';
+---
+
+<section class="focus section section--alt" id="enfoque" aria-labelledby="enfoque-title">
+  <div class="focus__inner">
+    <SectionHeading
+      eyebrow="Enfoque"
+      title="Las preguntas que orientan mi trabajo"
+      description="No pienso el portfolio como una lista de piezas, sino como una forma de mostrar cómo tomo decisiones: qué investigo, qué ordeno y qué pongo en juego cuando produzco."
+      id="enfoque-title"
+    />
+
+    <ol class="focus__questions">
+      {focusQuestions.map((item) => (
+        <li class="focus__question">
+          <span class="focus__number" aria-hidden="true">{item.number}</span>
+          <h3>{item.question}</h3>
+          <p>{item.answer}</p>
+        </li>
+      ))}
+    </ol>
+
+    <div class="focus__decisions">
+      <h3 class="focus__subtitle">Decisiones que distinguen la propuesta</h3>
+      <div class="focus__grid">
+        {designDecisions.map((decision) => (
+          <article class="focus__card">
+            <h4>{decision.title}</h4>
+            <p>{decision.text}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+
+    <aside class="focus__reading" aria-label="Cómo leer este portfolio">
+      <p class="focus__reading-label">Cómo leer este portfolio</p>
+      <p>
+        La barra <strong>Mirada</strong> cambia el énfasis de la experiencia:
+        podés recorrerlo desde <strong>Diseño &amp; UX</strong>, desde
+        <strong>Arquitectura &amp; Código</strong> o de forma
+        <strong>Integral</strong>. No se oculta información: se reorganiza la
+        lectura para que cada perfil encuentre primero lo que le interesa.
+      </p>
+    </aside>
+  </div>
+</section>
+
+<style>
+  .focus__inner {
+    max-width: var(--container-width);
+    margin: 0 auto;
+  }
+
+  .focus__questions {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+    counter-reset: focus;
+  }
+
+  .focus__question {
+    display: flex;
+    flex-direction: column;
+    padding: 26px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+  }
+
+  .focus__number {
+    margin-bottom: 18px;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--color-accent-deep);
+  }
+
+  .focus__question h3 {
+    margin-bottom: 12px;
+    font-size: clamp(1.05rem, 1.7vw, 1.24rem);
+    line-height: 1.3;
+  }
+
+  .focus__question p {
+    color: var(--color-text-muted);
+    font-size: 0.94rem;
+    line-height: 1.7;
+  }
+
+  .focus__decisions {
+    margin-top: clamp(44px, 6vw, 72px);
+  }
+
+  .focus__subtitle {
+    margin-bottom: 20px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .focus__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+  }
+
+  .focus__card {
+    padding: 24px;
+    border-left: 3px solid var(--color-accent);
+    background: var(--color-bg);
+  }
+
+  .focus__card h4 {
+    margin-bottom: 10px;
+    font-size: 1.05rem;
+  }
+
+  .focus__card p {
+    color: var(--color-text-muted);
+    font-size: 0.92rem;
+    line-height: 1.7;
+  }
+
+  .focus__reading {
+    display: grid;
+    grid-template-columns: minmax(160px, 0.32fr) minmax(0, 1fr);
+    gap: 24px;
+    margin-top: clamp(44px, 6vw, 72px);
+    padding: 24px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+  }
+
+  .focus__reading-label {
+    font-family: var(--font-display);
+    font-size: 0.74rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-accent-deep);
+  }
+
+  .focus__reading p:last-child {
+    color: var(--color-text-muted);
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+
+  @media (max-width: 900px) {
+    .focus__questions,
+    .focus__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .focus__reading {
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+  }
+</style>

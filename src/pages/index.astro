@@ -1,10 +1,16 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import About from '../components/About.astro';
+import Focus from '../components/Focus.astro';
+import Trajectory from '../components/Trajectory.astro';
 ---
 
 <BaseLayout>
-  <main id="contenido" class="container">
-    <h1>Abril Mancuso</h1>
-    <p>Portfolio multimedial en construcción con AstroJS.</p>
-  </main>
+  <Hero />
+  <About />
+  <Focus />
+  <Trajectory />
+
+  <!-- Los proyectos y la actividad técnica se incorporan en las próximas etapas. -->
 </BaseLayout>

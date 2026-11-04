@@ -1,0 +1,257 @@
+---
+import { site } from '../data/site';
+---
+
+<section class="hero" id="inicio" aria-labelledby="hero-title">
+  <div class="hero__grid" aria-hidden="true"></div>
+
+  <div class="hero__inner">
+    <div class="hero__content">
+      <p class="hero__eyebrow">Portfolio multimedial · 2026</p>
+      <h1 class="hero__title" id="hero-title">{site.name}</h1>
+      <p class="hero__role">{site.role}</p>
+      <p class="hero__thesis">
+        Diseño puentes entre la idea, el sistema y la producción. Me interesa
+        entender cómo se conectan la experiencia, el código y la gestión para
+        que un proyecto creativo llegue a buen puerto.
+      </p>
+
+      <div class="hero__actions">
+        <a class="btn btn--primary" href="#proyectos">Explorar proyectos</a>
+        <a class="btn btn--on-dark" href="#perfil">Leer mi perfil</a>
+      </div>
+    </div>
+
+    <aside class="hero__index" aria-label="Áreas de trabajo">
+      <p class="hero__index-title">Perfil híbrido</p>
+      <ol>
+        <li><span>01</span> Diseño UI/UX</li>
+        <li><span>02</span> Sistemas de Diseño</li>
+        <li><span>03</span> Desarrollo Full-Stack & Mobile</li>
+        <li><span>04</span> Producción Audiovisual</li>
+        <li><span>05</span> PM Digital</li>
+      </ol>
+      <p class="hero__index-note">
+        Cinco disciplinas, una misma pregunta: cómo se sostiene una idea cuando
+        pasa de la pantalla a la producción.
+      </p>
+    </aside>
+  </div>
+
+  <a class="hero__scroll" href="#perfil">
+    <span>Scroll para explorar</span>
+    <span class="hero__scroll-line" aria-hidden="true"></span>
+  </a>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: calc(100svh - var(--nav-height));
+    padding: clamp(64px, 9vw, 120px) 24px;
+    overflow: hidden;
+    background: var(--color-ink);
+    color: var(--color-ink-text);
+  }
+
+  .hero__grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+    background-size: 72px 72px;
+    mask-image: radial-gradient(ellipse 70% 65% at 50% 40%, #000 30%, transparent 78%);
+    pointer-events: none;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 45% at 18% 20%, rgba(196, 167, 125, 0.18), transparent 65%),
+      radial-gradient(ellipse 45% 40% at 82% 72%, rgba(185, 125, 111, 0.12), transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero__inner {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(260px, 0.65fr);
+    gap: clamp(40px, 7vw, 96px);
+    align-items: end;
+    width: 100%;
+    max-width: var(--container-width);
+    margin: 0 auto;
+  }
+
+  .hero__eyebrow {
+    margin-bottom: 18px;
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+
+  .hero__title {
+    max-width: 12ch;
+    font-size: clamp(3rem, 8.5vw, 6.8rem);
+    font-weight: 700;
+    letter-spacing: -0.055em;
+    line-height: 0.94;
+    margin-bottom: 24px;
+  }
+
+  .hero__role {
+    max-width: 62ch;
+    margin-bottom: 22px;
+    font-family: var(--font-display);
+    font-size: clamp(0.95rem, 1.7vw, 1.15rem);
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: 0.02em;
+    color: var(--color-ink-text);
+  }
+
+  .hero__thesis {
+    max-width: 56ch;
+    margin-bottom: 34px;
+    color: var(--color-ink-muted);
+    font-size: clamp(1rem, 1.8vw, 1.18rem);
+    line-height: 1.7;
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .hero__index {
+    padding: 26px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.035);
+    backdrop-filter: blur(8px);
+  }
+
+  .hero__index-title {
+    margin-bottom: 16px;
+    font-family: var(--font-display);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+
+  .hero__index ol {
+    display: grid;
+    gap: 12px;
+  }
+
+  .hero__index li {
+    display: flex;
+    gap: 12px;
+    align-items: baseline;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    font-family: var(--font-display);
+    font-size: 0.94rem;
+    font-weight: 500;
+  }
+
+  .hero__index li:last-child {
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+
+  .hero__index li span {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--color-accent);
+  }
+
+  .hero__index-note {
+    margin-top: 18px;
+    color: rgba(255, 255, 255, 0.62);
+    font-size: 0.84rem;
+    line-height: 1.6;
+  }
+
+  .hero__scroll {
+    position: absolute;
+    bottom: 26px;
+    left: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    transform: translateX(-50%);
+    font-family: var(--font-display);
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.52);
+  }
+
+  .hero__scroll-line {
+    width: 1px;
+    height: 34px;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.55), transparent);
+    animation: scroll-pulse 2.2s ease-in-out infinite;
+  }
+
+  @keyframes scroll-pulse {
+    0%,
+    100% {
+      opacity: 0.35;
+      transform: scaleY(0.85);
+    }
+    50% {
+      opacity: 1;
+      transform: scaleY(1.1);
+    }
+  }
+
+  @media (max-width: 900px) {
+    .hero__inner {
+      grid-template-columns: 1fr;
+      align-items: start;
+    }
+
+    .hero__title {
+      max-width: 100%;
+    }
+
+    .hero__index {
+      max-width: 520px;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .hero {
+      min-height: auto;
+      padding-bottom: 96px;
+    }
+
+    .hero__actions {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .hero__actions .btn {
+      width: 100%;
+    }
+
+    .hero__index {
+      padding: 20px;
+    }
+  }
+</style>

@@ -181,6 +181,10 @@ p {
   padding: 0 24px;
 }
 
+.site-main {
+  padding-top: var(--nav-height);
+}
+
 .section {
   padding: clamp(64px, 9vw, 112px) 24px;
 }
