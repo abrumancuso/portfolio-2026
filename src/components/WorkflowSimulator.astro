@@ -1,0 +1,352 @@
+---
+import SectionHeading from './SectionHeading.astro';
+import { workflowStages } from '../data/workflow';
+---
+
+<section class="workflow section section--alt" id="proceso" aria-labelledby="proceso-title">
+  <div class="container">
+    <SectionHeading
+      eyebrow="Proceso de trabajo"
+      title="Cómo paso de una idea compleja a un producto ejecutado"
+      description="Un tablero interactivo con las cinco etapas que uso para gestionar y diseñar un proyecto digital. Hacé clic en cada etapa para ver entregables, herramientas y las preguntas que resuelvo."
+      id="proceso-title"
+    />
+
+    <div class="workflow__board" data-workflow>
+      <div class="workflow__timeline" role="tablist" aria-label="Etapas del proceso de trabajo" aria-orientation="vertical">
+        {workflowStages.map((stage, index) => (
+          <button
+            class="workflow__stage"
+            type="button"
+            role="tab"
+            id={`workflow-tab-${stage.id}`}
+            aria-selected={index === 0 ? 'true' : 'false'}
+            aria-controls={`workflow-panel-${stage.id}`}
+            tabindex={index === 0 ? 0 : -1}
+            data-workflow-tab={stage.id}
+          >
+            <span class="workflow__stage-number">{stage.step}</span>
+            <span class="workflow__stage-title">{stage.title}</span>
+          </button>
+        ))}
+      </div>
+
+      <div class="workflow__detail">
+        {workflowStages.map((stage, index) => (
+          <div
+            class="workflow__panel"
+            id={`workflow-panel-${stage.id}`}
+            role="tabpanel"
+            aria-labelledby={`workflow-tab-${stage.id}`}
+            tabindex="0"
+            hidden={index !== 0}
+            data-workflow-panel={stage.id}
+          >
+            <header class="workflow__panel-head">
+              <span class="workflow__panel-step">Etapa {stage.step} / 05</span>
+              <h3>{stage.title}</h3>
+              <p>{stage.description}</p>
+            </header>
+
+            <div class="workflow__panel-grid">
+              <section class="workflow__block" aria-labelledby={`workflow-deliverables-${stage.id}`}>
+                <h4 id={`workflow-deliverables-${stage.id}`}>Entregables</h4>
+                <ul>
+                  {stage.deliverables.map((item) => <li>{item}</li>)}
+                </ul>
+              </section>
+
+              <section class="workflow__block" aria-labelledby={`workflow-tools-${stage.id}`}>
+                <h4 id={`workflow-tools-${stage.id}`}>Herramientas</h4>
+                <ul class="workflow__tools">
+                  {stage.tools.map((tool) => <li>{tool}</li>)}
+                </ul>
+              </section>
+
+              <section class="workflow__block" aria-labelledby={`workflow-questions-${stage.id}`}>
+                <h4 id={`workflow-questions-${stage.id}`}>Preguntas que resuelvo</h4>
+                <ul>
+                  {stage.questions.map((question) => <li>{question}</li>)}
+                </ul>
+              </section>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <p class="workflow__hint">
+      También podés recorrer las etapas con las flechas del teclado.
+    </p>
+
+    <p class="visually-hidden" role="status" aria-live="polite" data-workflow-status></p>
+  </div>
+</section>
+
+<script>
+  const workflow = document.querySelector<HTMLElement>('[data-workflow]');
+
+  if (workflow) {
+    const tabs = Array.from(workflow.querySelectorAll<HTMLButtonElement>('[data-workflow-tab]'));
+    const panels = Array.from(workflow.querySelectorAll<HTMLElement>('[data-workflow-panel]'));
+    const status = document.querySelector<HTMLElement>('[data-workflow-status]');
+
+    const activate = (id: string, focus = false) => {
+      const index = tabs.findIndex((tab) => tab.dataset.workflowTab === id);
+      if (index < 0) return;
+
+      tabs.forEach((tab, tabIndex) => {
+        const selected = tabIndex === index;
+        tab.setAttribute('aria-selected', String(selected));
+        tab.tabIndex = selected ? 0 : -1;
+      });
+
+      panels.forEach((panel) => {
+        panel.hidden = panel.dataset.workflowPanel !== id;
+      });
+
+      const activeTab = tabs[index];
+      if (focus) activeTab?.focus();
+
+      if (status && activeTab) {
+        const title = activeTab.querySelector<HTMLElement>('.workflow__stage-title')?.textContent?.trim();
+        status.textContent = `Etapa ${index + 1} de ${tabs.length}${title ? `: ${title}` : ''}.`;
+      }
+    };
+
+    tabs.forEach((tab, index) => {
+      tab.addEventListener('click', () => {
+        const id = tab.dataset.workflowTab;
+        if (id) activate(id);
+      });
+
+      tab.addEventListener('keydown', (event) => {
+        let nextIndex = index;
+
+        if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+          nextIndex = (index + 1) % tabs.length;
+        } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+          nextIndex = (index - 1 + tabs.length) % tabs.length;
+        } else if (event.key === 'Home') {
+          nextIndex = 0;
+        } else if (event.key === 'End') {
+          nextIndex = tabs.length - 1;
+        } else {
+          return;
+        }
+
+        event.preventDefault();
+        const nextTab = tabs[nextIndex];
+        if (nextTab?.dataset.workflowTab) activate(nextTab.dataset.workflowTab, true);
+      });
+    });
+
+    const firstTab = tabs[0];
+    if (firstTab?.dataset.workflowTab) activate(firstTab.dataset.workflowTab);
+  }
+</script>
+
+<style>
+  .workflow__board {
+    display: grid;
+    grid-template-columns: minmax(240px, 300px) minmax(0, 1fr);
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    box-shadow: 0 18px 40px rgba(116, 85, 47, 0.08);
+  }
+
+  .workflow__timeline {
+    display: grid;
+    align-content: start;
+    gap: 2px;
+    padding: 12px;
+    background: var(--color-ink);
+  }
+
+  .workflow__stage {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 12px;
+    align-items: start;
+    min-height: 64px;
+    padding: 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-sm);
+    color: rgba(255, 255, 255, 0.66);
+    text-align: left;
+    transition: background var(--transition), color var(--transition),
+      box-shadow var(--transition);
+  }
+
+  .workflow__stage:last-child {
+    border-bottom: none;
+  }
+
+  .workflow__stage:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: #fff;
+  }
+
+  .workflow__stage[aria-selected='true'] {
+    background: rgba(196, 167, 125, 0.16);
+    color: #fff;
+    box-shadow: inset 3px 0 0 var(--color-accent);
+  }
+
+  .workflow__stage-number {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--color-accent);
+  }
+
+  .workflow__stage-title {
+    font-family: var(--font-display);
+    font-size: 0.88rem;
+    font-weight: 600;
+    line-height: 1.35;
+  }
+
+  .workflow__detail {
+    padding: clamp(24px, 4vw, 42px);
+  }
+
+  .workflow__panel {
+    display: grid;
+    gap: 26px;
+  }
+
+  .workflow__panel-head {
+    display: grid;
+    gap: 8px;
+  }
+
+  .workflow__panel-step {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-accent-deep);
+  }
+
+  .workflow__panel h3 {
+    font-size: clamp(1.35rem, 3vw, 2rem);
+  }
+
+  .workflow__panel-head p {
+    max-width: 62ch;
+    color: var(--color-text-muted);
+    font-size: 0.96rem;
+    line-height: 1.7;
+  }
+
+  .workflow__panel-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .workflow__block {
+    padding: 16px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-bg-alt);
+  }
+
+  .workflow__block h4 {
+    margin-bottom: 10px;
+    font-family: var(--font-display);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .workflow__block ul {
+    display: grid;
+    gap: 8px;
+  }
+
+  .workflow__block li {
+    position: relative;
+    padding-left: 14px;
+    color: var(--color-text-muted);
+    font-size: 0.86rem;
+    line-height: 1.55;
+  }
+
+  .workflow__block li::before {
+    content: '';
+    position: absolute;
+    top: 0.55em;
+    left: 0;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--color-accent-deep);
+  }
+
+  .workflow__block .workflow__tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .workflow__tools li {
+    padding: 4px 8px;
+    border: 1px solid var(--color-border);
+    border-radius: 100px;
+    background: var(--color-surface);
+    font-family: var(--font-display);
+    font-size: 0.72rem;
+    color: var(--color-accent-deep);
+  }
+
+  .workflow__tools li::before {
+    display: none;
+  }
+
+  .workflow__hint {
+    margin-top: 14px;
+    color: var(--color-text-muted);
+    font-size: 0.78rem;
+    text-align: center;
+  }
+
+  @media (max-width: 900px) {
+    .workflow__board {
+      grid-template-columns: 1fr;
+    }
+
+    .workflow__timeline {
+      display: flex;
+      gap: 4px;
+      overflow-x: auto;
+      padding: 8px;
+      scrollbar-width: thin;
+    }
+
+    .workflow__stage {
+      flex: 0 0 220px;
+      min-height: 58px;
+      border-right: 1px solid rgba(255, 255, 255, 0.1);
+      border-bottom: none;
+    }
+
+    .workflow__stage:last-child {
+      border-right: none;
+    }
+
+    .workflow__stage[aria-selected='true'] {
+      box-shadow: inset 0 3px 0 var(--color-accent);
+    }
+  }
+
+  @media (max-width: 700px) {
+    .workflow__panel-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -14,7 +14,7 @@ El portfolio anterior era un sitio en HTML, CSS y JavaScript con:
 - Sin estados asíncronos ni consumo de APIs.
 - Sin una capa de datos que permitiera mantener el contenido.
 
-La consigna pedía migrar a AstroJS, incorporar al menos tres componentes interactivos, consumir una API externa con todos sus estados, resolver responsive y accesibilidad, documentar el proceso y construir un historial de commits progresivos.
+La consigna pedía migrar a AstroJS, incorporar al menos tres componentes propios relevantes, consumir una API externa con todos sus estados, resolver responsive y accesibilidad, documentar el proceso y construir un historial de commits progresivos.
 
 ### Qué se conservó
 
@@ -33,32 +33,55 @@ La consigna pedía migrar a AstroJS, incorporar al menos tres componentes intera
 
 ---
 
-## 2. Decisiones de arquitectura
+## 2. Correcciones de esta iteración
+
+La primera versión resolvía la presentación con tres bloques separados (Perfil, Enfoque y Trayectoria) y un selector global de “Mirada”. Esa estructura no comunicaba con claridad el foco profesional real ni hacía evidente dónde estaba la API.
+
+En esta iteración se corrigió:
+
+1. **Presentación unificada**: Hero + una sola sección “Sobre mí”. El foco es **UX/UI + Digital PM**, con la base técnica como diferencial.
+2. **Tres componentes propios con lógica real**:
+   - `ProjectExplorer`: matriz de proyectos con switch de rol, filtros, búsqueda, vistas y estado vacío.
+   - `WorkflowSimulator`: tablero/timeline interactivo de cinco etapas de PM y UX.
+   - `LiveApiDashboard`: panel en vivo conectado a la API pública de GitHub.
+3. **API visible**: badge de conexión, endpoint en pantalla, tarjetas dinámicas y controles para probar carga, vacío, error y respaldo.
+4. **Documentación actualizada**: README y PROCESO explican los tres componentes y la ubicación visual y técnica de la API.
+
+---
+
+## 3. Decisiones de arquitectura
 
 | Decisión | Alternativa descartada | Por qué se eligió |
 | --- | --- | --- |
 | AstroJS con `output: 'static'` | Next.js, React SPA | El portfolio es contenido con interacciones puntuales. Astro envía menos JS y genera HTML accesible desde el primer render. |
-| Datos en módulos TypeScript | Contenido hardcodeado en cada componente | Una sola fuente de verdad para proyectos, Mirada, navegación y respaldo de GitHub. |
+| Datos en módulos TypeScript | Contenido hardcodeado en cada componente | Una sola fuente de verdad para proyectos, miradas, proceso, navegación y respaldo de GitHub. |
 | Componentes `.astro` | Un único HTML gigante | Reutilización, estilos scoped y responsabilidades claras. |
-| Mirada con `data-mirada` + CSS | Estado global en un framework | Menos JavaScript, sin parpadeo, fallback sin JS y una única regla de visibilidad. |
+| Switch de proyectos con `data-mirada` + CSS | Estado global en un framework | Menos JavaScript, sin re-render y una única regla de visibilidad. |
 | `<dialog>` nativo | Modal custom con divs | Foco, Escape, backdrop y semántica resueltos por el navegador. |
+| Tabs nativos con ARIA | Acordeón o botones sin semántica | El proceso se lee como una secuencia de etapas y se navega con teclado. |
 | API de GitHub + respaldo local | Datos hardcodeados solamente | La sección muestra datos reales y, si falla la API, no rompe la experiencia. |
-| Script inline en `<head>` | Restaurar la Mirada después del primer paint | Evita el flash entre el modo por defecto y el guardado. |
+| Controles de prueba visibles | Solo probar desconectando la red | Permiten demostrar los estados en la defensa sin depender del entorno. |
 
-### Sobre la Mirada
+### Sobre la presentación
 
-La Mirada no es un tema visual: es una forma de lectura. Cambia los textos de presentación, el foco de cada proyecto y los metadatos que se resaltan.
+El Hero y “Sobre mí” ya no cambian según una mirada global. El texto personal es único y directo:
+
+- **Hero**: “Hola, soy Abru Mancuso. Diseño experiencias digitales (UX/UI) y lidero proyectos tecnológicos de punta a punta...”
+- **Sobre mí**: formación en UMAI, cruce entre Diseño UX/UI y Project Management, y la ventaja de hablar el mismo idioma que el equipo de desarrollo.
+
+El cambio de foco se movió al lugar donde aporta valor: **los proyectos**. Ahí el switch cambia qué se destaca de cada caso.
+
+### Sobre el switch de proyectos
 
 Se implementó con tres capas:
 
-1. **CSS global**: todos los `[data-mirada-panel]` están ocultos; solo se muestra el que coincide con `html[data-mirada="..."]`.
-2. **Script inline en el `<head>`**: lee `localStorage` y escribe `data-mirada` antes de que se pinte el contenido.
-3. **Selector**: actualiza el atributo, `aria-pressed`, el almacenamiento y emite un evento `mirada:change` para que otros componentes reaccionen.
+1. **CSS global**: todos los `[data-mirada-panel]` están ocultos; solo se muestra el que coincide con `html[data-mirada="producto"]` o `html[data-mirada="gestion"]`.
+2. **Switch en `ProjectExplorer`**: actualiza `data-mirada` en `<html>`, `aria-pressed`, la descripción visible y `localStorage`.
+3. **Resaltados**: los elementos con `data-mirada-highlight` reciben la clase `.is-highlighted` cuando coinciden con el modo activo.
 
 Ventajas:
 
-- Sin JavaScript, el HTML queda en modo Integral y el contenido principal sigue visible.
-- No hay que ocultar paneles con `hidden` desde el servidor.
+- Sin JavaScript, el HTML queda en modo “UX/UI & Producto” y el contenido principal sigue visible.
 - El cambio es inmediato y no requiere recargar.
 - La lógica de visibilidad vive en un solo lugar.
 
@@ -91,17 +114,18 @@ El respaldo local no reemplaza a la API: es una red de seguridad para que la sec
 
 ---
 
-## 3. Fases y commits
+## 4. Fases y commits
 
 | # | Commit | Qué contiene |
 | --- | --- | --- |
 | 1 | `chore: initialize AstroJS project and base structure` | `package.json`, configuración de Astro, `.gitignore`, estructura de carpetas y assets. |
 | 2 | `feat: add global layout, navigation and visual identity` | Layout, navegación, footer, tokens, tipografía y secciones base. |
 | 3 | `feat: migrate project data and build interactive project explorer` | Datos de los cuatro proyectos, tarjetas, filtros, búsqueda, vistas y diálogos. |
-| 4 | `feat: add reading mode selector with dynamic content` | Selector de Mirada, textos alternativos, persistencia y resaltados. |
-| 5 | `feat: add GitHub activity section with async states` | Fetch de la API, loading, éxito, vacío, error, rate limit y respaldo. |
+| 4 | `feat: add reading mode selector with dynamic content` | Primera versión del selector de Mirada y textos alternativos. |
+| 5 | `feat: add GitHub activity section with async states` | Primera versión del fetch de la API y estados asíncronos. |
 | 6 | `fix: polish responsive layout and accessibility` | Ajustes de contraste, foco, semántica, responsive y detalles de interacción. |
 | 7 | `docs: add project documentation and defense guide` | `README.md` y `PROCESO.md`. |
+| 8 | `refactor: unify presentation and rebuild interactive components` | Hero + Sobre mí unificados, switch de proyectos, WorkflowSimulator, LiveApiDashboard y documentación actualizada. |
 
 Para ver el historial:
 
@@ -111,47 +135,9 @@ git log --oneline
 
 ---
 
-## 4. Evidencia técnica
+## 5. Evidencia técnica de los tres componentes
 
-### 4.1 Selector de Mirada
-
-**Archivos:**
-
-- `src/components/ReadingMode.astro`
-- `src/layouts/BaseLayout.astro`
-- `src/styles/global.css`
-- `src/data/miradas.ts`
-- `src/data/site.ts`
-
-**Puntos exactos para mostrar:**
-
-| Archivo | Líneas | Qué se ve |
-| --- | --- | --- |
-| `src/components/ReadingMode.astro` | 15-27 | Botones de Mirada con `data-mirada-button` y `aria-pressed`. |
-| `src/components/ReadingMode.astro` | 55-88 | `applyMode`: cambia `data-mirada`, `aria-pressed`, resaltados, `localStorage` y emite `mirada:change`. |
-| `src/components/ReadingMode.astro` | 92-98 | Lectura del modo guardado y aplicación inicial. |
-| `src/layouts/BaseLayout.astro` | 45-54 | Script inline que restaura la Mirada antes del paint. |
-| `src/styles/global.css` | 322-330 | Regla CSS que muestra solo el panel activo. |
-| `src/data/miradas.ts` | 17-35 | Fuente de verdad de los tres modos. |
-| `src/data/site.ts` | 35-41 | Textos de Hero por Mirada. |
-| `src/data/site.ts` | 47-72 | Textos de Perfil por Mirada. |
-
-**Variables principales:**
-
-- `root`: `<html>`, donde se escribe `data-mirada`.
-- `buttons`: botones del selector.
-- `status`: región `aria-live` que anuncia el cambio.
-- `labels` / `descriptions`: textos accesibles por modo.
-- `validModes`: validación de valores guardados.
-- `highlights`: elementos con `data-mirada-highlight`.
-- `applyMode(mode, announce)`: función central.
-- `initialMode`: modo guardado o Integral.
-
-**Cómo explicarlo en 30 segundos:**
-
-> La Mirada se resuelve con un atributo en `<html>`. El CSS muestra solo el panel que coincide. El script inline lee `localStorage` antes del paint para evitar el flash. El selector actualiza el atributo, los estados `aria-pressed`, guarda la preferencia y emite un evento para que el explorador actualice su mensaje. Sin JavaScript, queda Integral y todo el contenido principal sigue visible.
-
-### 4.2 Explorador de proyectos
+### 5.1 ProjectExplorer
 
 **Archivos:**
 
@@ -159,57 +145,87 @@ git log --oneline
 - `src/components/ProjectCard.astro`
 - `src/components/ProjectDialog.astro`
 - `src/data/projects.ts`
+- `src/data/miradas.ts`
 
-**Puntos exactos para mostrar:**
+**Dónde mirar en el código:**
 
-| Archivo | Líneas | Qué se ve |
+| Qué | Archivo | Buscar |
 | --- | --- | --- |
-| `src/components/ProjectExplorer.astro` | 156-160 | Estado de filtros y vista. |
-| `src/components/ProjectExplorer.astro` | 179-203 | `applyFilters`: área, búsqueda, `hidden`, contador y estado vacío. |
-| `src/components/ProjectExplorer.astro` | 212-225 | Cambio entre Galería y Ficha técnica. |
-| `src/components/ProjectExplorer.astro` | 258-326 | Diálogos, carrusel, teclado, cierre y bloqueo de scroll. |
-| `src/components/ProjectCard.astro` | 77-86 | Paneles de Mirada y resaltados de roles/herramientas. |
-| `src/components/ProjectCard.astro` | 114-124 | Foco de Mirada en la ficha técnica. |
-| `src/components/ProjectDialog.astro` | 15-20 | `<dialog>` con `aria-labelledby`. |
-| `src/components/ProjectDialog.astro` | 58-85 | Carrusel y contador `aria-live`. |
-| `src/components/ProjectDialog.astro` | 97-100 | Contenido por Mirada dentro del caso. |
-| `src/data/projects.ts` | 89 | Array de proyectos tipado. |
+| Switch de mirada | `src/components/ProjectExplorer.astro` | `data-mode-switch`, `data-mirada-button` |
+| Estado y lógica del switch | `src/components/ProjectExplorer.astro` | `applyMode`, `isMirada`, `localStorage` |
+| Filtros y búsqueda | `src/components/ProjectExplorer.astro` | `applyFilters`, `data-search` |
+| Vista Galería/Ficha | `src/components/ProjectExplorer.astro` | `data-view`, `explorer[data-view='ficha']` |
+| Estado vacío | `src/components/ProjectExplorer.astro` | `data-empty`, `renderEmpty` |
+| Paneles por mirada | `src/components/ProjectCard.astro` | `data-mirada-panel` |
+| Resaltados | `src/components/ProjectCard.astro` y `ProjectDialog.astro` | `data-mirada-highlight` |
+| Datos de los proyectos | `src/data/projects.ts` | `miradas: { producto, gestion }` |
+| Opciones de mirada | `src/data/miradas.ts` | `miradaOptions` |
 
 **Variables principales:**
 
 - `state`: `{ area, query, view }`.
-- `cards`: tarjetas renderizadas.
-- `visibleCount`: cantidad visible para los mensajes.
-- `applyFilters()`: filtro combinado.
+- `root`: `<html>`, donde se escribe `data-mirada`.
+- `modeButtons`: botones del switch.
+- `highlights`: elementos con `data-mirada-highlight`.
+- `applyMode(mode, announce)`: función central del switch.
+- `applyFilters()`: filtro combinado por área y búsqueda.
 - `updateStatus(visible)`: mensaje accesible.
 - `showSlide(nextIndex)`: carrusel circular.
 - `dialogs`: todos los `<dialog>` del documento.
 
 **Cómo explicarlo en 30 segundos:**
 
-> El explorador no vuelve a renderizar las tarjetas: las tiene en el DOM y alterna `hidden` según área y búsqueda. El estado vive en un objeto chico. La vista Galería/Ficha se resuelve con `data-view` en el contenedor y CSS. Los casos completos se abren en `<dialog>` nativo, con foco atrapado, cierre por Escape, backdrop y pausa de video.
+> El explorador tiene las tarjetas en el DOM y alterna `hidden` según área y búsqueda. El switch de mirada escribe `data-mirada` en `<html>`; el CSS muestra el panel correspondiente y el JS resalta roles, herramientas, decisiones o proceso. La vista Galería/Ficha se resuelve con `data-view` y CSS. Los casos completos se abren en `<dialog>` nativo, con foco atrapado, cierre por Escape, backdrop y pausa de video.
 
-### 4.3 Actividad de GitHub
+### 5.2 WorkflowSimulator
 
 **Archivos:**
 
-- `src/components/GitHubActivity.astro`
+- `src/components/WorkflowSimulator.astro`
+- `src/data/workflow.ts`
+
+**Dónde mirar en el código:**
+
+| Qué | Archivo | Buscar |
+| --- | --- | --- |
+| Estructura del tablero | `src/components/WorkflowSimulator.astro` | `data-workflow`, `role="tablist"` |
+| Botones de etapa | `src/components/WorkflowSimulator.astro` | `data-workflow-tab` |
+| Paneles de etapa | `src/components/WorkflowSimulator.astro` | `data-workflow-panel` |
+| Lógica de activación | `src/components/WorkflowSimulator.astro` | `activate`, `aria-selected` |
+| Navegación por teclado | `src/components/WorkflowSimulator.astro` | `ArrowRight`, `ArrowLeft`, `Home`, `End` |
+| Contenido de las etapas | `src/data/workflow.ts` | `workflowStages` |
+
+**Variables principales:**
+
+- `tabs`: botones de etapa.
+- `panels`: paneles de contenido.
+- `activate(id, focus)`: muestra el panel y actualiza ARIA.
+- `status`: región `aria-live` que anuncia la etapa activa.
+
+**Cómo explicarlo en 30 segundos:**
+
+> El proceso se modela como tabs accesibles. Cada botón tiene `role="tab"`, `aria-selected` y `aria-controls`; cada panel tiene `role="tabpanel"`. Al hacer clic o usar las flechas, se ocultan los paneles que no corresponden y se muestra el activo. Los datos de entregables, herramientas y preguntas viven en `workflowStages`.
+
+### 5.3 LiveApiDashboard
+
+**Archivos:**
+
+- `src/components/LiveApiDashboard.astro`
 - `src/data/github.ts`
 
-**Puntos exactos para mostrar:**
+**Dónde mirar en el código:**
 
-| Archivo | Líneas | Qué se ve |
+| Qué | Archivo | Buscar |
 | --- | --- | --- |
-| `src/components/GitHubActivity.astro` | 143-151 | Estado local: repos, lenguaje, búsqueda, fuente, request y controller. |
-| `src/components/GitHubActivity.astro` | 153-169 | `setView`: alterna loading, éxito, vacío y error. |
-| `src/components/GitHubActivity.astro` | 309-347 | `renderFiltered`: búsqueda, lenguaje, estado vacío y status. |
-| `src/components/GitHubActivity.astro` | 349-357 | `useFallback`: carga los datos locales. |
-| `src/components/GitHubActivity.astro` | 359-437 | `loadRepos`: fetch, timeout, validación, errores y rate limit. |
-| `src/components/GitHubActivity.astro` | 374-378 | `fetch` con `Accept`, `no-store` y `AbortSignal`. |
-| `src/components/GitHubActivity.astro` | 382-403 | Detección de rate limit y hora de reintento. |
-| `src/components/GitHubActivity.astro` | 420-437 | Manejo de timeout y errores. |
-| `src/data/github.ts` | 21-23 | URL de la API. |
-| `src/data/github.ts` | 25 | Datos de respaldo. |
+| Sección visible | `src/components/LiveApiDashboard.astro` | `id="actividad"`, `data-live-api` |
+| Badge de conexión | `src/components/LiveApiDashboard.astro` | `data-badge`, `updateBadge` |
+| Controles de prueba | `src/components/LiveApiDashboard.astro` | `data-refresh`, `data-simulate-error`, `data-fallback` |
+| Estados | `src/components/LiveApiDashboard.astro` | `setView`, `data-loading`, `data-empty`, `data-error` |
+| Fetch | `src/components/LiveApiDashboard.astro` | `loadRepos`, `fetch`, `AbortController` |
+| Rate limit | `src/components/LiveApiDashboard.astro` | `x-ratelimit-remaining`, `x-ratelimit-reset` |
+| Render de tarjetas | `src/components/LiveApiDashboard.astro` | `createCard`, `textContent` |
+| URL y respaldo | `src/data/github.ts` | `GITHUB_API_URL`, `fallbackRepos` |
+| Render en la página | `src/pages/index.astro` | `<LiveApiDashboard />` |
 
 **Variables principales:**
 
@@ -222,53 +238,83 @@ git log --oneline
 - `setView(view)`: máquina de estados visual.
 - `renderFiltered()`: filtro y render.
 - `useFallback()`: respaldo local.
+- `simulateError()`: fuerza el estado de error para la defensa.
 - `loadRepos()`: fetch y manejo de errores.
 
 **Estados:**
 
 | Estado | Disparador | Salida |
 | --- | --- | --- |
-| Loading | Inicio o reintento | Skeleton + `aria-busy` |
-| Success | Array con repos | Tarjetas + filtros |
-| Empty | Array vacío o filtro sin resultados | Mensaje + acciones |
-| Error | Red, timeout, formato o status no OK | Mensaje + reintento + respaldo |
+| Loading | Inicio, refresco o reintento | Skeleton + `aria-busy` + badge amarillo |
+| Success | Array con repos | Tarjetas + filtros + badge verde |
+| Empty | Array vacío o filtro sin resultados | Mensaje + acciones + badge neutro |
+| Error | Red, timeout, formato o status no OK | Mensaje + reintento + respaldo + badge rojo |
 | Rate limit | 403/429 o `remaining: 0` | Mensaje con hora de reintento |
-| Fallback | Acción del usuario | Tarjetas locales marcadas |
+| Fallback | Acción del usuario | Tarjetas locales + badge naranja |
 
 **Cómo explicarlo en 30 segundos:**
 
-> La sección hace un `fetch` a la API pública de GitHub con timeout de 10 segundos y `AbortController`. Valida que la respuesta sea un array y que cada repo tenga nombre y URL. Si falla, muestra un estado de error con reintento y la opción de usar datos locales. Si GitHub limita las solicitudes, calcula la hora de reintento con `x-ratelimit-reset`. Los datos se insertan con `textContent`, no con `innerHTML`.
+> La sección hace un `fetch` a la API pública de GitHub con timeout de 10 segundos y `AbortController`. Valida que la respuesta sea un array y que cada repo tenga nombre y URL. Si falla, muestra un estado de error con reintento y la opción de usar datos locales. Si GitHub limita las solicitudes, calcula la hora de reintento con `x-ratelimit-reset`. Los datos se insertan con `textContent`, no con `innerHTML`. El badge y los controles de prueba hacen visible el estado en todo momento.
 
 ---
 
-## 5. Accesibilidad y responsive
+## 6. Ubicación exacta de la API
+
+### En la pantalla
+
+La API está en la sección **“Actividad & Repositorios en Tiempo Real (Live API)”**:
+
+- Es el **último bloque de contenido antes del footer de contacto**.
+- En la navegación se llega con el link **“Live API”** (`#actividad`).
+- El panel tiene un badge de conexión, el endpoint visible, una barra de pruebas, el buscador, los filtros por lenguaje y las tarjetas de repositorios.
+
+### En el código
+
+- `src/pages/index.astro`: `<LiveApiDashboard />` se renderiza después de `<WorkflowSimulator />` y antes del footer del layout.
+- `src/components/LiveApiDashboard.astro`: contiene la sección, el fetch, los estados y los controles.
+- `src/data/github.ts`: contiene `GITHUB_API_URL` y `fallbackRepos`.
+
+### Cómo probarla en la defensa
+
+1. Abrir `http://localhost:4321/#actividad`.
+2. Ver el badge `🟢 Conectado en vivo a GitHub API` y las tarjetas reales.
+3. Hacer clic en **Refrescar datos** para mostrar el estado de carga.
+4. Escribir `zzz` en el buscador para mostrar el estado vacío.
+5. Hacer clic en **Simular error** para mostrar el estado de error.
+6. Hacer clic en **Usar datos de respaldo** para mostrar el fallback local.
+7. Abrir DevTools > Network y mostrar la request a `api.github.com`.
+
+---
+
+## 7. Accesibilidad y responsive
 
 ### Evidencia
 
-| Criterio | Archivo | Líneas |
+| Criterio | Archivo | Buscar |
 | --- | --- | --- |
-| Skip link | `src/layouts/BaseLayout.astro` | 57 |
-| Foco visible | `src/styles/global.css` | 120-124 |
-| Movimiento reducido | `src/styles/global.css` | 162-174 |
-| Scroll con offset por nav + Mirada | `src/styles/global.css` | 59 |
-| Menú mobile con `aria-expanded` / `aria-controls` | `src/components/Nav.astro` | 14-15 |
-| Cierre con Escape y retorno de foco | `src/components/Nav.astro` | 59-62 |
-| Sección activa con `aria-current` | `src/components/Nav.astro` | 100-102 |
-| Resultados con `role="status"` | `src/components/ProjectExplorer.astro` | 97 |
-| Filtros con `aria-pressed` | `src/components/ProjectExplorer.astro` | 61, 199 |
-| Diálogo nativo con `aria-labelledby` | `src/components/ProjectDialog.astro` | 15-20 |
-| Estado de API con `aria-live` | `src/components/GitHubActivity.astro` | 35 |
-| Filtros de lenguaje con `aria-pressed` | `src/components/GitHubActivity.astro` | 268-276 |
-| `aria-busy` durante carga | `src/components/GitHubActivity.astro` | 15, 155 |
-| Video con nota de accesibilidad | `src/components/ProjectDialog.astro` | 51-53 |
+| Skip link | `src/layouts/BaseLayout.astro` | `skip-link` |
+| Foco visible | `src/styles/global.css` | `:focus-visible` |
+| Movimiento reducido | `src/styles/global.css` | `prefers-reduced-motion` |
+| Menú mobile | `src/components/Nav.astro` | `aria-expanded`, `aria-controls` |
+| Cierre con Escape y retorno de foco | `src/components/Nav.astro` | `Escape`, `toggle.focus()` |
+| Sección activa | `src/components/Nav.astro` | `aria-current` |
+| Switch de proyectos | `src/components/ProjectExplorer.astro` | `aria-pressed`, `data-mirada-button` |
+| Resultados del explorador | `src/components/ProjectExplorer.astro` | `role="status"`, `aria-live` |
+| Tabs del proceso | `src/components/WorkflowSimulator.astro` | `role="tablist"`, `role="tab"`, `aria-selected` |
+| Estado de API | `src/components/LiveApiDashboard.astro` | `role="status"`, `aria-live` |
+| Badge de API | `src/components/LiveApiDashboard.astro` | `data-badge` |
+| `aria-busy` durante carga | `src/components/LiveApiDashboard.astro` | `aria-busy` |
+| Diálogo nativo | `src/components/ProjectDialog.astro` | `<dialog>`, `aria-labelledby` |
+| Video con nota de accesibilidad | `src/components/ProjectDialog.astro` | “sin subtítulos ni audiodescripción” |
 
 ### Decisiones
 
 - La jerarquía de encabezados se mantiene: un `h1`, `h2` por sección, `h3`/`h4` dentro.
 - Las tarjetas usan `aria-label` con el título del proyecto para que la ficha técnica también tenga nombre accesible.
-- Los paneles ocultos por Mirada usan `display: none`, por lo que no se anuncian.
-- Los botones de filtro y Mirada usan `aria-pressed`, no `aria-selected`.
-- Los mensajes de resultados usan `aria-live="polite"`, no `alert`.
+- Los paneles ocultos por mirada usan `display: none`, por lo que no se anuncian.
+- Los botones de filtro, mirada y lenguaje usan `aria-pressed`, no `aria-selected`.
+- Las tabs del proceso usan `aria-selected` porque cambian el panel visible.
+- Los mensajes de resultados y estado usan `aria-live="polite"`, no `alert`.
 - El modal usa `<dialog>` nativo; no se reimplementa el focus trap.
 - Las animaciones se desactivan con `prefers-reduced-motion`.
 - Los controles principales tienen al menos 44 px de alto.
@@ -276,10 +322,11 @@ git log --oneline
 
 ### Breakpoints
 
-- `900px`: menú mobile, Hero a una columna, grillas de GitHub a dos columnas.
+- `900px`: menú mobile, Hero a una columna, timeline del proceso horizontal, Live API a dos columnas.
 - `860px`: diálogo a una columna.
-- `820px`: perfil y trayectoria a una columna.
-- `640px`: GitHub a una columna.
+- `820px`: Sobre mí a una columna.
+- `700px`: grillas internas del proceso a una columna.
+- `640px`: Live API a una columna.
 - `560px`: Hero sin altura forzada, acciones a ancho completo, diálogo a pantalla completa.
 
 ### Limitaciones
@@ -291,15 +338,22 @@ git log --oneline
 
 ---
 
-## 6. Pruebas realizadas
+## 8. Pruebas realizadas
 
-### Build
+### Servidor de desarrollo
 
 ```bash
-npm run build
+npm run dev
 ```
 
-Resultado: build estática exitosa, una página generada en `dist/`.
+Resultado observado:
+
+- Astro inicia correctamente en `http://localhost:4321/`.
+- La página responde `HTTP 200`.
+- El HTML generado incluye `#sobre-mi`, `#proyectos`, `#proceso` y `#actividad`.
+- El HTML incluye el switch `data-mirada-button` con los dos estados.
+- El HTML incluye `data-workflow` y `data-live-api`.
+- No quedan referencias a `ReadingMode`, `GitHubActivity`, `Focus` ni `Trajectory`.
 
 ### API
 
@@ -317,10 +371,11 @@ Resultado observado:
 
 ### Verificaciones manuales
 
-- El HTML generado no contiene atributos `hidden` en los paneles de Mirada.
-- Los paneles se muestran según `data-mirada`.
-- El build incluye la sección `#actividad`.
 - El explorador conserva los cuatro proyectos.
+- El switch cambia el panel visible y los resaltados.
+- El estado vacío aparece con una búsqueda sin resultados.
+- El proceso muestra una etapa por vez y responde a las flechas del teclado.
+- La API muestra badge, endpoint, tarjetas y controles de prueba.
 - Los diálogos tienen `aria-labelledby` y cierre accesible.
 - El README y este documento existen y están enlazados.
 
@@ -333,67 +388,48 @@ Resultado observado:
 
 ---
 
-## 7. Guía Rápida para Defensa en Vivo
+## 9. Guía rápida para defensa en vivo
 
 ### Recorrido sugerido de 5 minutos
 
-1. **Mirada (1 minuto)**
-   - Abrir la página.
-   - Hacer click en **Diseño & UX**.
-   - Mostrar cómo cambian Hero y Perfil.
-   - Abrir DevTools y ver `data-mirada="ux"` en `<html>`.
-   - Mostrar `localStorage` con `portfolio-mirada`.
-   - Mostrar la regla CSS en `src/styles/global.css:322-330`.
+1. **Hero + Sobre mí (1 minuto)**
+   - Abrir `http://localhost:4321/`.
+   - Mostrar la bajada del Hero y la sección única “Sobre mí”.
+   - Explicar el foco UX/UI + Digital PM y la base técnica.
 
 2. **Proyectos (2 minutos)**
+   - Ir a `#proyectos`.
+   - Cambiar el switch entre **Mirada UX/UI & Producto** y **Mirada Gestión & Arquitectura Técnica**.
+   - Mostrar cómo cambia el foco de cada tarjeta y los resaltados.
    - Filtrar por **3D**.
    - Buscar `After Effects`.
    - Cambiar a **Ficha técnica**.
-   - Abrir un caso completo.
-   - Pasar imágenes con las flechas.
-   - Cerrar con Escape.
-   - Mostrar `src/components/ProjectExplorer.astro:179-203` y `:258-326`.
+   - Abrir un caso completo, pasar imágenes con las flechas y cerrar con Escape.
+   - Mostrar `applyMode` y `applyFilters` en `ProjectExplorer.astro`.
 
-3. **API (1 minuto)**
-   - Abrir la pestaña Network y recargar.
-   - Mostrar la request a `api.github.com`.
-   - Explicar los estados con `src/components/GitHubActivity.astro:153-169` y `:359-437`.
-   - Si se quiere demostrar el error: bloquear la request o desconectar la red, recargar y mostrar el estado de error + respaldo.
+3. **Proceso (1 minuto)**
+   - Ir a `#proceso`.
+   - Recorrer las cinco etapas con clic y con flechas.
+   - Mostrar entregables, herramientas y preguntas.
+   - Mostrar `workflowStages` en `src/data/workflow.ts`.
 
-4. **Accesibilidad (1 minuto)**
+4. **Live API (1 minuto)**
+   - Ir a `#actividad`.
+   - Mostrar el badge `🟢 Conectado en vivo a GitHub API` y las tarjetas reales.
+   - Abrir la pestaña Network y mostrar la request a `api.github.com`.
+   - Hacer clic en **Refrescar datos** para mostrar loading.
+   - Escribir `zzz` para mostrar empty.
+   - Hacer clic en **Simular error** y luego en **Usar datos de respaldo**.
+   - Mostrar `loadRepos`, `setView` y `useFallback` en `LiveApiDashboard.astro`.
+
+5. **Accesibilidad (1 minuto)**
    - Tabulador desde el inicio: skip link.
    - Mostrar foco visible.
-   - Mostrar `aria-pressed` en filtros.
-   - Mostrar `aria-live` en resultados.
+   - Mostrar `aria-pressed` en el switch y filtros.
+   - Mostrar `aria-selected` en las tabs del proceso.
+   - Mostrar `aria-live` en resultados y estados.
    - Abrir un diálogo y mostrar que el foco queda adentro.
    - Cerrar con Escape y ver que el foco vuelve.
-
-### Tabla de archivos y líneas
-
-| Tema | Archivo | Líneas |
-| --- | --- | --- |
-| Selector de Mirada (UI) | `src/components/ReadingMode.astro` | 15-27 |
-| Selector de Mirada (lógica) | `src/components/ReadingMode.astro` | 55-98 |
-| Restauración antes del paint | `src/layouts/BaseLayout.astro` | 45-54 |
-| Visibilidad por CSS | `src/styles/global.css` | 322-330 |
-| Datos de Mirada | `src/data/miradas.ts` | 17-35 |
-| Textos por Mirada | `src/data/site.ts` | 35-72 |
-| Filtros y búsqueda | `src/components/ProjectExplorer.astro` | 156-203 |
-| Vista Galería/Ficha | `src/components/ProjectExplorer.astro` | 212-225 |
-| Diálogo y carrusel | `src/components/ProjectExplorer.astro` | 258-326 |
-| Tarjeta y paneles | `src/components/ProjectCard.astro` | 77-86, 114-124 |
-| Diálogo de caso | `src/components/ProjectDialog.astro` | 15-20, 58-85, 97-100 |
-| Datos de proyectos | `src/data/projects.ts` | 89 |
-| Estados de API | `src/components/GitHubActivity.astro` | 143-169 |
-| Filtros de API | `src/components/GitHubActivity.astro` | 309-347 |
-| Respaldo local | `src/components/GitHubActivity.astro` | 349-357 |
-| Fetch y errores | `src/components/GitHubActivity.astro` | 359-437 |
-| URL y respaldo | `src/data/github.ts` | 21-25 |
-| Skip link | `src/layouts/BaseLayout.astro` | 57 |
-| Foco visible | `src/styles/global.css` | 120-124 |
-| Menú mobile | `src/components/Nav.astro` | 14-15, 59-62 |
-| Resultados accesibles | `src/components/ProjectExplorer.astro` | 97 |
-| Estado de API accesible | `src/components/GitHubActivity.astro` | 35 |
 
 ### Preguntas probables
 
@@ -401,13 +437,17 @@ Resultado observado:
 
 > Porque el portfolio es principalmente contenido. Astro genera HTML estático y solo hidrata las interacciones necesarias. React o Next agregarían peso y complejidad de estado sin un beneficio claro. La arquitectura de componentes se mantiene, pero el resultado final es más liviano.
 
-**¿Por qué la Mirada usa CSS y no un estado de framework?**
+**¿Por qué el switch de proyectos usa CSS y no un estado de framework?**
 
 > Porque el cambio es una decisión de presentación: qué panel se muestra. Un atributo en `<html>` y una regla CSS resuelven el caso sin estado global, sin re-render y con fallback sin JavaScript. El script solo actualiza el atributo, el almacenamiento y los estados accesibles.
 
+**¿Dónde está la API y cómo se ve?**
+
+> En la sección “Actividad & Repositorios en Tiempo Real (Live API)”, al final de la página, antes del footer. Tiene un badge de conexión, el endpoint visible, tarjetas reales y una barra de pruebas para demostrar carga, vacío, error y respaldo.
+
 **¿Qué pasa si la API de GitHub falla?**
 
-> La sección muestra un estado de error con dos caminos: reintentar o usar datos de respaldo locales. Si el problema es rate limit, muestra la hora estimada de reintento. La página nunca queda rota ni con un spinner infinito.
+> La sección muestra un estado de error con dos caminos: reintentar o usar datos de respaldo locales. Si el problema es rate limit, muestra la hora estimada de reintento. La página nunca queda rota ni con un spinner infinito. Además, el botón “Simular error” permite demostrar ese estado en la defensa.
 
 **¿Cómo evitás XSS con datos de la API?**
 
@@ -417,22 +457,22 @@ Resultado observado:
 
 > Uso `<dialog>` nativo con `showModal()`. El navegador atrapa el foco, cierra con Escape y devuelve el foco al abridor. El diálogo tiene `aria-labelledby`, el botón de cierre tiene `aria-label`, el carrusel tiene contador `aria-live` y el video informa que no tiene subtítulos.
 
+**¿Cómo asegurás accesibilidad en el proceso?**
+
+> Uso el patrón de tabs: `role="tablist"`, `role="tab"`, `aria-selected`, `aria-controls`, `role="tabpanel"` y `tabindex`. Las flechas, Home y End cambian de etapa, y una región `aria-live` anuncia el cambio.
+
 **¿Qué mejorarías si tuvieras más tiempo?**
 
 > Agregar subtítulos y audiodescripción al video, sumar tests automatizados de filtros y estados de API, hacer una auditoría con lectores de pantalla, optimizar más las imágenes, publicar el deploy y reemplazar los datos de respaldo por una estrategia de caché o un proxy con token si el rate limit se vuelve un problema.
 
-**¿Qué parte te costó más?**
-
-> La convivencia entre la Mirada y los componentes: había que evitar el flash inicial, no duplicar la lógica de visibilidad y mantener el fallback sin JavaScript. La solución fue concentrar la visibilidad en CSS y la restauración temprana en un script inline mínimo.
-
 ---
 
-## 8. Limitaciones y próximos pasos
+## 10. Limitaciones y próximos pasos
 
 - Completar la URL del repositorio y del deploy en `README.md`.
 - Publicar en Vercel, Netlify o GitHub Pages.
 - Agregar subtítulos y audiodescripción al video de Billie Eilish.
-- Sumar tests de filtros, estados de API y carrusel.
+- Sumar tests de filtros, estados de API y tabs del proceso.
 - Probar con VoiceOver/NVDA y en dispositivos reales.
 - Optimizar imágenes de proyectos a WebP/AVIF con `srcset`.
 - Evaluar un proxy con token para la API si el rate limit afecta la experiencia.
@@ -440,15 +480,17 @@ Resultado observado:
 
 ---
 
-## 9. Checklist de cierre
+## 11. Checklist de cierre
 
 - [x] Migración a AstroJS.
 - [x] Cuatro proyectos con datos tipados.
-- [x] Selector de Mirada con persistencia y fallback.
+- [x] Hero + Sobre mí unificados.
+- [x] Switch de mirada en proyectos con persistencia.
 - [x] Explorador con filtros, búsqueda, vistas y estado vacío.
+- [x] WorkflowSimulator con cinco etapas y navegación por teclado.
+- [x] LiveApiDashboard con badge, endpoint, estados y controles de prueba.
 - [x] Diálogos de caso completo con carrusel y video.
-- [x] API de GitHub con loading, éxito, vacío, error, rate limit y respaldo.
 - [x] Responsive y accesibilidad base.
-- [x] README y PROCESO.
+- [x] README y PROCESO actualizados.
 - [ ] Completar URLs de repositorio y deploy.
 - [ ] Publicar.

@@ -1,8 +1,8 @@
-# Portfolio multimedial — Abril Mancuso
+# Portfolio multimedial — Abru Mancuso
 
-Portfolio personal y académico construido con AstroJS para la materia **Programación Multimedial IV (2026)**. Reúne una selección de proyectos, un selector de lectura llamado **Mirada**, un explorador interactivo de casos y una sección de actividad técnica que consume la API pública de GitHub.
+Portfolio personal y académico construido con AstroJS para la materia **Programación Multimedial IV (2026)**. El foco profesional es **Diseño UX/UI + Gestión de Proyectos Digitales (Digital PM)**, con una base técnica en programación multimedial, desarrollo web/mobile y producción audiovisual.
 
-El objetivo no es mostrar una lista de piezas, sino hacer visible **cómo se toman decisiones**: qué se investiga, qué se ordena, qué se construye y cómo se comunica.
+El sitio no presenta una lista de piezas: muestra **cómo se investiga, se estructura, se diseña y se gestiona un producto digital**. Para eso incluye tres componentes propios con lógica real: un explorador de proyectos con switch de rol, un simulador de proceso de trabajo y un panel en vivo conectado a una API externa.
 
 ---
 
@@ -10,7 +10,7 @@ El objetivo no es mostrar una lista de piezas, sino hacer visible **cómo se tom
 
 | Campo | Valor |
 | --- | --- |
-| Autora | Abril Mancuso |
+| Autora | Abru Mancuso (Abril Mancuso) |
 | Materia | Programación Multimedial IV |
 | Año | 2026 |
 | Tipo | Proyecto individual |
@@ -18,28 +18,28 @@ El objetivo no es mostrar una lista de piezas, sino hacer visible **cómo se tom
 | Deploy | `<COMPLETAR_URL_DEL_DEPLOY>` |
 | Stack principal | AstroJS 6.4.8, HTML, CSS, TypeScript/JavaScript |
 | API externa | GitHub REST API |
+| Componentes propios | `ProjectExplorer`, `WorkflowSimulator`, `LiveApiDashboard` |
 
-> Los placeholders de repositorio y deploy se completan al publicar. El proyecto ya está preparado para generar una build estática.
+> Los placeholders de repositorio y deploy se completan al publicar. El proyecto genera una build estática lista para cualquier hosting.
 
 ---
 
 ## 2. Descripción general
 
-El portfolio está organizado como una experiencia de una sola página con secciones ancladas:
+El portfolio es una experiencia de una sola página con seis bloques:
 
-1. **Inicio**: presentación, perfil híbrido y acceso rápido a proyectos.
-2. **Perfil**: retrato, formación y áreas de especialidad.
-3. **Enfoque**: preguntas que orientan la práctica y decisiones que distinguen la propuesta.
-4. **Trayectoria**: recorrido académico/profesional y herramientas.
-5. **Proyectos**: selección de cuatro casos destacados con filtros, búsqueda, dos vistas y diálogos de caso completo.
-6. **Actividad**: repositorios públicos de GitHub consumidos en tiempo real, con estados de carga, éxito, vacío, error y respaldo local.
-7. **Contacto**: email, Behance, LinkedIn y GitHub.
+1. **Hero** (`#inicio`): presentación directa y foco profesional.
+2. **Sobre mí** (`#sobre-mi`): una única sección personal, sin dividir la presentación en tres bloques.
+3. **Proyectos** (`#proyectos`): selección de cuatro casos con switch de mirada, filtros, búsqueda, dos vistas y diálogos.
+4. **Proceso** (`#proceso`): simulador interactivo de las cinco etapas de trabajo.
+5. **Live API** (`#actividad`): panel en vivo con repositorios reales de GitHub.
+6. **Contacto** (`#contacto`): email, Behance, LinkedIn y GitHub.
 
-La sección de proyectos aclara de forma visible que se trata de **una selección de algunos proyectos destacados**, no de la totalidad. El portfolio completo vive en Behance.
+La sección de proyectos aclara de forma visible que se trata de **una selección de algunos proyectos**, no de la totalidad. El portfolio completo de diseño e identidad vive en Behance.
 
 ### Proyectos incluidos
 
-- **Billie Eilish — motion graphics**: pieza audiovisual.
+- **Billie Eilish — motion graphics**: pieza audiovisual vertical.
 - **MacBook Pro 3D**: visualización y renders 3D.
 - **MaimoConecta**: proyecto de diseño estratégico y UX con 45 slides.
 - **Tini — Manual de Marca**: sistema de identidad visual de 9 páginas.
@@ -50,7 +50,7 @@ La sección de proyectos aclara de forma visible que se trata de **una selecció
 
 ### AstroJS 6.4.8
 
-Astro permite construir un sitio **estático, rápido y con muy poco JavaScript**, pero con arquitectura de componentes. Es el equilibrio adecuado para un portfolio: el contenido pesa más que la aplicación, y la interactividad se concentra solo donde aporta valor.
+Astro permite construir un sitio **estático, rápido y con muy poco JavaScript**, pero con arquitectura de componentes. Es el equilibrio adecuado para un portfolio: el contenido pesa más que la aplicación y la interactividad se concentra solo donde aporta valor.
 
 - `output: 'static'`: genera HTML, CSS y JS listos para cualquier hosting de archivos.
 - Componentes `.astro`: reutilización de secciones, tarjetas, diálogos y datos.
@@ -67,16 +67,16 @@ Astro permite construir un sitio **estático, rápido y con muy poco JavaScript*
 
 ### TypeScript / JavaScript
 
-- Tipos para `Project`, `MiradaId`, `GitHubRepo` y las opciones de Mirada.
+- Tipos para `Project`, `MiradaId`, `GitHubRepo` y `WorkflowStage`.
 - Datos centralizados y tipados en `src/data/`.
-- Scripts de cliente para filtros, diálogos, carrusel, Mirada y fetch de la API.
+- Scripts de cliente para el switch de proyectos, filtros, diálogos, carrusel, tabs del proceso y fetch de la API.
 
 ### APIs nativas del navegador
 
-- `<dialog>` + `showModal()` para los casos completos, con manejo de foco y cierre.
+- `<dialog>` + `showModal()` para los casos completos.
 - `<video>` para la pieza audiovisual.
 - `fetch` + `AbortController` para la API de GitHub.
-- `localStorage` para recordar la Mirada elegida.
+- `localStorage` para recordar la mirada elegida en proyectos.
 - `Intl.DateTimeFormat` para fechas legibles en español.
 
 ### Git y GitHub
@@ -97,27 +97,27 @@ Porque el problema no lo requiere. El portfolio es principalmente contenido con 
 
 ```
 Inicio (#inicio)
-  └── Perfil (#perfil)
-        └── Enfoque (#enfoque)
-              └── Trayectoria (#trayectoria)
-                    └── Proyectos (#proyectos)
-                          └── Actividad (#actividad)
-                                └── Contacto (#contacto)
+  └── Sobre mí (#sobre-mi)
+        └── Proyectos (#proyectos)
+              └── Proceso (#proceso)
+                    └── Live API (#actividad)
+                          └── Contacto (#contacto)
 ```
 
 La navegación es fija, indica la sección activa con `aria-current="location"` y en mobile se transforma en un menú desplegable.
 
-La barra **Mirada** queda debajo de la navegación y acompaña el scroll. No es decorativa: cambia el énfasis del contenido y resalta los metadatos que corresponden a cada enfoque.
+La presentación se resolvió en **Hero + una sola sección “Sobre mí”**. No hay secciones separadas de perfil, enfoque y trayectoria: el texto personal está unificado y el proceso de trabajo vive en un componente interactivo propio.
 
 ### Capas del proyecto
 
 | Capa | Archivos | Responsabilidad |
 | --- | --- | --- |
-| Datos | `src/data/site.ts`, `projects.ts`, `miradas.ts`, `github.ts` | Contenido editorial, proyectos, modos de lectura y respaldo de la API. |
-| Layout | `src/layouts/BaseLayout.astro` | Documento, fuentes, skip link, navegación, barra Mirada, footer y restauración temprana de la Mirada. |
-| Secciones | `src/components/Hero.astro`, `About.astro`, `Focus.astro`, `Trajectory.astro` | Presentación, perfil, enfoque y trayectoria. |
-| Proyectos | `ProjectExplorer.astro`, `ProjectCard.astro`, `ProjectDialog.astro` | Filtros, búsqueda, vistas, tarjetas, diálogos y carrusel. |
-| API | `GitHubActivity.astro` | Fetch, estados asíncronos, filtros y respaldo local. |
+| Datos | `src/data/site.ts`, `projects.ts`, `miradas.ts`, `workflow.ts`, `github.ts` | Contenido editorial, proyectos, modos de lectura, etapas de proceso y respaldo de la API. |
+| Layout | `src/layouts/BaseLayout.astro` | Documento, fuentes, skip link, navegación y footer. |
+| Presentación | `src/components/Hero.astro`, `About.astro` | Hero y sección única “Sobre mí”. |
+| Proyectos | `ProjectExplorer.astro`, `ProjectCard.astro`, `ProjectDialog.astro` | Switch de mirada, filtros, búsqueda, vistas, tarjetas, diálogos y carrusel. |
+| Proceso | `WorkflowSimulator.astro` | Tablero/timeline interactivo de las cinco etapas de trabajo. |
+| API | `LiveApiDashboard.astro` | Fetch, badge de conexión, estados asíncronos, filtros, pruebas y respaldo local. |
 | Sistema visual | `src/styles/global.css` + estilos scoped | Tokens, reset, utilidades, accesibilidad y patrones compartidos. |
 | Assets | `public/media/`, `public/perfil.jpg` | Imágenes, posters y video de los proyectos. |
 
@@ -130,82 +130,116 @@ La barra **Mirada** queda debajo de la navegación y acompaña el scroll. No es 
 
 ---
 
-## 5. Componentes interactivos implementados
+## 5. Los tres componentes propios relevantes
 
-### 5.1 Selector de Mirada
+### 5.1 `ProjectExplorer` — Matriz interactiva de proyectos + switch de rol
 
-**Archivo:** `src/components/ReadingMode.astro`
+**Archivos:**
 
-Permite leer el mismo portfolio desde tres enfoques:
+- `src/components/ProjectExplorer.astro`
+- `src/components/ProjectCard.astro`
+- `src/components/ProjectDialog.astro`
+- `src/data/projects.ts`
+- `src/data/miradas.ts`
 
-- **Integral**: lectura completa.
-- **Diseño & UX**: investigación, roles, decisiones de experiencia y criterios de uso.
-- **Arquitectura & Código**: pipeline técnico, herramientas, procesos y métricas.
+**Responsabilidad:** explorar la selección de proyectos y cambiar el foco de lectura según el rol profesional.
 
-Qué resuelve:
+**Interacción significativa obligatoria:** arriba de los proyectos hay un switch visible con dos estados:
 
-- Cambia los textos de Hero y Perfil.
-- Cambia el foco de cada proyecto en la galería y en la ficha técnica.
-- Resalta roles, herramientas, decisiones y procesos según el modo.
-- Persiste la elección en `localStorage`.
-- Restaura el modo antes del primer paint con un script inline en el `<head>`, evitando el parpadeo.
-- Usa `aria-pressed` en los botones y una región `aria-live` para anunciar el cambio.
-- Sin JavaScript, el HTML queda en modo Integral y todo el contenido principal sigue visible.
+- **Mirada UX/UI & Producto**: destaca el problema de usuario, los flujos, las decisiones de interfaz y los criterios de experiencia.
+- **Mirada Gestión & Arquitectura Técnica**: destaca el alcance, la organización, las prioridades, el stack, el proceso y la implementación.
 
-La visibilidad de los paneles se resuelve con CSS a partir de `data-mirada` en `<html>` y `data-mirada-panel` en cada bloque. El script solo cambia el atributo, los estados accesibles y el almacenamiento.
+El switch escribe `data-mirada` en `<html>`, actualiza `aria-pressed`, resalta metadatos con `data-mirada-highlight`, cambia la descripción visible y persiste la elección en `localStorage` con la clave `portfolio-mirada`. El cambio se resuelve con CSS para los paneles `data-mirada-panel` y con JavaScript para los resaltados.
 
-### 5.2 Explorador de proyectos
-
-**Archivo:** `src/components/ProjectExplorer.astro`
-
-Incluye:
+Además incluye:
 
 - Filtro por área (Todas, Diseño, Audiovisual, 3D, Gestión).
 - Búsqueda por título, herramienta, rol o texto del proyecto.
 - Vista **Galería visual** y vista **Ficha técnica**.
 - Contador de resultados con `role="status"` y `aria-live="polite"`.
-- Estado vacío con acción para restablecer filtros.
+- Estado vacío si una combinación de filtros no tiene resultados.
 - Botón para limpiar filtros.
 - Apertura de casos completos en diálogos nativos.
 - Cierre por botón, Escape o click en el backdrop.
 - Bloqueo del scroll del body mientras hay un diálogo abierto.
 - Pausa del video al cerrar el diálogo.
+- Carrusel de imágenes con flechas del teclado.
 
-### 5.3 Actividad de GitHub
+### 5.2 `WorkflowSimulator` — Tablero / timeline interactivo del proceso
 
-**Archivo:** `src/components/GitHubActivity.astro`
+**Archivos:**
 
-Consume la API pública de GitHub y muestra hasta 8 repositorios ordenados por actualización. Incluye:
+- `src/components/WorkflowSimulator.astro`
+- `src/data/workflow.ts`
 
+**Responsabilidad:** mostrar cómo se gestiona y diseña un proyecto digital, etapa por etapa.
+
+El componente tiene cinco etapas navegables:
+
+1. **Discovery & UX Research**
+2. **Definición & Priorización (PM)**
+3. **Wireframing & UI Design**
+4. **Handoff & Desarrollo**
+5. **Testing & Accesibilidad**
+
+Al seleccionar una etapa, el panel cambia y muestra:
+
+- **Entregables** que se generan.
+- **Herramientas** que se usan (Figma, Jira/Notion, Astro, React Native, WCAG, etc.).
+- **Preguntas** que se resuelven en esa fase.
+
+La interacción usa el patrón de **tabs accesibles**: `role="tablist"`, `role="tab"`, `aria-selected`, `aria-controls`, `role="tabpanel"`, `tabindex` y navegación con flechas, Home y End. El panel activo se anuncia con una región `aria-live`.
+
+### 5.3 `LiveApiDashboard` — Panel en vivo conectado a API externa
+
+**Archivos:**
+
+- `src/components/LiveApiDashboard.astro`
+- `src/data/github.ts`
+
+**Responsabilidad:** demostrar consumo de una API externa real, manejo de estados asíncronos y una estrategia de fallback.
+
+El panel consume la API pública de GitHub y muestra hasta 8 repositorios ordenados por actualización. Incluye:
+
+- Badge visible con el estado de conexión: `🟢 Conectado en vivo a GitHub API`, `🟡 Conectando...`, `⚪ Sin resultados` o `🔴 Error de conexión`.
+- Endpoint visible en pantalla para que se entienda qué API se está consumiendo.
+- Tarjetas dinámicas con nombre, descripción, lenguaje, última actualización, estrellas y link.
 - Estado de carga con skeleton y `aria-busy`.
-- Estado de éxito con tarjetas de repositorio.
+- Estado de éxito con tarjetas.
 - Estado vacío si el perfil no devuelve repositorios o si el filtro no encuentra resultados.
 - Estado de error con mensaje, botón de reintento y botón para usar datos de respaldo.
 - Detección de rate limit con hora estimada de reintento.
 - Timeout de 10 segundos con `AbortController`.
 - Búsqueda por nombre, descripción o lenguaje.
 - Filtros por lenguaje con `aria-pressed`.
-- Indicador de fuente: datos en vivo o datos de respaldo.
 - Enlaces a cada repositorio y al perfil de GitHub.
 - Mensaje `noscript` para quienes navegan sin JavaScript.
 
-### 5.4 Diálogos de caso completo
+**Controles visibles para la defensa:**
 
-**Archivo:** `src/components/ProjectDialog.astro`
-
-Cada proyecto tiene un `<dialog>` con:
-
-- Portada o video.
-- Carrusel de imágenes con controles anterior/siguiente y contador `aria-live`.
-- Navegación con flechas del teclado.
-- Contenido por Mirada.
-- Rol, problema, decisiones, proceso, herramientas, métricas y aprendizajes.
-- Enlace a Behance.
-- Nota de accesibilidad sobre el video sin subtítulos ni audiodescripción.
+- **Refrescar datos**: vuelve a disparar el estado de carga y consulta la API.
+- **Simular error**: fuerza el estado de error con el mismo tratamiento visual que un error real.
+- **Usar datos de respaldo**: carga los repositorios locales de `src/data/github.ts`.
+- **Buscar “zzz”**: permite ver el estado vacío sin modificar el código.
 
 ---
 
-## 6. API externa y estados
+## 6. API externa y ubicación exacta
+
+### Dónde está en la pantalla
+
+La API está en la sección **“Actividad & Repositorios en Tiempo Real (Live API)”**, al final de la página, **después de “Proceso de trabajo” y antes del footer de contacto**. En la navegación se accede con el link **“Live API”** (`#actividad`).
+
+### Dónde está en el código
+
+- Componente: `src/components/LiveApiDashboard.astro`
+- Renderizado: `src/pages/index.astro` (último componente antes del footer del layout)
+- Datos y respaldo: `src/data/github.ts`
+- Sección HTML: `id="actividad"` y `data-live-api`
+- Badge: `data-badge`
+- Controles de prueba: `data-refresh`, `data-simulate-error`, `data-fallback`
+- Estados: `data-loading`, `data-content`, `data-empty`, `data-error`
+- Fetch: bloque `loadRepos` dentro del `<script>` del componente
 
 ### Endpoint
 
@@ -253,7 +287,7 @@ GET https://api.github.com/users/abrumancuso/repos?sort=updated&per_page=8
 - Paleta cálida con fondos claros y superficies oscuras para el Hero y el Footer.
 - Tipografía **Instrument Sans** para display y **DM Sans** para texto.
 - Acento principal `#74552f` para garantizar contraste AA sobre fondos claros.
-- Layout de 1200 px con espaciado fluido y breakpoints en 900, 820, 640 y 560 px.
+- Layout de 1200 px con espaciado fluido y breakpoints en 900, 820, 700, 640 y 560 px.
 - Tarjetas, etiquetas y botones comparten radios, bordes y transiciones.
 
 ### Accesibilidad
@@ -262,7 +296,8 @@ GET https://api.github.com/users/abrumancuso/repos?sort=updated&per_page=8
 - Navegación con `aria-label`, `aria-expanded`, `aria-controls` y cierre con Escape.
 - Indicador de sección activa con `aria-current="location"`.
 - Foco visible con `:focus-visible` y contraste reforzado.
-- Botones de filtro y Mirada con `aria-pressed`.
+- Switch de proyectos, filtros y lenguajes con `aria-pressed`.
+- Tabs del proceso con `role="tablist"`, `aria-selected`, `aria-controls` y navegación por teclado.
 - Resultados y cambios de estado con `aria-live="polite"`.
 - Diálogos nativos con manejo de foco del navegador.
 - Etiquetas asociadas a inputs de búsqueda.
@@ -275,9 +310,10 @@ GET https://api.github.com/users/abrumancuso/repos?sort=updated&per_page=8
 ### Responsive
 
 - Hero a dos columnas en desktop y una columna en mobile.
-- Perfil con imagen sticky en desktop y estática en mobile.
-- Explorador de proyectos con toolbar flexible y grillas de 2/1 columnas.
-- Actividad de GitHub con grillas de 3/2/1 columnas.
+- Sobre mí con imagen sticky en desktop y estática en mobile.
+- Explorador de proyectos con toolbar flexible, switch de dos columnas y grillas de 2/1 columnas.
+- Proceso con timeline vertical en desktop y horizontal scrollable en mobile.
+- Live API con grillas de 3/2/1 columnas.
 - Diálogos a pantalla completa en mobile.
 - Menú de navegación desplegable por debajo de 900 px.
 
@@ -298,7 +334,7 @@ GET https://api.github.com/users/abrumancuso/repos?sort=updated&per_page=8
 2. **Definición de arquitectura** y sistema visual.
 3. **Migración de contenido y assets** a la estructura de Astro.
 4. **Construcción de componentes** y datos tipados.
-5. **Implementación de interactividad**: Mirada, explorador, diálogos y API.
+5. **Refactorización**: unificación de la presentación y creación de los tres componentes propios.
 6. **Ajustes de responsive y accesibilidad**.
 7. **Documentación y cierre**.
 
@@ -312,7 +348,7 @@ La IA se usó como **asistente de programación y documentación**, no como reem
 - Se consultó para contrastar alternativas de arquitectura, accesibilidad y manejo de estados asíncronos.
 - La selección de proyectos, los textos, la dirección visual, las métricas y las decisiones de contenido fueron definidas y revisadas por la autora.
 - Ningún dato de proyecto, métrica o experiencia fue inventado por la IA.
-- Cada cambio generado con asistencia fue leído, ajustado y validado con build antes de commitear.
+- Cada cambio generado con asistencia fue leído, ajustado y validado en el servidor de desarrollo antes de commitear.
 - La IA no reemplazó la comprensión del código: se usó para escribir más rápido lo que ya estaba decidido, y para detectar problemas que después se verificaron.
 
 ### Historial de commits
@@ -326,6 +362,7 @@ El repositorio tiene commits progresivos que separan:
 5. Sección de actividad de GitHub con estados asíncronos.
 6. Ajustes de responsive y accesibilidad.
 7. Documentación y guía de defensa.
+8. Refactorización: presentación unificada, switch de proyectos, WorkflowSimulator y LiveApiDashboard.
 
 ---
 
@@ -343,22 +380,21 @@ portfolio/
 ├── src/
 │   ├── components/
 │   │   ├── About.astro
-│   │   ├── Focus.astro
 │   │   ├── Footer.astro
-│   │   ├── GitHubActivity.astro
 │   │   ├── Hero.astro
+│   │   ├── LiveApiDashboard.astro
 │   │   ├── Nav.astro
 │   │   ├── ProjectCard.astro
 │   │   ├── ProjectDialog.astro
 │   │   ├── ProjectExplorer.astro
-│   │   ├── ReadingMode.astro
 │   │   ├── SectionHeading.astro
-│   │   └── Trajectory.astro
+│   │   └── WorkflowSimulator.astro
 │   ├── data/
 │   │   ├── github.ts
 │   │   ├── miradas.ts
 │   │   ├── projects.ts
-│   │   └── site.ts
+│   │   ├── site.ts
+│   │   └── workflow.ts
 │   ├── layouts/
 │   │   └── BaseLayout.astro
 │   ├── pages/
@@ -433,7 +469,7 @@ Si se publica en GitHub Pages como project page, hay que configurar el `base` co
 
 ## 12. Créditos y contenido
 
-- Contenido, proyectos, imágenes y textos: **Abril Mancuso**.
+- Contenido, proyectos, imágenes y textos: **Abru Mancuso**.
 - Portfolio completo: [Behance](https://www.behance.net/abrilmancuso).
 - Perfil profesional: [LinkedIn](https://linkedin.com/in/abrilmancuso).
 - Código y actividad: [GitHub](https://github.com/abrumancuso).

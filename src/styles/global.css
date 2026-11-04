@@ -41,7 +41,6 @@
   --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   --container-width: 1200px;
   --nav-height: 72px;
-  --mode-bar-height: 52px;
 }
 
 /* --- Reset --- */
@@ -56,7 +55,7 @@
 html {
   scroll-behavior: smooth;
   font-size: 16px;
-  scroll-padding-top: calc(var(--nav-height) + var(--mode-bar-height) + 16px);
+  scroll-padding-top: calc(var(--nav-height) + 16px);
 }
 
 body {
@@ -318,14 +317,13 @@ p {
 
 /* --- Paneles de Mirada ---
    Solo se muestra el panel del modo activo. El atributo data-mirada se
-   escribe en <html> desde el script inline del layout y desde el selector. */
+   escribe en <html> desde el switch del ProjectExplorer. */
 [data-mirada-panel] {
   display: none;
 }
 
-html[data-mirada='integral'] [data-mirada-panel='integral'],
-html[data-mirada='ux'] [data-mirada-panel='ux'],
-html[data-mirada='codigo'] [data-mirada-panel='codigo'] {
+html[data-mirada='producto'] [data-mirada-panel='producto'],
+html[data-mirada='gestion'] [data-mirada-panel='gestion'] {
   display: block;
 }
 

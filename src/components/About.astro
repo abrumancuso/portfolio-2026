@@ -1,51 +1,45 @@
 ---
 import SectionHeading from './SectionHeading.astro';
-import { aboutMiradas, profile, site } from '../data/site';
-import { miradaOptions } from '../data/miradas';
+import { about, site } from '../data/site';
 ---
 
-<section class="about section" id="perfil" aria-labelledby="perfil-title">
+<section class="about section" id="sobre-mi" aria-labelledby="sobre-mi-title">
   <div class="about__inner">
     <figure class="about__media">
       <img
         src="/perfil.jpg"
-        alt="Retrato de Abril Mancuso"
+        alt="Retrato de Abru Mancuso"
         width="700"
         height="933"
         loading="eager"
         decoding="async"
       />
       <figcaption>
-        <span>Abril Mancuso</span>
+        <span>{site.name}</span>
         <span>{site.location}</span>
       </figcaption>
     </figure>
 
     <div class="about__content">
       <SectionHeading
-        eyebrow="Perfil"
-        title="Diseño, tecnología y producción en una misma práctica"
-        id="perfil-title"
+        eyebrow="Sobre mí"
+        title={about.lead}
+        id="sobre-mi-title"
       />
 
-      {miradaOptions.map((mirada) => (
-        <div class="about__variant" data-mirada-panel={mirada.id}>
-          <p class="about__lead">{aboutMiradas[mirada.id].lead}</p>
-          <div class="about__paragraphs">
-            {aboutMiradas[mirada.id].paragraphs.map((paragraph) => <p>{paragraph}</p>)}
-          </div>
-        </div>
-      ))}
+      <div class="about__paragraphs">
+        {about.paragraphs.map((paragraph) => <p set:html={paragraph} />)}
+      </div>
 
-      <ul class="about__tags" aria-label="Áreas de especialidad" data-mirada-highlight="ux">
-        {profile.tags.map((tag) => <li class="tag">{tag}</li>)}
+      <ul class="about__tags" aria-label="Áreas de especialidad">
+        {about.tags.map((tag) => <li class="tag">{tag}</li>)}
       </ul>
 
       <div class="about__links">
         <a class="btn btn--primary" href={site.behance} target="_blank" rel="noopener noreferrer">
           Ver más trabajos en Behance
         </a>
-        <a class="about__text-link" href="#trayectoria">Ver trayectoria y herramientas</a>
+        <a class="about__text-link" href="#proceso">Ver cómo trabajo</a>
       </div>
     </div>
   </div>
@@ -63,7 +57,7 @@ import { miradaOptions } from '../data/miradas';
 
   .about__media {
     position: sticky;
-    top: calc(var(--nav-height) + var(--mode-bar-height) + 24px);
+    top: calc(var(--nav-height) + 24px);
   }
 
   .about__media img {
@@ -96,17 +90,17 @@ import { miradaOptions } from '../data/miradas';
     display: none;
   }
 
-  .about__lead {
-    margin-bottom: 20px;
-    font-size: clamp(1.08rem, 2vw, 1.28rem);
-    line-height: 1.65;
-  }
-
   .about__paragraphs {
     display: grid;
-    gap: 14px;
+    gap: 16px;
     color: var(--color-text-muted);
-    line-height: 1.75;
+    font-size: 1.02rem;
+    line-height: 1.8;
+  }
+
+  .about__paragraphs :global(strong) {
+    color: var(--color-text);
+    font-weight: 600;
   }
 
   .about__tags {

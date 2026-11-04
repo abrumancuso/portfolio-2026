@@ -101,7 +101,7 @@ const imageCount = project.media.type === 'images' ? project.media.images.length
           ))}
         </section>
 
-        <section class="project-dialog__section" data-mirada-highlight="ux">
+        <section class="project-dialog__section" data-mirada-highlight="producto">
           <h3>Mi rol</h3>
           <p>{project.role}</p>
           <ul class="project-dialog__roles">
@@ -114,14 +114,14 @@ const imageCount = project.media.type === 'images' ? project.media.images.length
           <p>{project.problem}</p>
         </section>
 
-        <section class="project-dialog__section" data-mirada-highlight="ux">
+        <section class="project-dialog__section" data-mirada-highlight="producto">
           <h3>Decisiones de diseño</h3>
           <ul class="project-dialog__list">
             {project.decisions.map((decision) => <li>{decision}</li>)}
           </ul>
         </section>
 
-        <section class="project-dialog__section" data-mirada-highlight="codigo">
+        <section class="project-dialog__section" data-mirada-highlight="gestion">
           <h3>Proceso técnico</h3>
           <ol class="project-dialog__process">
             {project.process.map((step) => (
@@ -133,7 +133,7 @@ const imageCount = project.media.type === 'images' ? project.media.images.length
           </ol>
         </section>
 
-        <section class="project-dialog__section" data-mirada-highlight="codigo">
+        <section class="project-dialog__section" data-mirada-highlight="gestion">
           <h3>Herramientas</h3>
           <ul class="project-dialog__tools">
             {project.tools.map((tool) => <li>{tool}</li>)}

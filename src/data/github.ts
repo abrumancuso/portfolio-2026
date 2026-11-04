@@ -1,9 +1,9 @@
 /**
- * Configuración y datos de respaldo para el componente de actividad técnica.
+ * Configuración y datos de respaldo para el LiveApiDashboard.
  *
  * La API pública de GitHub no requiere token para este endpoint, pero tiene
  * un límite de 60 solicitudes por hora por IP. Si se alcanza el límite o falla
- * la red, el componente ofrece datos locales de respaldo para no romper la
+ * la red, el panel ofrece datos locales de respaldo para no romper la
  * experiencia.
  */
 

@@ -2,7 +2,6 @@
 import '../styles/global.css';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
-import ReadingMode from '../components/ReadingMode.astro';
 
 interface Props {
   title?: string;
@@ -10,15 +9,15 @@ interface Props {
 }
 
 const {
-  title = 'Abril Mancuso | Portfolio multimedial',
-  description = 'Portfolio de Abril Mancuso: diseño UI/UX, sistemas de diseño, desarrollo full-stack y mobile, producción audiovisual y gestión de proyectos digitales.',
+  title = 'Abru Mancuso | UX/UI & Digital PM',
+  description = 'Portfolio de Abru Mancuso: diseño UX/UI, gestión de proyectos digitales y base técnica multimedial. Casos, proceso de trabajo y actividad en vivo desde GitHub.',
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url);
 ---
 
 <!doctype html>
-<html lang="es" data-mirada="integral">
+<html lang="es" data-mirada="producto">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -39,25 +38,11 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url);
       href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Instrument+Sans:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-
-    <!-- Restaura la Mirada guardada antes de pintar el contenido.
-         Así se evita el parpadeo entre el modo por defecto y el elegido. -->
-    <script is:inline>
-      try {
-        const savedMode = localStorage.getItem('portfolio-mirada');
-        if (savedMode === 'integral' || savedMode === 'ux' || savedMode === 'codigo') {
-          document.documentElement.dataset.mirada = savedMode;
-        }
-      } catch (error) {
-        /* Sin localStorage, se usa la mirada integral por defecto. */
-      }
-    </script>
   </head>
   <body>
     <a class="skip-link" href="#contenido">Saltar al contenido principal</a>
     <Nav />
     <main class="site-main" id="contenido">
-      <ReadingMode />
       <slot />
     </main>
     <Footer />

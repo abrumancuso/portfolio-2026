@@ -1,20 +1,47 @@
 ---
 import SectionHeading from './SectionHeading.astro';
-import { GITHUB_USERNAME } from '../data/github';
+import { GITHUB_API_URL, GITHUB_USERNAME } from '../data/github';
 ---
 
-<section class="github section section--alt" id="actividad" aria-labelledby="actividad-title">
+<section class="live-api section" id="actividad" aria-labelledby="actividad-title">
   <div class="container">
     <SectionHeading
-      eyebrow="Actividad técnica"
-      title="Lo que estoy construyendo en GitHub"
-      description="Este bloque consume la API pública de GitHub en tiempo real. Si la API falla, alcanza el límite de solicitudes o no hay conexión, la interfaz lo informa y ofrece datos de respaldo locales."
+      eyebrow="Live API"
+      title="Actividad & Repositorios en Tiempo Real (Live API)"
+      description="Este panel consume la API pública de GitHub con fetch. Muestra datos reales y permite probar los estados de carga, éxito, vacío, error y respaldo local sin salir de la página."
       id="actividad-title"
     />
 
-    <div class="github__panel" data-github data-state="loading" aria-busy="true">
-      <div class="github__toolbar" data-toolbar hidden>
-        <div class="github__search">
+    <div class="live-api__panel" data-live-api data-state="loading" aria-busy="true">
+      <div class="live-api__statusbar">
+        <span class="live-api__badge" data-badge data-state="loading">
+          🟡 Conectando con GitHub API…
+        </span>
+        <code class="live-api__endpoint">GET {GITHUB_API_URL.replace('https://', '')}</code>
+      </div>
+
+      <div class="live-api__testbar" aria-label="Controles para probar los estados de la API">
+        <div>
+          <p class="live-api__testbar-title">Probar estados en la defensa</p>
+          <p class="live-api__testbar-hint">
+            Refrescá para ver la carga. Escribí “zzz” en el buscador para ver el estado vacío.
+          </p>
+        </div>
+        <div class="live-api__test-actions">
+          <button class="live-api__test-button" type="button" data-refresh>
+            Refrescar datos
+          </button>
+          <button class="live-api__test-button" type="button" data-simulate-error>
+            Simular error
+          </button>
+          <button class="live-api__test-button" type="button" data-fallback>
+            Usar datos de respaldo
+          </button>
+        </div>
+      </div>
+
+      <div class="live-api__toolbar" data-toolbar hidden>
+        <div class="live-api__search">
           <label for="repo-search">Buscar repositorio</label>
           <input
             id="repo-search"
@@ -22,47 +49,43 @@ import { GITHUB_USERNAME } from '../data/github';
             data-repo-search
             placeholder="Ej. portfolio, backend, ecommerce"
             autocomplete="off"
-            aria-controls="github-grid"
+            aria-controls="live-api-grid"
           />
         </div>
 
-        <div class="github__languages" role="group" aria-label="Filtrar por lenguaje" data-languages></div>
+        <div class="live-api__languages" role="group" aria-label="Filtrar por lenguaje" data-languages></div>
 
-        <button class="github__reset" type="button" data-reset>Limpiar filtros</button>
+        <button class="live-api__reset" type="button" data-reset>Limpiar filtros</button>
       </div>
 
-      <div class="github__meta">
-        <p class="github__status" role="status" aria-live="polite" data-status>
+      <div class="live-api__meta">
+        <p class="live-api__status" role="status" aria-live="polite" data-status>
           Cargando repositorios de GitHub…
         </p>
-
-        <div class="github__source" data-source hidden>
-          <span class="github__source-label" data-source-label></span>
-          <button class="github__source-button" type="button" data-retry-api>Actualizar</button>
-        </div>
+        <p class="live-api__updated" data-updated>Consultando la API…</p>
       </div>
 
-      <div class="github__loading" data-loading aria-hidden="true">
+      <div class="live-api__loading" data-loading aria-hidden="true">
         {[0, 1, 2].map(() => (
-          <div class="github__skeleton">
-            <span class="github__skeleton-line github__skeleton-line--title"></span>
-            <span class="github__skeleton-line"></span>
-            <span class="github__skeleton-line github__skeleton-line--short"></span>
-            <span class="github__skeleton-line github__skeleton-line--meta"></span>
+          <div class="live-api__skeleton">
+            <span class="live-api__skeleton-line live-api__skeleton-line--title"></span>
+            <span class="live-api__skeleton-line"></span>
+            <span class="live-api__skeleton-line live-api__skeleton-line--short"></span>
+            <span class="live-api__skeleton-line live-api__skeleton-line--meta"></span>
           </div>
         ))}
       </div>
 
-      <div class="github__content" data-content hidden>
-        <div class="github__grid" id="github-grid" data-grid></div>
+      <div class="live-api__content" data-content hidden>
+        <div class="live-api__grid" id="live-api-grid" data-grid></div>
       </div>
 
-      <div class="github__empty" data-empty hidden>
-        <p class="github__empty-title" data-empty-title>No hay repositorios para mostrar.</p>
-        <p class="github__empty-message" data-empty-message>
+      <div class="live-api__empty" data-empty hidden>
+        <p class="live-api__empty-title" data-empty-title>No hay repositorios para mostrar.</p>
+        <p class="live-api__empty-message" data-empty-message>
           Probá con otro filtro o volvé a intentar.
         </p>
-        <div class="github__actions">
+        <div class="live-api__actions">
           <button class="btn btn--primary" type="button" data-reset>Limpiar filtros</button>
           <button class="btn btn--ghost" type="button" data-empty-retry>Reintentar</button>
           <a
@@ -74,17 +97,17 @@ import { GITHUB_USERNAME } from '../data/github';
         </div>
       </div>
 
-      <div class="github__error" data-error hidden>
-        <p class="github__error-title" data-error-title>No pudimos cargar la actividad.</p>
-        <p class="github__error-message" data-error-message></p>
-        <div class="github__actions">
+      <div class="live-api__error" data-error hidden>
+        <p class="live-api__error-title" data-error-title>No pudimos cargar la actividad.</p>
+        <p class="live-api__error-message" data-error-message></p>
+        <div class="live-api__actions">
           <button class="btn btn--primary" type="button" data-retry>Reintentar</button>
           <button class="btn btn--ghost" type="button" data-fallback>Usar datos de respaldo</button>
         </div>
       </div>
     </div>
 
-    <div class="github__footer">
+    <div class="live-api__footer">
       <a
         class="btn btn--ghost"
         href={`https://github.com/${GITHUB_USERNAME}`}
@@ -96,11 +119,11 @@ import { GITHUB_USERNAME } from '../data/github';
 
     <noscript>
       <style is:inline>
-        [data-github] {
+        [data-live-api] {
           display: none;
         }
       </style>
-      <p class="github__noscript">
+      <p class="live-api__noscript">
         Activá JavaScript para ver la actividad en tiempo real.
         <a href={`https://github.com/${GITHUB_USERNAME}`} target="_blank" rel="noopener noreferrer"
           >Ver repositorios en GitHub</a
@@ -113,7 +136,7 @@ import { GITHUB_USERNAME } from '../data/github';
 <script>
   import { fallbackRepos, GITHUB_API_URL, type GitHubRepo } from '../data/github';
 
-  const panel = document.querySelector<HTMLElement>('[data-github]');
+  const panel = document.querySelector<HTMLElement>('[data-live-api]');
 
   if (panel) {
     const get = <T extends HTMLElement>(selector: string) => panel.querySelector<T>(selector);
@@ -122,8 +145,8 @@ import { GITHUB_USERNAME } from '../data/github';
     const search = get<HTMLInputElement>('[data-repo-search]');
     const languages = get<HTMLElement>('[data-languages]');
     const status = get<HTMLElement>('[data-status]');
-    const source = get<HTMLElement>('[data-source]');
-    const sourceLabel = get<HTMLElement>('[data-source-label]');
+    const updated = get<HTMLElement>('[data-updated]');
+    const badge = get<HTMLElement>('[data-badge]');
     const loading = get<HTMLElement>('[data-loading]');
     const content = get<HTMLElement>('[data-content]');
     const grid = get<HTMLElement>('[data-grid]');
@@ -136,8 +159,9 @@ import { GITHUB_USERNAME } from '../data/github';
     const errorTitle = get<HTMLElement>('[data-error-title]');
     const errorMessage = get<HTMLElement>('[data-error-message]');
     const retryButton = get<HTMLButtonElement>('[data-retry]');
-    const fallbackButton = get<HTMLButtonElement>('[data-fallback]');
-    const retryApiButton = get<HTMLButtonElement>('[data-retry-api]');
+    const refreshButton = get<HTMLButtonElement>('[data-refresh]');
+    const simulateErrorButton = get<HTMLButtonElement>('[data-simulate-error]');
+    const fallbackButtons = Array.from(panel.querySelectorAll<HTMLButtonElement>('[data-fallback]'));
     const resetButtons = Array.from(panel.querySelectorAll<HTMLButtonElement>('[data-reset]'));
 
     type ViewState = 'loading' | 'success' | 'empty' | 'error';
@@ -150,6 +174,22 @@ import { GITHUB_USERNAME } from '../data/github';
     let requestId = 0;
     let controller: AbortController | null = null;
 
+    const badgeMessages: Record<ViewState, string> = {
+      loading: '🟡 Conectando con GitHub API…',
+      success: '🟢 Conectado en vivo a GitHub API',
+      empty: '⚪ Conectado, sin resultados',
+      error: '🔴 Error de conexión con GitHub API',
+    };
+
+    const updateBadge = (view: ViewState) => {
+      if (!badge) return;
+      badge.dataset.state = view;
+      badge.textContent =
+        view === 'success' && sourceType === 'fallback'
+          ? '🟠 Datos de respaldo locales'
+          : badgeMessages[view];
+    };
+
     const setView = (view: ViewState) => {
       panel.dataset.state = view;
       panel.setAttribute('aria-busy', String(view === 'loading'));
@@ -157,20 +197,12 @@ import { GITHUB_USERNAME } from '../data/github';
       content.hidden = view !== 'success';
       empty.hidden = view !== 'empty';
       error.hidden = view !== 'error';
+      updateBadge(view);
     };
 
     const setSource = (type: Source) => {
       sourceType = type;
-      source.hidden = false;
-      source.dataset.source = type;
-
-      if (type === 'fallback') {
-        sourceLabel.textContent = 'Datos de respaldo locales';
-        retryApiButton.textContent = 'Reintentar API';
-      } else {
-        sourceLabel.textContent = 'Datos en vivo de GitHub';
-        retryApiButton.textContent = 'Actualizar';
-      }
+      if (panel.dataset.state === 'success') updateBadge('success');
     };
 
     const normalize = (value: string) =>
@@ -190,15 +222,22 @@ import { GITHUB_USERNAME } from '../data/github';
       }).format(date);
     };
 
+    const formatTime = () =>
+      new Intl.DateTimeFormat('es-AR', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+      }).format(new Date());
+
     const createCard = (repo: GitHubRepo) => {
       const card = document.createElement('article');
-      card.className = 'gh-card';
+      card.className = 'live-api-card';
 
       const header = document.createElement('div');
-      header.className = 'gh-card__header';
+      header.className = 'live-api-card__header';
 
       const title = document.createElement('h3');
-      title.className = 'gh-card__title';
+      title.className = 'live-api-card__title';
 
       const link = document.createElement('a');
       link.href = repo.html_url;
@@ -209,34 +248,34 @@ import { GITHUB_USERNAME } from '../data/github';
 
       if (repo.fork) {
         const fork = document.createElement('span');
-        fork.className = 'gh-card__fork';
+        fork.className = 'live-api-card__fork';
         fork.textContent = 'fork';
         title.append(fork);
       }
 
       const languageTag = document.createElement('span');
-      languageTag.className = 'gh-card__language';
+      languageTag.className = 'live-api-card__language';
       languageTag.textContent = repo.language ?? 'Sin lenguaje';
 
       header.append(title, languageTag);
 
       const description = document.createElement('p');
-      description.className = 'gh-card__description';
+      description.className = 'live-api-card__description';
       description.textContent = repo.description ?? 'Sin descripción.';
 
       const meta = document.createElement('div');
-      meta.className = 'gh-card__meta';
+      meta.className = 'live-api-card__meta';
 
       const stars = document.createElement('span');
       stars.textContent = `★ ${repo.stargazers_count ?? 0}`;
 
-      const updated = document.createElement('span');
-      updated.textContent = `Actualizado ${formatDate(repo.updated_at)}`;
+      const repoUpdated = document.createElement('span');
+      repoUpdated.textContent = `Actualizado ${formatDate(repo.updated_at)}`;
 
-      meta.append(stars, updated);
+      meta.append(stars, repoUpdated);
 
       const footer = document.createElement('a');
-      footer.className = 'gh-card__link';
+      footer.className = 'live-api-card__link';
       footer.href = repo.html_url;
       footer.target = '_blank';
       footer.rel = 'noopener noreferrer';
@@ -263,10 +302,10 @@ import { GITHUB_USERNAME } from '../data/github';
         ...options.map((option) => {
           const button = document.createElement('button');
           button.type = 'button';
-          button.className = 'gh-filter';
+          button.className = 'live-api-filter';
           button.dataset.language = option;
           button.setAttribute('aria-pressed', String(language === option));
-          button.setAttribute('aria-controls', 'github-grid');
+          button.setAttribute('aria-controls', 'live-api-grid');
           button.textContent = option === 'all' ? 'Todos' : option;
 
           button.addEventListener('click', () => {
@@ -301,6 +340,8 @@ import { GITHUB_USERNAME } from '../data/github';
       emptyTitle.textContent = title;
       emptyMessage.textContent = message;
       status.textContent = title;
+      updated.textContent =
+        sourceType === 'fallback' ? 'Datos locales · sin resultados' : 'API consultada · sin resultados';
 
       if (emptyReset) emptyReset.hidden = repos.length === 0;
       emptyRetry.hidden = repos.length > 0;
@@ -335,18 +376,23 @@ import { GITHUB_USERNAME } from '../data/github';
       toolbar.hidden = false;
       grid.replaceChildren(...filtered.map(createCard));
       updateFilterStatus(filtered.length);
+      updated.textContent = `Actualizado ${formatTime()} · ${
+        sourceType === 'fallback' ? 'datos de respaldo' : 'API en vivo'
+      }`;
     };
 
     const showError = (title: string, message: string) => {
       setView('error');
       toolbar.hidden = true;
-      source.hidden = true;
       errorTitle.textContent = title;
       errorMessage.textContent = message;
       status.textContent = title;
+      updated.textContent = 'Sin datos en vivo';
     };
 
     const useFallback = () => {
+      requestId += 1;
+      controller?.abort();
       repos = fallbackRepos;
       language = 'all';
       query = '';
@@ -354,6 +400,15 @@ import { GITHUB_USERNAME } from '../data/github';
       setSource('fallback');
       renderLanguages();
       renderFiltered();
+    };
+
+    const simulateError = () => {
+      requestId += 1;
+      controller?.abort();
+      showError(
+        'Error simulado para la defensa.',
+        'Este estado se activó manualmente desde el panel de pruebas. La interfaz muestra el mismo tratamiento que un error real: mensaje, reintento y opción de usar datos de respaldo.',
+      );
     };
 
     const loadRepos = async () => {
@@ -367,8 +422,8 @@ import { GITHUB_USERNAME } from '../data/github';
 
       setView('loading');
       toolbar.hidden = true;
-      source.hidden = true;
       status.textContent = 'Cargando repositorios de GitHub…';
+      updated.textContent = 'Consultando la API…';
 
       try {
         const response = await fetch(GITHUB_API_URL, {
@@ -456,19 +511,131 @@ import { GITHUB_USERNAME } from '../data/github';
 
     emptyRetry.addEventListener('click', loadRepos);
     retryButton.addEventListener('click', loadRepos);
-    retryApiButton.addEventListener('click', loadRepos);
-    fallbackButton.addEventListener('click', useFallback);
+    refreshButton.addEventListener('click', loadRepos);
+    simulateErrorButton.addEventListener('click', simulateError);
+    fallbackButtons.forEach((button) => button.addEventListener('click', useFallback));
 
     loadRepos();
   }
 </script>
 
 <style>
-  .github__panel {
+  .live-api__panel {
     margin-top: 32px;
   }
 
-  .github__toolbar {
+  .live-api__statusbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .live-api__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 38px;
+    padding: 8px 14px;
+    border: 1px solid var(--color-border);
+    border-radius: 100px;
+    background: var(--color-surface);
+    font-family: var(--font-display);
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-text);
+  }
+
+  .live-api__badge[data-state='success'] {
+    border-color: #8ab89a;
+    background: #eef8f1;
+    color: #245c36;
+  }
+
+  .live-api__badge[data-state='loading'] {
+    border-color: #e5c98d;
+    background: #fff8e8;
+    color: #6f5317;
+  }
+
+  .live-api__badge[data-state='empty'] {
+    border-color: var(--color-border);
+    background: var(--color-bg-alt);
+    color: var(--color-text-muted);
+  }
+
+  .live-api__badge[data-state='error'] {
+    border-color: #d8a39a;
+    background: #fff0ee;
+    color: #8a2f21;
+  }
+
+  .live-api__endpoint {
+    max-width: 100%;
+    padding: 6px 10px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: var(--color-bg-alt);
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    overflow-wrap: anywhere;
+  }
+
+  .live-api__testbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 16px;
+    padding: 16px;
+    border: 1px dashed var(--color-accent-deep);
+    border-radius: var(--radius-md);
+    background: #fffdf9;
+  }
+
+  .live-api__testbar-title {
+    margin-bottom: 4px;
+    font-family: var(--font-display);
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--color-text);
+  }
+
+  .live-api__testbar-hint {
+    color: var(--color-text-muted);
+    font-size: 0.76rem;
+    line-height: 1.5;
+  }
+
+  .live-api__test-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .live-api__test-button {
+    min-height: 38px;
+    padding: 7px 11px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface);
+    font-family: var(--font-display);
+    font-size: 0.74rem;
+    font-weight: 600;
+    color: var(--color-accent-deep);
+    transition: background var(--transition), border-color var(--transition);
+  }
+
+  .live-api__test-button:hover {
+    border-color: var(--color-accent-deep);
+    background: var(--color-bg-alt);
+  }
+
+  .live-api__toolbar {
     display: flex;
     flex-wrap: wrap;
     align-items: end;
@@ -479,14 +646,14 @@ import { GITHUB_USERNAME } from '../data/github';
     background: var(--color-surface);
   }
 
-  .github__search {
+  .live-api__search {
     display: flex;
     flex: 1 1 260px;
     flex-direction: column;
     gap: 6px;
   }
 
-  .github__search label {
+  .live-api__search label {
     font-family: var(--font-display);
     font-size: 0.7rem;
     font-weight: 600;
@@ -495,7 +662,7 @@ import { GITHUB_USERNAME } from '../data/github';
     color: var(--color-text-muted);
   }
 
-  .github__search input {
+  .live-api__search input {
     min-height: 44px;
     padding: 10px 16px;
     border: 1px solid var(--color-border);
@@ -505,13 +672,13 @@ import { GITHUB_USERNAME } from '../data/github';
     color: var(--color-ink);
   }
 
-  .github__languages {
+  .live-api__languages {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
   }
 
-  :global(.gh-filter) {
+  :global(.live-api-filter) {
     min-height: 36px;
     padding: 6px 12px;
     border: 1px solid var(--color-border);
@@ -524,18 +691,18 @@ import { GITHUB_USERNAME } from '../data/github';
     transition: background var(--transition), color var(--transition), border-color var(--transition);
   }
 
-  :global(.gh-filter:hover) {
+  :global(.live-api-filter:hover) {
     border-color: var(--color-accent);
     color: var(--color-accent-deep);
   }
 
-  :global(.gh-filter[aria-pressed='true']) {
+  :global(.live-api-filter[aria-pressed='true']) {
     border-color: var(--color-ink);
     background: var(--color-ink);
     color: #fff;
   }
 
-  .github__reset {
+  .live-api__reset {
     min-height: 44px;
     padding: 0 8px;
     font-family: var(--font-display);
@@ -546,67 +713,43 @@ import { GITHUB_USERNAME } from '../data/github';
     text-underline-offset: 3px;
   }
 
-  .github__meta {
+  .live-api__meta {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-    gap: 16px;
+    gap: 12px;
     margin: 18px 0;
   }
 
-  .github__status {
+  .live-api__status {
     margin: 0;
     font-size: 0.85rem;
     color: var(--color-text-muted);
   }
 
-  .github__source {
-    display: flex;
-    flex: 0 0 auto;
-    align-items: center;
-    gap: 10px;
-    font-size: 0.75rem;
-  }
-
-  .github__source-label {
-    padding: 5px 9px;
-    border-radius: 100px;
-    background: var(--color-bg);
-    font-size: 0.68rem;
-    font-weight: 600;
-    letter-spacing: 0.04em;
+  .live-api__updated {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
     color: var(--color-text-muted);
   }
 
-  .github__source[data-source='fallback'] .github__source-label {
-    background: #fff1e2;
-    color: #8a4b00;
-  }
-
-  .github__source-button {
-    font-family: var(--font-display);
-    font-size: 0.72rem;
-    font-weight: 600;
-    color: var(--color-accent-deep);
-    text-decoration: underline;
-    text-underline-offset: 3px;
-  }
-
-  .github__loading,
-  .github__grid {
+  .live-api__loading,
+  .live-api__grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 16px;
   }
 
-  .github__skeleton {
+  .live-api__skeleton {
     padding: 24px;
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
     background: var(--color-surface);
   }
 
-  .github__skeleton-line {
+  .live-api__skeleton-line {
     display: block;
     height: 12px;
     margin-bottom: 12px;
@@ -618,25 +761,25 @@ import { GITHUB_USERNAME } from '../data/github';
       var(--color-border) 75%
     );
     background-size: 200% 100%;
-    animation: github-shimmer 1.4s ease-in-out infinite;
+    animation: live-api-shimmer 1.4s ease-in-out infinite;
   }
 
-  .github__skeleton-line--title {
+  .live-api__skeleton-line--title {
     width: 60%;
     height: 18px;
   }
 
-  .github__skeleton-line--short {
+  .live-api__skeleton-line--short {
     width: 75%;
   }
 
-  .github__skeleton-line--meta {
+  .live-api__skeleton-line--meta {
     width: 45%;
     margin-top: 24px;
     margin-bottom: 0;
   }
 
-  :global(.gh-card) {
+  :global(.live-api-card) {
     display: flex;
     flex-direction: column;
     gap: 14px;
@@ -648,13 +791,13 @@ import { GITHUB_USERNAME } from '../data/github';
       box-shadow var(--transition);
   }
 
-  :global(.gh-card:hover) {
+  :global(.live-api-card:hover) {
     transform: translateY(-2px);
     border-color: var(--color-accent);
     box-shadow: 0 12px 28px rgba(37, 33, 30, 0.07);
   }
 
-  :global(.gh-card__header) {
+  :global(.live-api-card__header) {
     display: flex;
     flex-wrap: wrap;
     align-items: flex-start;
@@ -662,7 +805,7 @@ import { GITHUB_USERNAME } from '../data/github';
     gap: 12px;
   }
 
-  :global(.gh-card__title) {
+  :global(.live-api-card__title) {
     margin: 0;
     font-family: var(--font-display);
     font-size: 1.05rem;
@@ -670,16 +813,16 @@ import { GITHUB_USERNAME } from '../data/github';
     overflow-wrap: anywhere;
   }
 
-  :global(.gh-card__title a) {
+  :global(.live-api-card__title a) {
     color: var(--color-ink);
     text-decoration: none;
   }
 
-  :global(.gh-card__title a:hover) {
+  :global(.live-api-card__title a:hover) {
     color: var(--color-accent-deep);
   }
 
-  :global(.gh-card__fork) {
+  :global(.live-api-card__fork) {
     display: inline-block;
     margin-left: 8px;
     padding: 2px 6px;
@@ -692,7 +835,7 @@ import { GITHUB_USERNAME } from '../data/github';
     color: var(--color-text-muted);
   }
 
-  :global(.gh-card__language) {
+  :global(.live-api-card__language) {
     flex: 0 0 auto;
     padding: 4px 8px;
     border-radius: 100px;
@@ -702,7 +845,7 @@ import { GITHUB_USERNAME } from '../data/github';
     color: var(--color-text-muted);
   }
 
-  :global(.gh-card__description) {
+  :global(.live-api-card__description) {
     flex: 1;
     margin: 0;
     font-size: 0.9rem;
@@ -711,7 +854,7 @@ import { GITHUB_USERNAME } from '../data/github';
     overflow-wrap: anywhere;
   }
 
-  :global(.gh-card__meta) {
+  :global(.live-api-card__meta) {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
@@ -722,7 +865,7 @@ import { GITHUB_USERNAME } from '../data/github';
     color: var(--color-text-muted);
   }
 
-  :global(.gh-card__link) {
+  :global(.live-api-card__link) {
     font-family: var(--font-display);
     font-size: 0.75rem;
     font-weight: 600;
@@ -730,13 +873,13 @@ import { GITHUB_USERNAME } from '../data/github';
     text-decoration: none;
   }
 
-  :global(.gh-card__link:hover) {
+  :global(.live-api-card__link:hover) {
     text-decoration: underline;
     text-underline-offset: 3px;
   }
 
-  .github__empty,
-  .github__error {
+  .live-api__empty,
+  .live-api__error {
     padding: 32px;
     border: 1px dashed var(--color-border);
     border-radius: var(--radius-lg);
@@ -744,29 +887,29 @@ import { GITHUB_USERNAME } from '../data/github';
     text-align: center;
   }
 
-  .github__empty-title,
-  .github__error-title {
+  .live-api__empty-title,
+  .live-api__error-title {
     margin: 0 0 8px;
     font-family: var(--font-display);
     font-size: 1.1rem;
   }
 
-  .github__empty-message,
-  .github__error-message {
+  .live-api__empty-message,
+  .live-api__error-message {
     max-width: 60ch;
     margin: 0 auto 20px;
     color: var(--color-text-muted);
     line-height: 1.6;
   }
 
-  .github__actions {
+  .live-api__actions {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     gap: 10px;
   }
 
-  .github__footer {
+  .live-api__footer {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -774,13 +917,13 @@ import { GITHUB_USERNAME } from '../data/github';
     margin-top: 24px;
   }
 
-  .github__footer p {
+  .live-api__footer p {
     margin: 0;
     font-size: 0.75rem;
     color: var(--color-text-muted);
   }
 
-  .github__noscript {
+  .live-api__noscript {
     margin-top: 16px;
     padding: 16px;
     border: 1px solid var(--color-border);
@@ -788,7 +931,7 @@ import { GITHUB_USERNAME } from '../data/github';
     background: var(--color-surface);
   }
 
-  @keyframes github-shimmer {
+  @keyframes live-api-shimmer {
     0% {
       background-position: 200% 0;
     }
@@ -798,49 +941,31 @@ import { GITHUB_USERNAME } from '../data/github';
   }
 
   @media (max-width: 900px) {
-    .github__loading,
-    .github__grid {
+    .live-api__loading,
+    .live-api__grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
 
   @media (max-width: 640px) {
-    .github__loading,
-    .github__grid {
+    .live-api__loading,
+    .live-api__grid {
       grid-template-columns: 1fr;
     }
 
-    .github__meta,
-    .github__footer {
+    .live-api__meta,
+    .live-api__footer,
+    .live-api__testbar {
       flex-direction: column;
       align-items: flex-start;
     }
 
-    .github__source {
-      flex-wrap: wrap;
-    }
-
-    .github__empty,
-    .github__error {
-      padding: 24px 18px;
-    }
-
-    .github__actions .btn {
+    .live-api__test-actions {
       width: 100%;
     }
-  }
 
-  @media (prefers-reduced-motion: reduce) {
-    .github__skeleton-line {
-      animation: none;
-    }
-
-    :global(.gh-card) {
-      transition: none;
-    }
-
-    :global(.gh-card:hover) {
-      transform: none;
+    .live-api__test-button {
+      flex: 1 1 auto;
     }
   }
 </style>

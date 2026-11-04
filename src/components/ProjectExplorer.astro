@@ -1,18 +1,15 @@
 ---
 import { filterAreas, projects } from '../data/projects';
-import { miradaLabels, miradaOptions, type MiradaId } from '../data/miradas';
+import {
+  miradaDescriptions,
+  miradaLabels,
+  miradaOptions,
+  type MiradaId,
+} from '../data/miradas';
 import ProjectCard from './ProjectCard.astro';
 import ProjectDialog from './ProjectDialog.astro';
 
-const miradas: MiradaId[] = miradaOptions.map((mirada) => mirada.id);
-
-const miradaNotes: Record<MiradaId, string> = {
-  integral:
-    'Mirada integral: cada proyecto muestra su resumen, sus roles y sus señales principales.',
-  ux: 'Mirada Diseño & UX: se destacan roles, decisiones de investigación y criterios de experiencia.',
-  codigo:
-    'Mirada Arquitectura & Código: se destacan procesos técnicos, herramientas y métricas de producción.',
-};
+const defaultMirada: MiradaId = 'producto';
 ---
 
 <section class="projects section" id="proyectos" aria-labelledby="proyectos-title">
@@ -23,16 +20,16 @@ const miradaNotes: Record<MiradaId, string> = {
         <h2 id="proyectos-title">Selección de algunos proyectos destacados</h2>
         <p>
           Cuatro trabajos que muestran distintas capas de mi práctica: motion graphics,
-          visualización 3D, diseño estratégico e identidad visual. La selección no
-          representa la totalidad de mis proyectos.
+          visualización 3D, diseño estratégico e identidad visual. El switch de mirada
+          cambia el foco de lectura de cada caso.
         </p>
       </div>
 
       <aside class="projects__note" aria-label="Sobre esta selección de proyectos">
         <p>
-          <strong>Esta es una selección de algunos proyectos destacados</strong>, no la
-          totalidad de mis trabajos. En Behance podés ver el portfolio completo, con
-          más piezas y procesos.
+          <strong>Esta es una selección de algunos proyectos</strong> donde apliqué
+          diseño de experiencia, estrategia y desarrollo. Podés ver más trabajos de
+          diseño e identidad en mi Behance.
         </p>
         <a
           class="btn btn--behance"
@@ -49,6 +46,30 @@ const miradaNotes: Record<MiradaId, string> = {
     </header>
 
     <div class="explorer" data-explorer data-view="galeria">
+      <div class="explorer__mode-switch" data-mode-switch>
+        <div class="explorer__mode-head">
+          <span class="explorer__label" id="mirada-label">Leer proyectos desde</span>
+          <p class="explorer__mode-current" data-mode-current>{miradaLabels[defaultMirada]}</p>
+        </div>
+
+        <div class="explorer__mode-options" role="group" aria-labelledby="mirada-label">
+          {miradaOptions.map((mirada, index) => (
+            <button
+              class="explorer__mode-button"
+              type="button"
+              data-mirada-button={mirada.id}
+              aria-pressed={index === 0 ? 'true' : 'false'}
+            >
+              {mirada.label}
+            </button>
+          ))}
+        </div>
+
+        <p class="explorer__mode-description" data-mode-description>
+          {miradaDescriptions[defaultMirada]}
+        </p>
+      </div>
+
       <div class="explorer__toolbar">
         <div class="explorer__control">
           <span class="explorer__label" id="filtro-label">Filtrar por área</span>
@@ -102,14 +123,6 @@ const miradaNotes: Record<MiradaId, string> = {
         </button>
       </div>
 
-      <div class="explorer__mode-note">
-        {miradas.map((mode) => (
-          <p data-mirada-panel={mode}>
-            <span>{miradaLabels[mode]}</span> {miradaNotes[mode]}
-          </p>
-        ))}
-      </div>
-
       <div class="explorer__grid" data-grid>
         {projects.map((project) => <ProjectCard project={project} />)}
       </div>
@@ -159,6 +172,18 @@ const miradaNotes: Record<MiradaId, string> = {
       view: 'galeria' as 'galeria' | 'ficha',
     };
 
+    const root = document.documentElement;
+    const modeButtons = Array.from(
+      explorer.querySelectorAll<HTMLButtonElement>('[data-mirada-button]'),
+    );
+    const modeDescription = explorer.querySelector<HTMLElement>('[data-mode-description]');
+    const modeCurrent = explorer.querySelector<HTMLElement>('[data-mode-current]');
+    const highlights = Array.from(document.querySelectorAll<HTMLElement>('[data-mirada-highlight]'));
+    const validModes = miradaOptions.map((mirada) => mirada.id);
+
+    const isMirada = (value: string | null | undefined): value is MiradaId =>
+      Boolean(value && validModes.includes(value as MiradaId));
+
     let visibleCount = cards.length;
 
     const normalize = (value: string) =>
@@ -174,6 +199,41 @@ const miradaNotes: Record<MiradaId, string> = {
       if (status) {
         status.textContent = `Mostrando ${visible} de ${cards.length} proyectos · Área: ${areaLabel}${queryPart}`;
       }
+    };
+
+    const applyMode = (mode: MiradaId, announce = true) => {
+      root.dataset.mirada = mode;
+
+      modeButtons.forEach((button) => {
+        button.setAttribute('aria-pressed', String(button.dataset.miradaButton === mode));
+      });
+
+      highlights.forEach((element) => {
+        element.classList.toggle('is-highlighted', element.dataset.miradaHighlight === mode);
+      });
+
+      if (modeCurrent) modeCurrent.textContent = miradaLabels[mode];
+      if (modeDescription) modeDescription.textContent = miradaDescriptions[mode];
+
+      if (announce && status) {
+        status.textContent = `Mirada ${miradaLabels[mode]} activa. Mostrando ${visibleCount} de ${cards.length} proyectos.`;
+      }
+
+      try {
+        localStorage.setItem('portfolio-mirada', mode);
+      } catch {
+        /* El portfolio sigue funcionando si el navegador bloquea localStorage. */
+      }
+
+      document.dispatchEvent(
+        new CustomEvent('mirada:change', {
+          detail: {
+            mirada: mode,
+            label: miradaLabels[mode],
+            description: miradaDescriptions[mode],
+          },
+        }),
+      );
     };
 
     const applyFilters = () => {
@@ -244,14 +304,23 @@ const miradaNotes: Record<MiradaId, string> = {
       });
     });
 
+    modeButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const mode = button.dataset.miradaButton;
+        if (isMirada(mode)) applyMode(mode);
+      });
+    });
+
     applyFilters();
 
-    document.addEventListener('mirada:change', (event) => {
-      const detail = (event as CustomEvent<{ label?: string }>).detail;
-      if (status && detail?.label) {
-        status.textContent = `Mirada ${detail.label} activa. Mostrando ${visibleCount} de ${cards.length} proyectos.`;
-      }
-    });
+    let initialMode: MiradaId = defaultMirada;
+    try {
+      const storedMode = localStorage.getItem('portfolio-mirada');
+      if (isMirada(storedMode)) initialMode = storedMode;
+    } catch {
+      /* Se usa el modo por defecto si localStorage no está disponible. */
+    }
+    applyMode(initialMode, false);
   }
 
   /* --- Diálogos de caso completo y carruseles --- */
@@ -500,23 +569,70 @@ const miradaNotes: Record<MiradaId, string> = {
     text-underline-offset: 3px;
   }
 
-  .explorer__mode-note {
+  .explorer__mode-switch {
+    display: grid;
+    gap: 12px;
     margin-bottom: 18px;
-    padding: 10px 14px;
-    border-radius: var(--radius-sm);
-    background: var(--color-surface);
+    padding: clamp(16px, 2.5vw, 22px);
     border: 1px solid var(--color-border);
-    font-size: 0.84rem;
-    color: var(--color-text-muted);
-    line-height: 1.6;
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
   }
 
-  .explorer__mode-note span {
-    display: inline-block;
-    margin-right: 6px;
+  .explorer__mode-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .explorer__mode-current {
     font-family: var(--font-display);
+    font-size: 0.9rem;
     font-weight: 600;
     color: var(--color-accent-deep);
+  }
+
+  .explorer__mode-options {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+    padding: 4px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-bg-alt);
+  }
+
+  .explorer__mode-button {
+    min-height: 48px;
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-display);
+    font-size: 0.8rem;
+    font-weight: 600;
+    line-height: 1.35;
+    color: var(--color-text-muted);
+    text-align: left;
+    transition: background var(--transition), color var(--transition),
+      box-shadow var(--transition);
+  }
+
+  .explorer__mode-button:hover {
+    background: var(--color-surface);
+    color: var(--color-accent-deep);
+  }
+
+  .explorer__mode-button[aria-pressed='true'] {
+    background: var(--color-ink);
+    color: #fff;
+    box-shadow: 0 6px 16px rgba(28, 25, 23, 0.14);
+  }
+
+  .explorer__mode-description {
+    color: var(--color-text-muted);
+    font-size: 0.82rem;
+    line-height: 1.6;
   }
 
   .explorer__grid {
@@ -599,6 +715,10 @@ const miradaNotes: Record<MiradaId, string> = {
     }
 
     .explorer__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .explorer__mode-options {
       grid-template-columns: 1fr;
     }
 

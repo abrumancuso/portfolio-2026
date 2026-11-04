@@ -79,11 +79,11 @@ const searchText = [
         </p>
       ))}
 
-      <ul class="project-card__roles" aria-label="Roles del proyecto" data-mirada-highlight="ux">
+      <ul class="project-card__roles" aria-label="Roles del proyecto" data-mirada-highlight="producto">
         {project.roles.map((role) => <li>{role}</li>)}
       </ul>
 
-      <ul class="project-card__tools" aria-label="Herramientas" data-mirada-highlight="codigo">
+      <ul class="project-card__tools" aria-label="Herramientas" data-mirada-highlight="gestion">
         {project.tools.map((tool) => <li>{tool}</li>)}
       </ul>
 
@@ -129,14 +129,14 @@ const searchText = [
         <p>{project.role}</p>
 
         <h4>Decisiones</h4>
-        <ul class="project-card__decisions" data-mirada-highlight="ux">
+        <ul class="project-card__decisions" data-mirada-highlight="producto">
           {project.decisions.map((decision) => <li>{decision}</li>)}
         </ul>
       </div>
 
       <div>
         <h4>Proceso</h4>
-        <ol class="project-card__process" data-mirada-highlight="codigo">
+        <ol class="project-card__process" data-mirada-highlight="gestion">
           {project.process.map((step) => (
             <li>
               <strong>{step.step}</strong>
@@ -156,7 +156,7 @@ const searchText = [
         </dl>
 
         <h4>Herramientas</h4>
-        <ul class="project-card__tools" data-mirada-highlight="codigo">
+        <ul class="project-card__tools" data-mirada-highlight="gestion">
           {project.tools.map((tool) => <li>{tool}</li>)}
         </ul>
       </div>

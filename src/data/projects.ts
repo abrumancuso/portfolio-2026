@@ -5,8 +5,8 @@
  * cargados en la versión anterior del portfolio. La sección aclara que es una
  * selección y no la totalidad de los trabajos.
  *
- * Cada proyecto tiene tres "miradas" (integral, ux y codigo). El selector de
- * Mirada decide cuál se muestra y qué metadatos se destacan.
+ * Cada proyecto tiene dos "miradas" (producto y gestion). El switch del
+ * ProjectExplorer decide cuál se muestra y qué metadatos se destacan.
  */
 
 import type { MiradaId } from './miradas';
@@ -127,23 +127,17 @@ export const projects: Project[] = [
       caption: 'Pieza final de Técnicas de Animación. Video vertical con audio original del proyecto.',
     },
     miradas: {
-      integral: {
-        focus: 'Una pieza audiovisual que traduce la energía del tour en un sistema de movimiento.',
-        highlight: 'Ritmo, personaje y lectura vertical.',
+      producto: {
+        focus: 'La pieza se diseña para consumo móvil: lectura rápida, alto contraste y un único foco por plano.',
+        highlight: 'Legibilidad en 9:16, jerarquía y ritmo de lectura.',
         detail:
-          'El proyecto integra dirección de arte, animación y edición en una única pieza breve. La decisión central fue tratar el audio como guion del movimiento.',
+          'Cada plano tiene una función: presentar el personaje, ubicar el tour y cerrar con la fecha. La animación acompaña esa lectura, no la tapa.',
       },
-      ux: {
-        focus: 'La pieza se diseña para un contexto de consumo móvil: lectura rápida, alto contraste y un único foco por plano.',
-        highlight: 'Legibilidad en 9:16 y jerarquía de información.',
+      gestion: {
+        focus: 'Gestión del pipeline audiovisual: alcance breve, entregables por etapa y coordinación de animación, edición y audio.',
+        highlight: 'Alcance, cronograma y pipeline técnico.',
         detail:
-          'Cada plano tiene una función: presentar el personaje, ubicar el tour y cerrar con la información de la gira. La animación acompaña esa lectura, no la tapa.',
-      },
-      codigo: {
-        focus: 'Pipeline técnico: animación de personaje en After Effects, composición y sincronización de audio en Premiere Pro.',
-        highlight: 'Timeline, capas y sincronización.',
-        detail:
-          'El trabajo se organizó por capas y precomposiciones para poder ajustar el ritmo sin rehacer la animación completa. La edición final se armó sobre la música.',
+          'Organicé el trabajo en referencias, storyboard, animación y edición. Cada etapa tuvo un entregable verificable para no rehacer la pieza completa si cambiaba el ritmo. Stack: After Effects y Premiere Pro.',
       },
     },
     behanceUrl: behance,
@@ -191,23 +185,17 @@ export const projects: Project[] = [
       caption: 'Tres vistas del producto: frente, detalle y posterior.',
     },
     miradas: {
-      integral: {
-        focus: 'Un ejercicio de visualización de producto que une forma, material y luz.',
-        highlight: 'Proporción, materialidad y consistencia entre vistas.',
-        detail:
-          'El proyecto no busca un render aislado, sino un sistema de imágenes coherente. Las tres vistas comparten encuadre, iluminación y tratamiento de materiales.',
-      },
-      ux: {
+      producto: {
         focus: 'La lectura del producto se construye desde el encuadre: qué se muestra primero y qué detalle se destaca en cada vista.',
-        highlight: 'Jerarquía visual y reconocibilidad.',
+        highlight: 'Jerarquía visual, reconocibilidad y consistencia.',
         detail:
           'Elegí vistas que permiten reconocer el objeto de inmediato y, al mismo tiempo, descubrir detalles de construcción. La luz guía la mirada hacia las superficies clave.',
       },
-      codigo: {
-        focus: 'Pipeline 3D: bloqueo, modelado, texturizado PBR, iluminación y render con Arnold.',
+      gestion: {
+        focus: 'Pipeline 3D y control de calidad: bloqueo, modelado, texturizado PBR, iluminación y render.',
         highlight: 'Maya, Substance Painter y Arnold.',
         detail:
-          'Cada etapa tiene un archivo y un criterio de salida. El texturizado se construyó para funcionar en las tres vistas sin rehacer materiales entre renders.',
+          'Cada etapa tiene un archivo y un criterio de salida. El texturizado se construyó para funcionar en las tres vistas sin rehacer materiales entre renders. El alcance se cerró en tres piezas finales.',
       },
     },
     behanceUrl: behance,
@@ -251,23 +239,17 @@ export const projects: Project[] = [
       caption: 'Presentación completa de 45 slides: investigación, ideación y propuesta.',
     },
     miradas: {
-      integral: {
-        focus: 'Una propuesta de comunicación institucional que nace de escuchar a los estudiantes.',
-        highlight: 'Research, ideación y narrativa de presentación.',
-        detail:
-          'El proyecto articula investigación, diseño estratégico y trabajo en equipo. La propuesta final se presenta como un sistema de canal, no como una acción suelta.',
-      },
-      ux: {
+      producto: {
         focus: 'La investigación de usuarios define el problema y el formato: un podcast pensado desde las necesidades de conexión de los estudiantes.',
-        highlight: 'Design Thinking y UX Research.',
+        highlight: 'Design Thinking, UX Research y narrativa de presentación.',
         detail:
           'El proceso partió de entrevistas y observación. La propuesta se validó con el equipo y se comunicó con una narrativa visual clara para que la audiencia académica entendiera el valor.',
       },
-      codigo: {
-        focus: 'La dimensión técnica del proyecto está en el prototipado y la documentación: cómo se estructura una propuesta para que pueda implementarse.',
-        highlight: 'Prototipo, sistema y presentación.',
+      gestion: {
+        focus: 'La gestión del proyecto se ve en el alcance, los roles y los entregables: investigación, ideación, prototipo y presentación.',
+        highlight: 'Alcance, roles, entregables y presentación.',
         detail:
-          'Cada etapa dejó un entregable: hallazgos, mapa de oportunidad, concepto y presentación. Esa estructura es la que permite que la idea sobreviva al cambio de contexto.',
+          'Cada etapa dejó un entregable verificable: hallazgos, mapa de oportunidad, concepto y presentación de 45 slides. Esa estructura permitió sostener el trabajo en equipo y que la idea sobreviva al cambio de contexto.',
       },
     },
     behanceUrl: behance,
@@ -311,23 +293,17 @@ export const projects: Project[] = [
       caption: 'Manual de marca completo: sistema visual, aplicaciones y guías de uso.',
     },
     miradas: {
-      integral: {
-        focus: 'Un sistema de identidad que traduce el universo de un álbum en reglas visuales reutilizables.',
-        highlight: 'Tipografía, paleta y aplicaciones.',
-        detail:
-          'El manual reúne las decisiones que hacen reconocible la marca: qué tipografía usa, qué colores la sostienen y cómo se aplica sin perder coherencia.',
-      },
-      ux: {
+      producto: {
         focus: 'El manual se diseña para ser usado: jerarquía clara, ejemplos y criterios que reducen la ambigüedad al aplicar la marca.',
         highlight: 'Usabilidad del sistema y documentación.',
         detail:
           'Cada sección responde a una pregunta concreta de quien tiene que aplicar la identidad. El diseño editorial ordena la información para que el manual funcione como herramienta.',
       },
-      codigo: {
-        focus: 'La lógica de sistema está en las reglas: tokens de color, escalas tipográficas y aplicaciones que se repiten con criterios definidos.',
-        highlight: 'Reglas, escalas y consistencia.',
+      gestion: {
+        focus: 'La lógica de sistema está en las reglas y en la documentación: tokens de color, escalas tipográficas, aplicaciones y criterios de uso.',
+        highlight: 'Reglas, escalas, documentación y consistencia.',
         detail:
-          'Aunque el entregable sea editorial, la lógica es la misma que la de un sistema de diseño: definir variables, documentar usos y probar que el sistema resista contextos distintos.',
+          'Aunque el entregable sea editorial, la lógica es la misma que la de un sistema de diseño: definir variables, documentar usos y probar que el sistema resista contextos distintos. El manual funciona como handoff para que otra persona aplique la marca sin depender de mí.',
       },
     },
     behanceUrl: behance,
