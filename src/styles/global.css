@@ -315,7 +315,7 @@ p {
    El selector de Mirada escribe data-mirada en <html>. Estas reglas
    muestran únicamente el bloque correspondiente. El atributo hidden
    también se actualiza por JS para lectores de pantalla. */
-[data-mirada-panel][hidden] {
+[hidden] {
   display: none !important;
 }
 
