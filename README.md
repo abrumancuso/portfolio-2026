@@ -2,7 +2,7 @@
 
 Portfolio personal y académico construido con AstroJS para la materia **Programación Multimedial IV (2026)**. El posicionamiento profesional es **Project Manager & Diseñadora UX/UI**, con formación técnica multimedial y experiencia en el ciclo completo de productos digitales.
 
-El sitio no se limita a mostrar piezas: presenta **cómo se investiga, se planifica, se diseña y se implementa un producto digital**. Para eso incluye tres componentes propios con lógica real, páginas individuales para cada proyecto y un laboratorio de research conectado a una API pública.
+El sitio no se limita a mostrar piezas: presenta **cómo se investiga, se planifica, se diseña y se implementa un producto digital**. Para eso incluye tres componentes propios con lógica real, páginas individuales para cada proyecto y un manual de identidad instantáneo conectado a iTunes Search API.
 
 ---
 
@@ -17,8 +17,8 @@ El sitio no se limita a mostrar piezas: presenta **cómo se investiga, se planif
 | Repositorio | `<COMPLETAR_URL_DEL_REPO>` |
 | Deploy | `<COMPLETAR_URL_DEL_DEPLOY>` |
 | Stack principal | AstroJS 6.4.8, HTML, CSS, TypeScript/JavaScript |
-| API externa | Random User API |
-| Componentes propios | `ProjectExplorer`, `WorkflowSimulator`, `PersonaLab` |
+| API externa | iTunes Search API |
+| Componentes propios | `ProjectExplorer`, `WorkflowSimulator`, `AlbumLab` |
 
 > Los placeholders de repositorio y deploy se completan al publicar. El proyecto genera una build estática lista para cualquier hosting.
 
@@ -32,7 +32,7 @@ El portfolio es una experiencia de una sola página con seis bloques y páginas 
 2. **Sobre mí** (`#sobre-mi`): perfil, diferencial y propuesta de valor.
 3. **Proyectos** (`#proyectos`): selección de cuatro casos con selector de enfoque, filtros, búsqueda y dos vistas.
 4. **Proceso** (`#proceso`): simulador interactivo de las cinco etapas de trabajo.
-5. **Laboratorio** (`#laboratorio`): generador de proto-personas con Random User API.
+5. **Identidad** (`#identidad`): manual de identidad instantáneo con iTunes Search API.
 6. **Contacto** (`#contacto`): email, Behance, LinkedIn y GitHub.
 
 Cada proyecto tiene además una **página propia** en `/proyectos/[id]` con el caso completo, la galería o el video, las dos lecturas del proyecto, el proceso técnico, las métricas, los aprendizajes y la navegación al proyecto anterior y siguiente.
@@ -81,16 +81,16 @@ Astro permite construir un sitio **estático, rápido y con muy poco JavaScript*
 
 ### TypeScript / JavaScript
 
-- Tipos para `Project`, `MiradaId`, `PersonaApiResult`, `PersonaSetResponse` y `WorkflowStage`.
+- Tipos para `Project`, `MiradaId`, `ItunesAlbum`, `Album`, `TypographyPair` y `WorkflowStage`.
 - Datos centralizados y tipados en `src/data/`.
-- Scripts de cliente para el selector de proyectos, filtros, vistas, tabs del proceso, generación de proto-personas, copiado de fichas y carrusel de imágenes.
+- Scripts de cliente para el selector de proyectos, filtros, vistas, tabs del proceso, búsqueda de álbumes, selección, extracción de paleta, tipografía y carrusel de imágenes.
 
 ### APIs nativas del navegador
 
-- `fetch` + `AbortController` para Random User API.
-- `navigator.clipboard` para copiar fichas de proto-personas.
+- `fetch` + `AbortController` para iTunes Search API.
+- `canvas` + `getImageData` para extraer la paleta de cada portada.
+- `navigator.clipboard` para copiar colores y tokens CSS.
 - `localStorage` para recordar el enfoque elegido en proyectos.
-- `Intl.DateTimeFormat` para fechas legibles en español.
 - `<video>` para la pieza audiovisual.
 
 ### Git y GitHub
@@ -114,7 +114,7 @@ Inicio (#inicio)
   └── Sobre mí (#sobre-mi)
         └── Proyectos (#proyectos)
               └── Proceso (#proceso)
-                    └── Laboratorio (#laboratorio)
+                    └── Identidad (#identidad)
                           └── Contacto (#contacto)
 ```
 
@@ -126,13 +126,13 @@ La presentación se resolvió en **Hero + una sola sección “Sobre mí”**. N
 
 | Capa | Archivos | Responsabilidad |
 | --- | --- | --- |
-| Datos | `src/data/site.ts`, `projects.ts`, `miradas.ts`, `workflow.ts`, `personas.ts` | Contenido editorial, proyectos, enfoques de lectura, etapas de proceso, configuración de la API y respaldo. |
+| Datos | `src/data/site.ts`, `projects.ts`, `miradas.ts`, `workflow.ts`, `albums.ts` | Contenido editorial, proyectos, enfoques de lectura, etapas de proceso, metadata de álbumes y respaldo. |
 | Layout | `src/layouts/BaseLayout.astro` | Documento, fuentes, skip link, navegación y footer. |
 | Presentación | `src/components/Hero.astro`, `About.astro` | Hero y sección única “Sobre mí”. |
 | Proyectos | `ProjectExplorer.astro`, `ProjectCard.astro`, `ProjectMedia.astro` | Selector de enfoque, filtros, búsqueda, vistas, tarjetas, galería y video. |
 | Páginas de proyecto | `src/pages/proyectos/[id].astro` | Caso completo, dos lecturas, métricas, aprendizajes y navegación entre proyectos. |
 | Proceso | `WorkflowSimulator.astro` | Tablero/timeline interactivo de las cinco etapas de trabajo. |
-| API | `PersonaLab.astro` | Generación de proto-personas, estados asíncronos, copiado y respaldo local. |
+| API | `AlbumLab.astro` | Búsqueda de álbumes, extracción de paleta, tipografía, tokens y respaldo local. |
 | Sistema visual | `src/styles/global.css` + estilos scoped | Tokens, reset, utilidades, accesibilidad y patrones compartidos. |
 | Assets | `public/media/`, `public/perfil.jpg` | Imágenes, posters y video de los proyectos. |
 
@@ -142,7 +142,7 @@ La presentación se resolvió en **Hero + una sola sección “Sobre mí”**. N
 2. Los componentes `.astro` los importan en build time y generan HTML estático.
 3. `getStaticPaths()` genera una página por cada proyecto.
 4. Los scripts de cliente agregan comportamiento sobre ese HTML ya renderizado.
-5. Random User API se consulta en el navegador; si falla, se usa el set de respaldo local.
+5. iTunes Search API se consulta en el navegador; si falla, se usa el set de ejemplo local.
 
 ---
 
@@ -203,40 +203,45 @@ Al seleccionar una etapa, el panel cambia y muestra:
 
 La interacción usa el patrón de **tabs accesibles**: `role="tablist"`, `role="tab"`, `aria-selected`, `aria-controls`, `role="tabpanel"`, `tabindex` y navegación con flechas, Home y End. El panel activo se anuncia con una región `aria-live`.
 
-### 5.3 `PersonaLab` — Laboratorio de proto-personas conectado a Random User API
+### 5.3 `AlbumLab` — Manual de identidad instantáneo con iTunes Search API
 
 **Archivos:**
 
-- `src/components/PersonaLab.astro`
-- `src/data/personas.ts`
+- `src/components/AlbumLab.astro`
+- `src/data/albums.ts`
 
-**Responsabilidad:** demostrar consumo de una API externa real, manejo de estados asíncronos y aplicación de criterios de research.
+**Responsabilidad:** demostrar consumo de una API externa real, lectura de una identidad visual existente y traducción de una portada a un sistema de diseño acotado.
 
-El laboratorio genera un set de **cuatro proto-personas ficticias** y les asigna una hipótesis de research según el contexto elegido. Incluye:
+El laboratorio permite buscar un artista, elegir un álbum y generar un mini manual de identidad. Incluye:
 
-- Badge visible con el estado de conexión: **Proto-personas generadas**, **Generando proto-personas…**, **Sin resultados**, **Error de conexión** o **Set de respaldo local**.
+- Badge visible con el estado: **Buscando álbumes…**, **Analizando portada…**, **Manual generado**, **Sin resultados**, **Error de conexión** o **Set de ejemplo**.
 - Endpoint visible en pantalla para que se entienda qué API se está consumiendo.
-- Selector de contexto: **Producto digital**, **Educación** o **Comunidad**.
-- Tarjetas con foto, nombre, edad, ubicación, email y una hipótesis con objetivo, fricción y pregunta de investigación.
-- Copiado de cada ficha al portapapeles.
+- Buscador libre de artistas con ejemplos rápidos: **Billie Eilish**, **Tini**, **Dua Lipa** y **Bad Bunny**.
+- Grilla de hasta 12 álbumes con portada, título, artista, año y género.
+- Selección de álbum con `aria-pressed`; el manual se regenera al instante.
+- Paleta de cinco colores extraída de la portada con `canvas` y `getImageData`.
+- Tira proporcional que muestra el peso real de cada color en la portada.
+- Nombres descriptivos en español (`azul profundo`, `rosa claro`, `neutro`) y roles asignados por luminancia y saturación.
+- Análisis de diseño en primera persona: qué color domina, qué transmite, cómo se usa como acento y qué hipótesis de aplicación propone.
+- Tipografía curada según el género: **Fraunces** + DM Sans (editorial), **Archivo Black** + DM Sans (contundente) o **Space Grotesk** + DM Sans (técnica).
+- Concepto, tono, aplicaciones y tokens CSS listos para copiar.
+- Mini paleta en la tarjeta seleccionada para dar feedback inmediato al tocar un álbum.
+- Vista aplicada con la paleta y la tipografía elegidas.
+- Copia de cada HEX y del bloque completo de tokens con confirmación `aria-live`.
 - Estado de carga con skeleton y `aria-busy`.
-- Estado de éxito con las cuatro proto-personas.
-- Estado vacío si la API no devuelve resultados válidos.
-- Estado de error con mensaje, reintento y opción de usar datos de respaldo.
-- Timeout de 10 segundos con `AbortController`.
-- Set de respaldo local en `src/data/personas.ts`.
+- Estado vacío si la búsqueda no devuelve álbumes.
+- Estado de error con mensaje, reintento y opción de usar el set de ejemplo.
+- Timeout de 12 segundos con `AbortController` y protección contra respuestas viejas.
+- Set de ejemplo local en `src/data/albums.ts` con Billie Eilish y Tini.
 - Mensaje `noscript` para quienes navegan sin JavaScript.
 
-**Controles visibles para la defensa:**
+**Por qué está en el portfolio:**
 
-- **Generar proto-personas**: consulta la API con el contexto seleccionado.
-- **Cambiar el contexto**: vuelve a consultar automáticamente.
-- **Copiar ficha**: copia los datos y la hipótesis de cada proto-persona.
-- **Simular error**: fuerza el estado de error con el mismo tratamiento visual que un error real.
-- **Usar set de respaldo**: carga las proto-personas locales.
-- **Reintentar consulta**: vuelve a llamar a la API.
+- **Leer una identidad existente también es research.** Un PM y una diseñadora UX/UI trabajan con marcas, materiales y sistemas que ya existen; el ejercicio practica observación, síntesis y criterio visual.
+- **Traducir a sistema es una decisión de producto.** Extraer una paleta, ordenar roles, elegir tipografías y definir tokens es pasar de una imagen a un lenguaje aplicable.
+- **El alcance se comunica.** El manual aclara que la tipografía es una recomendación curada y que la paleta se extrae de la portada; no se presenta como el manual oficial de la discográfica.
 
-**Aclaración ética:** Random User API genera datos ficticios. Las proto-personas son hipótesis para ordenar supuestos y alinear al equipo; no son evidencia de investigación. La validación se hace con personas reales.
+**Aclaración metodológica:** la paleta se calcula a partir de los píxeles de la portada, pero la tipografía no se extrae de la imagen. Es una dupla curada según el género y se muestra como interpretación, no como dato oficial. Las portadas pertenecen a sus respectivos titulares y se usan con fines educativos y de portfolio.
 
 ---
 
@@ -244,75 +249,115 @@ El laboratorio genera un set de **cuatro proto-personas ficticias** y les asigna
 
 ### Dónde está en la pantalla
 
-El laboratorio está en la sección **“Laboratorio de research: proto-personas para empezar a preguntar”**, después de **“Proceso de trabajo”** y antes del footer de contacto. En la navegación se accede con el link **“Laboratorio”** (`#laboratorio`).
+El manual está en la sección **“Identidad: un manual en segundos”**, después de **“Proceso de trabajo”** y antes del footer de contacto. En la navegación se accede con el link **“Identidad”** (`#identidad`).
+
+La sección incluye un bloque previo, **“Un ejemplo de mi trabajo”**, que explica el valor del ejercicio: leer una identidad existente, traducirla a un sistema y comunicar el alcance de esa interpretación.
 
 ### Dónde está en el código
 
-- Componente: `src/components/PersonaLab.astro`
-- Renderizado: `src/pages/index.astro` (último componente antes del footer del layout)
-- Datos, contextos y respaldo: `src/data/personas.ts`
-- Sección HTML: `id="laboratorio"` y `data-persona-lab`
-- Badge: `data-badge`
-- Formulario: `data-form`, `data-context`
-- Estados: `data-loading`, `data-content`, `data-empty`, `data-error`
-- Herramientas de demostración: `data-retry`, `data-simulate-error`, `data-fallback`
-- Fetch: bloque `loadPersonas` dentro del `<script>` del componente
+| Responsabilidad | Archivo | Marcas / funciones |
+| --- | --- | --- |
+| Sección visible | `src/components/AlbumLab.astro` | `id="identidad"`, `data-album-lab` |
+| Render en la página | `src/pages/index.astro` | `<AlbumLab />` |
+| Badge de estado | `src/components/AlbumLab.astro` | `data-badge`, `data-badge-text`, `updateBadge` |
+| Endpoint visible | `src/components/AlbumLab.astro` | `.album-lab__endpoint` |
+| Buscador | `src/components/AlbumLab.astro` | `data-search-form`, `data-search-input`, `loadAlbums` |
+| Ejemplos rápidos | `src/components/AlbumLab.astro` | `data-example` |
+| Grilla de álbumes | `src/components/AlbumLab.astro` | `.album-lab__grid`, `data-grid`, `renderGrid` |
+| Selección | `src/components/AlbumLab.astro` | `data-album-id`, `aria-pressed`, `selectAlbum` |
+| Portada y metadata | `src/components/AlbumLab.astro` | `data-cover`, `data-album-title`, `data-album-artist`, `data-album-meta` |
+| Paleta | `src/components/AlbumLab.astro` | `data-palette`, `extractPalette`, `renderPalette` |
+| Tipografía | `src/components/AlbumLab.astro` | `getTypographyPair`, `renderTypography` |
+| Tokens | `src/components/AlbumLab.astro` | `buildTokens`, `data-tokens`, `data-copy-tokens` |
+| Vista aplicada | `src/components/AlbumLab.astro` | `data-preview`, `applyPreview` |
+| Estados | `src/components/AlbumLab.astro` | `setView`, `data-loading`, `data-content`, `data-empty`, `data-error` |
+| Fetch | `src/components/AlbumLab.astro` | `loadAlbums`, `fetchJson`, `AbortController` |
+| Normalización | `src/data/albums.ts` | `toAlbum`, `getArtworkUrl` |
+| Tipografías curadas | `src/data/albums.ts` | `typographyPairs`, `getTypographyPair` |
+| Respaldo | `src/data/albums.ts` | `fallbackAlbums` |
 
 ### Endpoint
 
 ```
-GET https://randomuser.me/api/?results=4&nat=es,us,gb&inc=name,location,email,dob,picture,login
+GET https://itunes.apple.com/search?term={artista}&entity=album&limit=12&country=US
 ```
 
-- No requiere token para este endpoint.
-- Devuelve JSON público.
-- Tiene CORS habilitado.
-- Se agrega `seed` en cada consulta para generar un set nuevo.
+- No requiere token ni clave.
+- Devuelve JSON público con CORS habilitado (`access-control-allow-origin: *`).
+- `entity=album` limita la búsqueda a álbumes.
+- `limit=12` acota la grilla.
+- `country=US` amplía el catálogo disponible.
+- La portada llega como `artworkUrl100`; `getArtworkUrl` reemplaza el sufijo por `600x600bb` para trabajar con una imagen de mayor tamaño.
+- Se usa `cache: 'no-store'` para traer resultados frescos.
+- La API tiene límites de uso informales; por eso existe el set de ejemplo local.
 
 ### Respuesta usada
 
 ```json
 {
+  "resultCount": 12,
   "results": [
     {
-      "login": { "uuid": "..." },
-      "name": { "first": "Juana", "last": "Muñoz" },
-      "location": { "city": "Elche", "country": "Spain" },
-      "email": "juana.munoz@example.com",
-      "dob": { "age": 30 },
-      "picture": { "large": "https://randomuser.me/api/portraits/women/33.jpg" }
+      "collectionId": 1739659134,
+      "collectionName": "HIT ME HARD AND SOFT",
+      "artistName": "Billie Eilish",
+      "artworkUrl100": "https://is1-ssl.mzstatic.com/.../100x100bb.jpg",
+      "releaseDate": "2024-05-17T07:00:00Z",
+      "trackCount": 11,
+      "primaryGenreName": "Alternative",
+      "collectionViewUrl": "https://music.apple.com/us/album/..."
     }
   ]
 }
 ```
 
-El componente valida que cada perfil tenga `login.uuid`, `name.first`, `name.last`, `location.city`, `location.country`, `email`, `dob.age` y `picture.large`. Si no, lo descarta.
+`toAlbum` valida que existan `collectionId`, `collectionName` y `artworkUrl100`. Si falta el artista, usa `Artista desconocido`; si falta el género, `Música`; si falta la fecha, `s/f`. Los resultados se deduplican por `collectionId` y se ordenan para priorizar coincidencias exactas del artista buscado antes de recortar a 12.
 
 ### Estados implementados
 
 | Estado | Badge | Qué se ve | Disparador |
 | --- | --- | --- | --- |
-| Carga | `Generando proto-personas…` | Skeleton + `aria-busy` | Al generar o cambiar contexto |
-| Éxito | `Proto-personas generadas` | Cuatro tarjetas con datos e hipótesis | Respuesta válida de la API |
-| Vacío | `Sin resultados` | Mensaje y acciones | Respuesta sin perfiles válidos |
-| Error | `Error de conexión` | Mensaje, reintento y respaldo | Fallo de red, timeout o formato inválido |
-| Respaldo | `Set de respaldo local` | Proto-personas locales | Botón “Usar set de respaldo” |
+| Carga de búsqueda | `Buscando álbumes…` | Skeleton + `aria-busy` | Al buscar o reintentar |
+| Carga del manual | `Analizando portada…` | Skeleton del manual | Al seleccionar un álbum |
+| Éxito | `Manual generado` | Grilla, portada, paleta, tipografía, tokens y preview | Respuesta válida + canvas disponible |
+| Vacío | `Sin resultados` | Mensaje y acciones | Búsqueda sin álbumes |
+| Error | `Error de conexión` | Mensaje, reintento y set de ejemplo | Fallo de red, timeout o formato inválido |
+| Respaldo | `Set de ejemplo` | Álbumes locales | Botón “Ver set de ejemplo” |
 
 ### Decisiones técnicas
 
-- **Timeout**: `AbortController` corta la solicitud a los 10 segundos.
-- **Validación**: se verifica la estructura de cada perfil antes de renderizar.
-- **Seguridad**: los datos de la API se insertan con `textContent`, no con `innerHTML`.
-- **Respaldo**: si la API falla, la sección no queda rota; se puede reintentar o usar el set local.
-- **Imágenes**: si la foto falla, se muestran iniciales generadas localmente.
-- **Sin secretos**: no hay claves ni variables de entorno; todo es público.
-- **Cache**: se usa `cache: 'no-store'` para consultar datos frescos.
+- **Timeout**: `AbortController` corta la búsqueda a los 12 segundos.
+- **Race guard**: `requestId` y `manualRequestId` evitan que una respuesta vieja pise una búsqueda o un manual más reciente.
+- **Validación**: se descartan ítems sin id, nombre o portada.
+- **Deduplicación**: `Set<number>` por `collectionId`.
+- **Orden**: las coincidencias exactas de artista se muestran primero; después las que incluyen el término.
+- **Paleta**: la portada se dibuja en un canvas de 96×96, se agrupan píxeles en buckets de color, se promedian y se eligen hasta cinco colores con distancia mínima. Si no hay suficientes, se generan variantes del dominante.
+- **Roles**: el color más frecuente es dominante; el más saturado, acento; el más claro y el más oscuro completan la escala.
+- **Contraste**: `contrastText` elige texto claro u oscuro según luminancia relativa; el umbral es `0.179`.
+- **Tipografía**: `getTypographyPair` mapea género a una dupla curada. No se infiere de la imagen.
+- **Tokens**: `buildTokens` genera variables CSS de fondo, superficie, texto, acento, borde y fuentes.
+- **Seguridad**: los datos de la API se insertan con `textContent` y APIs del DOM, nunca con `innerHTML`.
+- **Copiar**: `navigator.clipboard.writeText` con confirmación en `aria-live` y fallback si el navegador lo bloquea.
+- **Respaldo**: si la API falla, la sección no queda rota; se puede reintentar o usar el set de ejemplo.
+- **Sin secretos**: no hay claves ni variables de entorno.
+
+### Por qué iTunes Search API y no otra API
+
+- Es pública, sin token y con CORS.
+- Devuelve portadas reales, que son la materia prima del ejercicio visual.
+- Conecta con dos proyectos del portfolio, Billie Eilish y Tini, y con el discurso de identidad de marca.
+- Permite buscar cualquier artista, no solo una lista fija.
+- Hace visible el pasaje de una imagen a un sistema: paleta, roles, tipografía y tokens.
+- Se puede explicar y defender en vivo sin depender de credenciales.
 
 ### Limitaciones conocidas
 
-- La API puede fallar o tardar; por eso existe el respaldo local.
-- Los datos son ficticios y no representan personas reales.
-- Las proto-personas no reemplazan investigación con usuarios.
+- iTunes no devuelve tipografías; la dupla es una recomendación curada, no un dato de la API.
+- El manual es una interpretación, no el manual oficial de la discográfica.
+- La paleta es heurística: portadas con texto, logos o degradés pueden producir colores que no son los oficiales de la marca.
+- Los resultados pueden incluir singles, colaboraciones o ediciones regionales.
+- La API puede fallar, tardar o limitar requests; por eso existe el set de ejemplo.
+- Las portadas pertenecen a sus respectivos titulares y se usan con fines educativos y de portfolio.
 - El servicio es externo y puede cambiar sin aviso.
 
 ---
@@ -336,7 +381,8 @@ El componente valida que cada perfil tenga `login.uuid`, `name.first`, `name.las
 - Selector de proyectos, filtros y vistas con `aria-pressed`.
 - Tabs del proceso con `role="tablist"`, `aria-selected`, `aria-controls` y navegación por teclado.
 - Resultados y cambios de estado con `aria-live="polite"`.
-- Etiquetas asociadas a inputs de búsqueda y al formulario de proto-personas.
+- Etiquetas asociadas al buscador de artistas y a los botones de selección de álbum.
+- Paleta y tokens copiables con `navigator.clipboard` y confirmación con `aria-live`.
 - Imágenes con `alt` descriptivo; imágenes decorativas con `aria-hidden`.
 - Video con nota explícita de ausencia de subtítulos y audiodescripción.
 - `prefers-reduced-motion` para reducir animaciones.
@@ -350,14 +396,15 @@ El componente valida que cada perfil tenga `login.uuid`, `name.first`, `name.las
 - Explorador de proyectos con toolbar flexible, selector de dos columnas y grillas de 2/1 columnas.
 - Páginas de proyecto con hero, métricas y lecturas en dos columnas; una columna en mobile.
 - Proceso con timeline vertical en desktop y horizontal scrollable en mobile.
-- Laboratorio de proto-personas con formulario de 2/1 columnas y grillas de tarjetas adaptativas.
+- Manual con portada fija en su columna (sin `sticky`) y una columna en mobile; grilla de álbumes, tira de paleta y swatches adaptativos.
 - Menú de navegación desplegable por debajo de 900 px.
 
 ### Limitaciones de accesibilidad
 
 - El video no tiene subtítulos ni audiodescripción; se informa en la interfaz.
 - Las fuentes se cargan desde Google Fonts; si fallan, hay fallback del sistema.
-- El laboratorio depende de una API externa y de la conexión del usuario.
+- El manual depende de iTunes Search API y de la conexión del usuario.
+- Las portadas son contenido de terceros y se usan con fines educativos y de portfolio.
 - No se realizó una auditoría formal con lector de pantalla; se aplicaron criterios manuales y revisión de contraste.
 
 ---
@@ -370,7 +417,7 @@ El componente valida que cada perfil tenga `login.uuid`, `name.first`, `name.las
 2. **Definición de arquitectura** y sistema visual.
 3. **Migración de contenido y assets** a la estructura de Astro.
 4. **Construcción de componentes** y datos tipados.
-5. **Refactorización**: unificación de la presentación, creación de los tres componentes propios, páginas individuales de proyecto y reemplazo del laboratorio de color por el laboratorio de proto-personas.
+5. **Refactorización**: unificación de la presentación, creación de los tres componentes propios, páginas individuales de proyecto y reemplazo del laboratorio de color y el radar de señales por el manual de identidad instantáneo.
 6. **Ajustes de responsive y accesibilidad**.
 7. **Documentación y cierre**.
 
@@ -398,8 +445,8 @@ El repositorio tiene commits progresivos que separan:
 5. Sección de actividad de GitHub con estados asíncronos.
 6. Ajustes de responsive y accesibilidad.
 7. Documentación y guía de defensa.
-8. Refactorización: presentación unificada, selector de proyectos, WorkflowSimulator y LiveApiDashboard.
-9. `feat: add project pages and research lab with random user api`: páginas individuales de proyecto, laboratorio de proto-personas y posicionamiento profesional de Abril Mancuso.
+8. Refactorización: presentación unificada, selector de proyectos, WorkflowSimulator y primer dashboard de API.
+9. `feat: add itunes album identity lab`: manual de identidad instantáneo, extracción de paleta, tipografía curada y posicionamiento profesional de Abril Mancuso.
 
 ---
 
@@ -420,7 +467,7 @@ portfolio/
 │   │   ├── Footer.astro
 │   │   ├── Hero.astro
 │   │   ├── Nav.astro
-│   │   ├── PersonaLab.astro
+│   │   ├── AlbumLab.astro
 │   │   ├── ProjectCard.astro
 │   │   ├── ProjectExplorer.astro
 │   │   ├── ProjectMedia.astro
@@ -428,7 +475,7 @@ portfolio/
 │   │   └── WorkflowSimulator.astro
 │   ├── data/
 │   │   ├── miradas.ts
-│   │   ├── personas.ts
+│   │   ├── albums.ts
 │   │   ├── projects.ts
 │   │   ├── site.ts
 │   │   └── workflow.ts
@@ -512,7 +559,7 @@ Si se publica en GitHub Pages como project page, hay que configurar el `base` co
 - Portfolio completo: [Behance](https://www.behance.net/abrilmancuso).
 - Perfil profesional: [LinkedIn](https://linkedin.com/in/abrilmancuso).
 - Código y actividad: [GitHub](https://github.com/abrumancuso).
-- Tipografías: Instrument Sans y DM Sans (Google Fonts).
-- API de proto-personas: [Random User API](https://randomuser.me).
+- Tipografías: Instrument Sans, DM Sans, Fraunces, Space Grotesk y Archivo Black (Google Fonts).
+- API de álbumes: [iTunes Search API](https://developer.apple.com/library/archive/documentation/AudioVideo/Conceptual/iTuneSearchAPI/). Las portadas pertenecen a sus respectivos titulares.
 
 Los proyectos incluidos son una selección académica y profesional. Las métricas y descripciones corresponden a cada caso y se presentan con fines de portfolio.

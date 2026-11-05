@@ -153,6 +153,9 @@ const defaultMirada: MiradaId = 'producto';
 </section>
 
 <script>
+  import { miradaDescriptions, miradaLabels, miradaOptions, type MiradaId } from '../data/miradas';
+
+  const defaultMirada: MiradaId = 'producto';
   const explorer = document.querySelector<HTMLElement>('[data-explorer]');
 
   if (explorer) {
