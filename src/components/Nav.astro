@@ -137,8 +137,8 @@ import { navLinks, site } from '../data/site';
     right: 0;
     z-index: 1000;
     height: var(--nav-height);
-    background: rgba(253, 251, 249, 0.94);
-    border-bottom: 1px solid var(--color-border);
+    background: rgba(255, 248, 220, 0.94);
+    border-bottom: 2px solid var(--color-plum);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
   }
@@ -156,9 +156,10 @@ import { navLinks, site } from '../data/site';
 
   .nav__logo {
     font-family: var(--font-display);
-    font-size: 1.55rem;
+    font-size: 1.6rem;
     font-weight: 700;
-    letter-spacing: -0.04em;
+    letter-spacing: -0.03em;
+    color: var(--color-plum);
     transition: opacity var(--transition);
   }
 
@@ -169,28 +170,30 @@ import { navLinks, site } from '../data/site';
   .nav__menu {
     display: flex;
     align-items: center;
-    gap: clamp(14px, 2vw, 28px);
+    gap: clamp(12px, 1.8vw, 24px);
   }
 
   .nav__link {
     position: relative;
     display: inline-block;
-    padding: 6px 0;
-    font-family: var(--font-display);
-    font-size: 0.86rem;
-    font-weight: 500;
-    color: var(--color-text-muted);
-    transition: color var(--transition);
+    padding: 7px 10px;
+    border-radius: var(--radius-pill);
+    font-family: var(--font-ui);
+    font-size: 0.83rem;
+    font-weight: 600;
+    color: var(--color-plum-soft);
+    transition: color var(--transition), background var(--transition);
   }
 
   .nav__link::after {
     content: '';
     position: absolute;
-    right: 0;
-    bottom: 0;
-    left: 0;
+    right: 10px;
+    bottom: 2px;
+    left: 10px;
     height: 2px;
-    background: var(--color-accent-deep);
+    border-radius: var(--radius-pill);
+    background: var(--color-terracotta);
     transform: scaleX(0);
     transform-origin: left;
     transition: transform var(--transition);
@@ -199,7 +202,8 @@ import { navLinks, site } from '../data/site';
   .nav__link:hover,
   .nav__link[aria-current='location'],
   .nav__link[aria-current='page'] {
-    color: var(--color-accent-deep);
+    background: var(--color-mustard);
+    color: var(--color-plum);
   }
 
   .nav__link:hover::after,
@@ -223,7 +227,7 @@ import { navLinks, site } from '../data/site';
     display: block;
     width: 22px;
     height: 2px;
-    background: var(--color-text);
+    background: var(--color-plum);
     transition: transform var(--transition), opacity var(--transition);
   }
 
@@ -254,8 +258,8 @@ import { navLinks, site } from '../data/site';
       gap: 0;
       padding: 12px 24px 20px;
       background: var(--color-bg);
-      border-bottom: 1px solid var(--color-border);
-      box-shadow: 0 18px 30px rgba(28, 25, 23, 0.08);
+      border-bottom: 2px solid var(--color-plum);
+      box-shadow: 0 10px 0 rgba(108, 3, 69, 0.12);
       opacity: 0;
       visibility: hidden;
       transform: translateY(-12px);

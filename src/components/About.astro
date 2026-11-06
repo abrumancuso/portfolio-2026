@@ -6,6 +6,7 @@ import { about, site } from '../data/site';
 <section class="about section" id="sobre-mi" aria-labelledby="sobre-mi-title">
   <div class="about__inner">
     <figure class="about__media">
+      <span class="about__badge" aria-hidden="true">✦ 4.º año</span>
       <img
         src="/perfil.jpg"
         alt="Retrato de Abril Mancuso"
@@ -26,6 +27,11 @@ import { about, site } from '../data/site';
         title={about.lead}
         id="sobre-mi-title"
       />
+
+      <p class="about__umai">
+        <span aria-hidden="true">✨</span>
+        Cursando 4.º año de la Lic. en Tecnología Multimedial · UMAI
+      </p>
 
       <div class="about__paragraphs">
         {about.paragraphs.map((paragraph) => <p set:html={paragraph} />)}
@@ -53,11 +59,33 @@ import { about, site } from '../data/site';
     align-items: start;
     max-width: var(--container-width);
     margin: 0 auto;
+    padding: clamp(24px, 4vw, 46px);
+    border: 2px solid var(--color-plum);
+    border-radius: var(--radius-xl);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-sticker);
   }
 
   .about__media {
     position: sticky;
     top: calc(var(--nav-height) + 24px);
+  }
+
+  .about__badge {
+    position: absolute;
+    top: -16px;
+    right: -10px;
+    z-index: 1;
+    padding: 7px 14px;
+    border: 2px solid var(--color-plum);
+    border-radius: var(--radius-pill);
+    background: var(--color-mustard);
+    box-shadow: var(--shadow-sticker-sm);
+    font-family: var(--font-ui);
+    font-size: 0.74rem;
+    font-weight: 700;
+    color: var(--color-plum);
+    transform: rotate(6deg);
   }
 
   .about__media img {
@@ -67,18 +95,43 @@ import { about, site } from '../data/site';
     object-fit: cover;
     object-position: center top;
     border-radius: var(--radius-lg);
-    border: 1px solid var(--color-border);
+    border: 2px solid var(--color-plum);
     background: var(--color-bg-alt);
+    box-shadow: var(--shadow-sticker);
+    transform: rotate(-1.5deg);
+    transition: transform var(--transition), box-shadow var(--transition);
+  }
+
+  .about__media img:hover {
+    transform: rotate(0deg) translateY(-3px);
+    box-shadow: var(--shadow-sticker-lg);
   }
 
   .about__media figcaption {
     display: flex;
     justify-content: space-between;
     gap: 12px;
-    margin-top: 12px;
-    font-family: var(--font-display);
-    font-size: 0.76rem;
+    margin-top: 16px;
+    font-family: var(--font-ui);
+    font-size: 0.74rem;
+    font-weight: 500;
     color: var(--color-text-muted);
+  }
+
+  .about__umai {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 22px;
+    padding: 7px 14px;
+    border: 2px solid var(--color-plum);
+    border-radius: var(--radius-pill);
+    background: var(--color-mustard);
+    box-shadow: var(--shadow-sticker-sm);
+    font-family: var(--font-ui);
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--color-plum);
   }
 
   .about__content :global(.section-header) {
@@ -99,8 +152,9 @@ import { about, site } from '../data/site';
   }
 
   .about__paragraphs :global(strong) {
-    color: var(--color-text);
-    font-weight: 600;
+    color: var(--color-plum);
+    font-weight: 700;
+    box-shadow: inset 0 -0.45em 0 var(--color-mustard);
   }
 
   .about__tags {
@@ -119,7 +173,7 @@ import { about, site } from '../data/site';
   }
 
   .about__text-link {
-    font-family: var(--font-display);
+    font-family: var(--font-ui);
     font-size: 0.86rem;
     font-weight: 600;
     color: var(--color-accent-deep);

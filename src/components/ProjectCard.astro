@@ -179,16 +179,18 @@ const searchText = [
     flex-direction: column;
     height: 100%;
     overflow: hidden;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
+    border: 2px solid var(--color-plum);
+    border-radius: var(--radius-lg);
     background: var(--color-surface);
-    transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+    box-shadow: var(--shadow-sticker-soft);
+    transition: transform var(--transition), box-shadow var(--transition),
+      border-color var(--transition);
   }
 
   .project-card:hover {
-    transform: translateY(-4px);
-    border-color: var(--color-accent);
-    box-shadow: 0 18px 40px rgba(116, 85, 47, 0.12);
+    transform: translate(-2px, -4px) rotate(-0.6deg);
+    border-color: var(--color-plum);
+    box-shadow: var(--shadow-sticker);
   }
 
   .project-card__gallery {
@@ -222,26 +224,28 @@ const searchText = [
     left: 50%;
     display: grid;
     place-items: center;
-    width: 52px;
-    height: 52px;
+    width: 54px;
+    height: 54px;
+    border: 2px solid var(--color-cream);
     border-radius: 50%;
-    background: rgba(28, 25, 23, 0.72);
-    color: #fff;
+    background: var(--color-plum);
+    color: var(--color-cream);
     transform: translate(-50%, -50%);
-    backdrop-filter: blur(4px);
+    box-shadow: 0 0 0 6px rgba(255, 248, 220, 0.28);
   }
 
   .project-card__badge {
     position: absolute;
     right: 12px;
     bottom: 12px;
-    padding: 5px 10px;
-    border-radius: 100px;
-    background: rgba(28, 25, 23, 0.78);
-    color: #fff;
-    font-family: var(--font-display);
+    padding: 6px 12px;
+    border: 2px solid var(--color-plum);
+    border-radius: var(--radius-pill);
+    background: var(--color-mustard);
+    color: var(--color-plum);
+    font-family: var(--font-ui);
     font-size: 0.7rem;
-    font-weight: 500;
+    font-weight: 700;
   }
 
   .project-card__body {
@@ -296,20 +300,23 @@ const searchText = [
   }
 
   .project-card__roles li {
-    padding: 4px 9px;
-    border-radius: 100px;
-    background: var(--color-bg-alt);
-    font-size: 0.74rem;
-    color: var(--color-text-muted);
+    padding: 4px 10px;
+    border-radius: var(--radius-pill);
+    background: var(--color-peach);
+    font-family: var(--font-ui);
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--color-plum);
   }
 
   .project-card__tools li {
-    padding: 4px 9px;
-    border: 1px solid var(--color-border);
-    border-radius: 100px;
-    font-family: var(--font-display);
+    padding: 4px 10px;
+    border: 1.5px solid rgba(108, 3, 69, 0.28);
+    border-radius: var(--radius-pill);
+    font-family: var(--font-ui);
     font-size: 0.72rem;
-    color: var(--color-accent-deep);
+    font-weight: 500;
+    color: var(--color-plum-soft);
   }
 
   .project-card__open {
@@ -319,19 +326,23 @@ const searchText = [
     gap: 8px;
     min-height: 44px;
     margin-top: auto;
-    padding: 10px 16px;
-    border: 1px solid var(--color-accent-deep);
-    border-radius: var(--radius-sm);
-    color: var(--color-accent-deep);
-    font-family: var(--font-display);
+    padding: 10px 18px;
+    border: 2px solid var(--color-plum);
+    border-radius: var(--radius-pill);
+    background: var(--color-surface);
+    color: var(--color-plum);
+    font-family: var(--font-ui);
     font-size: 0.8rem;
-    font-weight: 600;
-    transition: background var(--transition), color var(--transition);
+    font-weight: 700;
+    transition: background var(--transition), color var(--transition),
+      transform var(--transition), box-shadow var(--transition);
   }
 
   .project-card__open:hover {
-    background: var(--color-accent-deep);
-    color: #fff;
+    background: var(--color-plum);
+    color: var(--color-cream);
+    transform: translate(-1px, -1px);
+    box-shadow: var(--shadow-sticker-sm);
   }
 
   .project-card__technical {
@@ -357,9 +368,10 @@ const searchText = [
 
   .project-card__technical-focus {
     padding: 14px 16px;
-    border-left: 3px solid var(--color-accent-deep);
+    border: 1.5px solid var(--color-plum);
+    border-left: 6px solid var(--color-terracotta);
     border-radius: var(--radius-sm);
-    background: var(--color-bg-alt);
+    background: var(--color-peach);
   }
 
   .project-card__technical-focus strong {
@@ -382,7 +394,7 @@ const searchText = [
 
   .project-card__technical h4 {
     margin-bottom: 6px;
-    font-family: var(--font-display);
+    font-family: var(--font-ui);
     font-size: 0.72rem;
     font-weight: 600;
     letter-spacing: 0.12em;
@@ -436,8 +448,9 @@ const searchText = [
 
   .project-card__metrics div {
     padding: 10px;
+    border: 1.5px solid rgba(108, 3, 69, 0.2);
     border-radius: var(--radius-sm);
-    background: var(--color-bg-alt);
+    background: var(--color-mustard);
     text-align: center;
   }
 
@@ -448,10 +461,10 @@ const searchText = [
   }
 
   .project-card__metrics dd {
-    font-family: var(--font-display);
+    font-family: var(--font-ui);
     font-size: 1.1rem;
     font-weight: 700;
-    color: var(--color-accent-deep);
+    color: var(--color-plum);
   }
 
   .project-card__technical-footer {
@@ -466,7 +479,7 @@ const searchText = [
   }
 
   .project-card__areas {
-    font-family: var(--font-display);
+    font-family: var(--font-ui);
     font-size: 0.72rem;
     letter-spacing: 0.06em;
     text-transform: uppercase;

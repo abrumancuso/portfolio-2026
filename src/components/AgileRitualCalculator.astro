@@ -1,0 +1,2283 @@
+---
+import SectionHeading from './SectionHeading.astro';
+
+/**
+ * Calculadora de Rituales Ágiles — ¿Reunión en vivo o async?
+ *
+ * Cruza datos reales de Open-Meteo (geocoding + forecast) entre Buenos Aires
+ * y la ciudad del equipo para diagnosticar el solapamiento horario y
+ * recomendar el ritual correcto. Todos los estados pedidos en la consigna
+ * quedan visibles en la UI: loading, success, selected, empty y error.
+ */
+
+const baseCity = {
+  id: 'buenos-aires',
+  name: 'Buenos Aires',
+  country: 'Argentina',
+  lat: -34.6037,
+  lon: -58.3816,
+  timezone: 'America/Argentina/Buenos_Aires',
+  abbreviation: 'ART',
+};
+
+const hubs = [
+  { id: 'san-francisco', name: 'San Francisco', country: 'Estados Unidos', lat: 37.7749, lon: -122.4194, timezone: 'America/Los_Angeles' },
+  { id: 'madrid', name: 'Madrid', country: 'España', lat: 40.4168, lon: -3.7038, timezone: 'Europe/Madrid' },
+  { id: 'cdmx', name: 'Ciudad de México', country: 'México', lat: 19.4326, lon: -99.1332, timezone: 'America/Mexico_City' },
+  { id: 'londres', name: 'Londres', country: 'Reino Unido', lat: 51.5074, lon: -0.1278, timezone: 'Europe/London' },
+  { id: 'berlin', name: 'Berlín', country: 'Alemania', lat: 52.52, lon: 13.405, timezone: 'Europe/Berlin' },
+  { id: 'sao-paulo', name: 'São Paulo', country: 'Brasil', lat: -23.5505, lon: -46.6333, timezone: 'America/Sao_Paulo' },
+];
+
+const rituals = [
+  {
+    id: 'kickoff',
+    label: 'Kickoff & Discovery UX',
+    short: 'Kickoff',
+    meta: '60 min · alineación y empatía',
+    minutes: 60,
+    sync: 1,
+    tone: 'plum',
+    detail: 'Necesita conversación cara a cara: expectativas, alcance y criterios de éxito.',
+  },
+  {
+    id: 'critique',
+    label: 'Design Critique en Figma',
+    short: 'Critique',
+    meta: '45 min · flujos, UI y sistema',
+    minutes: 45,
+    sync: 0.8,
+    tone: 'terracotta',
+    detail: 'Conviene compartir pantalla, pero las observaciones se pueden documentar.',
+  },
+  {
+    id: 'planning',
+    label: 'Sprint Planning & Priorización',
+    short: 'Planning',
+    meta: '45 min · alcance y roadmap',
+    minutes: 45,
+    sync: 0.9,
+    tone: 'peach',
+    detail: 'Requiere decisiones conjuntas sobre prioridades y capacidad del equipo.',
+  },
+  {
+    id: 'daily',
+    label: 'Daily / Handoff & Bugs',
+    short: 'Daily',
+    meta: '15 min · seguimiento técnico',
+    minutes: 15,
+    sync: 0.25,
+    tone: 'cream',
+    detail: 'Con un update escrito alcanza; la reunión sólo suma si hay un bloqueo.',
+  },
+];
+
+const config = { baseCity, hubs, rituals, defaultRitual: 'kickoff', defaultHub: 'madrid' };
+---
+
+<section class="rituals section" id="rituales" aria-labelledby="rituales-title">
+  <div class="container rituals__inner">
+    <SectionHeading
+      eyebrow="Herramienta interactiva · datos en vivo"
+      title="¿Reunión en vivo o async? Calculá el ritual correcto"
+      description="Cruzo mi base en Buenos Aires con la ciudad de tu equipo usando la hora y el clima reales de Open-Meteo. El resultado es un diagnóstico de coordinación: cuántas horas compartimos, qué tan viable es la sincronía y cómo protegería el foco del equipo."
+      id="rituales-title"
+    />
+
+    <div class="rituals__stage">
+      <span class="rituals__sticker rituals__sticker--star" aria-hidden="true">✦</span>
+      <span class="rituals__sticker rituals__sticker--smile" aria-hidden="true">☺</span>
+
+      <div class="rituals__panel" data-rituals data-state="loading" aria-busy="true">
+        <span class="rituals__tape" aria-hidden="true"></span>
+
+        <div class="rituals__bar">
+          <span class="rituals__state" data-state-badge data-state="loading">
+            <span class="rituals__state-dot" aria-hidden="true"></span>
+            Cargando datos…
+          </span>
+          <p class="rituals__endpoint" aria-hidden="true">
+            Open-Meteo · geocoding + forecast · sin API key
+          </p>
+          <button class="rituals__offline" type="button" data-offline aria-pressed="false">
+            Simular modo offline
+          </button>
+        </div>
+
+        <form class="rituals__search" data-search-form role="search" novalidate>
+          <label class="rituals__label" for="city-search">Paso 1 · ¿Dónde está tu equipo?</label>
+
+          <div class="rituals__search-row">
+            <div class="rituals__field">
+              <input
+                class="rituals__input"
+                id="city-search"
+                name="city"
+                type="text"
+                placeholder="Buscá una ciudad: Madrid, Tokio, Toronto…"
+                autocomplete="off"
+                spellcheck="false"
+                role="combobox"
+                aria-autocomplete="list"
+                aria-expanded="false"
+                aria-controls="city-results"
+                data-city-input
+              />
+              <ul class="rituals__results" id="city-results" role="listbox" aria-label="Ciudades encontradas" data-results hidden></ul>
+            </div>
+            <button class="rituals__go" type="submit">Buscar</button>
+          </div>
+
+          <p class="rituals__hint" data-search-hint>Elegí un hub tecnológico o escribí cualquier ciudad del mundo:</p>
+
+          <div class="rituals__hubs" data-hubs>
+            {hubs.map((hub, index) => (
+              <button
+                class="rituals__hub"
+                type="button"
+                data-hub={index}
+              >
+                {hub.name}
+              </button>
+            ))}
+          </div>
+        </form>
+
+        <!-- Estado 1: carga -->
+        <div class="rituals__skeleton" data-region="loading" aria-label="Cargando datos del equipo">
+          <span class="rituals__bone"></span>
+          <span class="rituals__bone"></span>
+          <span class="rituals__bone"></span>
+        </div>
+
+        <!-- Estado 4: vacío -->
+        <div class="rituals__empty" data-region="empty" hidden>
+          <p class="rituals__empty-emoji" aria-hidden="true">🔍✨</p>
+          <h3>No encontramos esa ciudad</h3>
+          <p data-empty-copy>
+            Open-Meteo no devolvió resultados. Probá con otro nombre o volvé a
+            los hubs sugeridos.
+          </p>
+          <button class="btn btn--primary" type="button" data-back-to-hubs>
+            Volver a ciudades sugeridas
+          </button>
+        </div>
+
+        <!-- Estado 5: error / fallback -->
+        <div class="rituals__error" data-region="error" hidden role="alert">
+          <p class="rituals__error-emoji" aria-hidden="true">🛠️</p>
+          <h3>Se cortó la conexión con Open-Meteo</h3>
+          <p data-error-copy>
+            No pudimos traer la hora y el clima en vivo. La calculadora no se
+            rompe: podés reintentar o seguir con husos horarios de respaldo.
+          </p>
+          <div class="rituals__error-actions">
+            <button class="btn btn--primary" type="button" data-retry>Reintentar conexión</button>
+            <button class="btn btn--ghost" type="button" data-fallback>Usar husos de respaldo</button>
+          </div>
+        </div>
+
+        <!-- Estados 2 y 3: contenido / selección -->
+        <div class="rituals__success" data-region="success" hidden>
+          <div class="rituals__cities">
+            <article class="rituals__city rituals__city--base" aria-label="Estado actual en Buenos Aires">
+              <p class="rituals__city-tag">Mi base</p>
+              <h3 class="rituals__city-name">Buenos Aires</h3>
+              <p class="rituals__city-time" data-base-time>--:--</p>
+              <p class="rituals__city-meta">
+                <span data-base-tz>ART</span> · <span data-base-offset>UTC−3</span>
+              </p>
+              <p class="rituals__city-weather">
+                <span class="rituals__city-emoji" data-base-emoji aria-hidden="true">🌤️</span>
+                <span><strong data-base-temp>—</strong> <span data-base-weather>consultando clima</span></span>
+              </p>
+            </article>
+
+            <div class="rituals__bridge" aria-hidden="true">
+              <span data-diff>—</span>
+              <small>diferencia</small>
+            </div>
+
+            <article class="rituals__city rituals__city--team" aria-label="Estado actual en la ciudad del equipo">
+              <p class="rituals__city-tag">Ciudad del equipo</p>
+              <h3 class="rituals__city-name" data-team-name>Elegí una ciudad</h3>
+              <p class="rituals__city-time" data-team-time>--:--</p>
+              <p class="rituals__city-meta">
+                <span data-team-tz>—</span> · <span data-team-offset>—</span>
+              </p>
+              <p class="rituals__city-weather">
+                <span class="rituals__city-emoji" data-team-emoji aria-hidden="true">🌍</span>
+                <span><strong data-team-temp>—</strong> <span data-team-weather>consultando clima</span></span>
+              </p>
+            </article>
+          </div>
+
+          <fieldset class="rituals__fieldset">
+            <legend class="rituals__label">Paso 2 · ¿Qué ritual necesitamos resolver?</legend>
+            <div class="rituals__rituals" role="group" aria-label="Rituales ágiles">
+              {rituals.map((ritual) => (
+                <button
+                  class={`rituals__ritual rituals__ritual--${ritual.tone}`}
+                  type="button"
+                  data-ritual={ritual.id}
+                  aria-pressed={ritual.id === config.defaultRitual ? 'true' : 'false'}
+                >
+                  <span class="rituals__ritual-name">{ritual.label}</span>
+                  <span class="rituals__ritual-meta">{ritual.meta}</span>
+                  <span class="rituals__ritual-state">
+                    {ritual.id === config.defaultRitual ? 'Seleccionado' : 'Tocar para elegir'}
+                  </span>
+                </button>
+              ))}
+            </div>
+            <p class="rituals__ritual-detail" data-ritual-detail>
+              {rituals[0].detail}
+            </p>
+          </fieldset>
+
+          <div class="rituals__overlap">
+            <div class="rituals__overlap-head">
+              <h3>Solapamiento de 24 horas</h3>
+              <p class="rituals__overlap-window">Ventana laboral de referencia: 9:00 a 18:00 (hora local de cada equipo)</p>
+            </div>
+
+            <div class="rituals__ruler" aria-hidden="true">
+              <span>00</span><span>06</span><span>12</span><span>18</span><span>24</span>
+            </div>
+
+            <div class="rituals__track">
+              <div class="rituals__lane" aria-hidden="true">
+                <span class="rituals__lane-label">BA</span>
+                <div class="rituals__lane-blocks" data-lane-base></div>
+              </div>
+              <div class="rituals__lane" aria-hidden="true">
+                <span class="rituals__lane-label">EQ</span>
+                <div class="rituals__lane-blocks" data-lane-team></div>
+              </div>
+              <div class="rituals__lane rituals__lane--golden" aria-hidden="true">
+                <span class="rituals__lane-label">GH</span>
+                <div class="rituals__lane-blocks" data-lane-golden></div>
+              </div>
+            </div>
+
+            <p class="rituals__legend">
+              <span class="rituals__legend-item rituals__legend-item--base">Buenos Aires</span>
+              <span class="rituals__legend-item rituals__legend-item--team">Ciudad del equipo</span>
+              <span class="rituals__legend-item rituals__legend-item--golden">Golden hours</span>
+              <span class="rituals__legend-note">Horas leídas en hora de Buenos Aires</span>
+            </p>
+
+            <p class="rituals__golden-text" data-golden-text>Calculando horas compartidas…</p>
+
+            <div class="rituals__bar-readout" aria-hidden="true">
+              <span class="rituals__bar-value" data-overlap-value>0 h</span>
+              <div class="rituals__bar-track"><span data-overlap-bar></span></div>
+              <span class="rituals__bar-max">9 h máx.</span>
+            </div>
+          </div>
+
+          <div class="rituals__diagnosis">
+            <div class="rituals__score">
+              <p class="rituals__score-label">Índice de viabilidad sincrónica</p>
+              <p class="rituals__score-value"><span data-score>—</span><small>%</small></p>
+              <div class="rituals__score-track" aria-hidden="true">
+                <span data-score-bar></span>
+              </div>
+              <p class="rituals__score-note" data-score-note>—</p>
+            </div>
+
+            <div class="rituals__verdict">
+              <p class="rituals__verdict-badge" data-verdict-badge data-verdict="sync">
+                <span aria-hidden="true" data-verdict-emoji>🟢</span>
+                <span data-verdict-label>Sesión sincrónica</span>
+              </p>
+              <h3 data-verdict-title>—</h3>
+              <p class="rituals__verdict-copy" data-verdict-copy>—</p>
+              <p class="rituals__slot" data-slot>—</p>
+            </div>
+
+            <div class="rituals__kit">
+              <p class="rituals__kit-label">Cómo lo resuelvo</p>
+              <ul data-kit></ul>
+            </div>
+          </div>
+
+          <p class="rituals__weather" data-weather>—</p>
+        </div>
+      </div>
+    </div>
+
+    <p class="rituals__source">
+      Datos en vivo de
+      <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Open-Meteo</a>
+      (geocoding y forecast). Sin API key, sin backend y sin guardar búsquedas.
+    </p>
+
+    <p class="visually-hidden" role="status" aria-live="polite" data-live></p>
+  </div>
+</section>
+
+<script
+  type="application/json"
+  id="rituals-config"
+  is:inline
+  set:html={JSON.stringify(config)}
+></script>
+
+<script>
+  type Hub = {
+    id: string;
+    name: string;
+    country: string;
+    lat: number;
+    lon: number;
+    timezone?: string;
+    abbreviation?: string;
+  };
+
+  type Ritual = {
+    id: string;
+    label: string;
+    short: string;
+    meta: string;
+    minutes: number;
+    sync: number;
+    tone: string;
+    detail: string;
+  };
+
+  type CityWeather = {
+    name: string;
+    country: string;
+    lat: number;
+    lon: number;
+    timezone?: string;
+    abbreviation: string;
+    utcOffsetSeconds: number;
+    temperature: number | null;
+    weatherCode: number | null;
+    isDay: boolean;
+  };
+
+  type Config = {
+    baseCity: Hub;
+    hubs: Hub[];
+    rituals: Ritual[];
+    defaultRitual: string;
+    defaultHub: string;
+  };
+
+  type Plan = {
+    diffSeconds: number;
+    diffMin: number;
+    overlapStart: number;
+    overlapEnd: number;
+    overlapMinutes: number;
+    overlapHours: number;
+    ritual: Ritual;
+    score: number;
+    verdict: 'sync' | 'hybrid' | 'async';
+    slot: { startBA: number; endBA: number; startTeam: number; endTeam: number } | null;
+    inBaseHours: boolean;
+    inTeamHours: boolean;
+  };
+
+  const WORK_START = 9 * 60;
+  const WORK_END = 18 * 60;
+  const DAY = 24 * 60;
+
+  const panel = document.querySelector<HTMLElement>('[data-rituals]');
+  const configElement = document.getElementById('rituals-config');
+
+  if (panel && configElement) {
+    const config = JSON.parse(configElement.textContent ?? '{}') as Config;
+    const rituals = config.rituals;
+    const hubs = config.hubs;
+
+    const find = <T extends Element = HTMLElement>(selector: string) =>
+      panel.querySelector<T>(selector);
+
+    const input = find<HTMLInputElement>('[data-city-input]');
+    const form = find<HTMLFormElement>('[data-search-form]');
+    const resultsList = find<HTMLUListElement>('[data-results]');
+    const searchHint = find<HTMLElement>('[data-search-hint]');
+    const stateBadge = find<HTMLElement>('[data-state-badge]');
+    const live = document.querySelector<HTMLElement>('[data-live]');
+    const offlineButton = find<HTMLButtonElement>('[data-offline]');
+    const backToHubsButton = find<HTMLButtonElement>('[data-back-to-hubs]');
+    const retryButton = find<HTMLButtonElement>('[data-retry]');
+    const fallbackButton = find<HTMLButtonElement>('[data-fallback]');
+    const emptyCopy = find<HTMLElement>('[data-empty-copy]');
+    const errorCopy = find<HTMLElement>('[data-error-copy]');
+
+    const regions = {
+      loading: find<HTMLElement>('[data-region="loading"]'),
+      empty: find<HTMLElement>('[data-region="empty"]'),
+      error: find<HTMLElement>('[data-region="error"]'),
+      success: find<HTMLElement>('[data-region="success"]'),
+    };
+
+    const baseTime = find<HTMLElement>('[data-base-time]');
+    const baseTz = find<HTMLElement>('[data-base-tz]');
+    const baseOffset = find<HTMLElement>('[data-base-offset]');
+    const baseTemp = find<HTMLElement>('[data-base-temp]');
+    const baseWeather = find<HTMLElement>('[data-base-weather]');
+    const baseEmoji = find<HTMLElement>('[data-base-emoji]');
+
+    const teamName = find<HTMLElement>('[data-team-name]');
+    const teamTime = find<HTMLElement>('[data-team-time]');
+    const teamTz = find<HTMLElement>('[data-team-tz]');
+    const teamOffset = find<HTMLElement>('[data-team-offset]');
+    const teamTemp = find<HTMLElement>('[data-team-temp]');
+    const teamWeather = find<HTMLElement>('[data-team-weather]');
+    const teamEmoji = find<HTMLElement>('[data-team-emoji]');
+    const diffLabel = find<HTMLElement>('[data-diff]');
+
+    const laneBase = find<HTMLElement>('[data-lane-base]');
+    const laneTeam = find<HTMLElement>('[data-lane-team]');
+    const laneGolden = find<HTMLElement>('[data-lane-golden]');
+    const goldenText = find<HTMLElement>('[data-golden-text]');
+    const overlapValue = find<HTMLElement>('[data-overlap-value]');
+    const overlapBar = find<HTMLElement>('[data-overlap-bar]');
+
+    const scoreValue = find<HTMLElement>('[data-score]');
+    const scoreBar = find<HTMLElement>('[data-score-bar]');
+    const scoreNote = find<HTMLElement>('[data-score-note]');
+    const verdictBadge = find<HTMLElement>('[data-verdict-badge]');
+    const verdictEmoji = find<HTMLElement>('[data-verdict-emoji]');
+    const verdictLabel = find<HTMLElement>('[data-verdict-label]');
+    const verdictTitle = find<HTMLElement>('[data-verdict-title]');
+    const verdictCopy = find<HTMLElement>('[data-verdict-copy]');
+    const slotText = find<HTMLElement>('[data-slot]');
+    const kitList = find<HTMLElement>('[data-kit]');
+    const weatherText = find<HTMLElement>('[data-weather]');
+    const ritualDetail = find<HTMLElement>('[data-ritual-detail]');
+    const ritualButtons = Array.from(panel.querySelectorAll<HTMLButtonElement>('[data-ritual]'));
+    const hubButtons = Array.from(panel.querySelectorAll<HTMLButtonElement>('[data-hub]'));
+
+    const STATE_LABELS: Record<string, string> = {
+      loading: 'Cargando datos…',
+      success: 'Contenido disponible',
+      selected: 'Ritual seleccionado',
+      empty: 'Sin resultados',
+      error: 'Error de conexión',
+    };
+
+    const VERDICTS = {
+      sync: {
+        emoji: '🟢',
+        label: 'Sesión sincrónica en vivo',
+        title: 'Reunión en vivo, con agenda cerrada',
+        kit: [
+          'Agenda previa en Notion con objetivo, decisiones y tiempo por bloque.',
+          'Tablero colaborativo en FigJam para trabajar sobre el flujo en vivo.',
+          'Resumen y próximos pasos cargados en Jira o Linear al terminar.',
+        ],
+      },
+      hybrid: {
+        emoji: '🟡',
+        label: 'Sesión corta + async',
+        title: 'Sincronía mínima y el resto documentado',
+        kit: [
+          'Bloque de 15 a 20 minutos para destrabar una decisión puntual.',
+          'Grabación en Loom para quien no pueda sumarse en vivo.',
+          'Decisiones y criterios de aceptación escritos en Notion.',
+        ],
+      },
+      async: {
+        emoji: '🟣',
+        label: 'Flujo asíncrono (async-first)',
+        title: 'Async para cuidar el foco del equipo',
+        kit: [
+          'Video de 5 minutos en Loom recorriendo el prototipo en Figma.',
+          'Comentarios estructurados con @menciones en el archivo de Figma.',
+          'Tickets con criterios de aceptación claros en Jira o Linear.',
+          'Check-in escrito en Slack con ventana de respuesta de 24 horas.',
+        ],
+      },
+    } as const;
+
+    let base: CityWeather | null = null;
+    let team: CityWeather | null = null;
+    let currentCity: Hub = hubs.find((hub) => hub.id === config.defaultHub) ?? hubs[0];
+    let selectedRitual = config.defaultRitual;
+    let simulateOffline = false;
+    let usingFallback = false;
+    let lastResults: Hub[] = [];
+    let searchTimer = 0;
+    let searchSeq = 0;
+    let loadSeq = 0;
+
+    const pad = (value: number) => String(value).padStart(2, '0');
+
+    const formatClock = (offsetSeconds: number, now = Date.now()) => {
+      const date = new Date(now + offsetSeconds * 1000);
+      return `${pad(date.getUTCHours())}:${pad(date.getUTCMinutes())}`;
+    };
+
+    const minutesOfDay = (offsetSeconds: number, now = Date.now()) => {
+      const date = new Date(now + offsetSeconds * 1000);
+      return date.getUTCHours() * 60 + date.getUTCMinutes();
+    };
+
+    const formatMinutes = (totalMinutes: number) => {
+      const normalized = ((Math.round(totalMinutes) % DAY) + DAY) % DAY;
+      return `${pad(Math.floor(normalized / 60))}:${pad(normalized % 60)}`;
+    };
+
+    const offsetLabel = (seconds: number) => {
+      const sign = seconds >= 0 ? '+' : '−';
+      const abs = Math.abs(seconds);
+      const hours = Math.floor(abs / 3600);
+      const minutes = Math.round((abs % 3600) / 60);
+      return `UTC${sign}${hours}${minutes ? `:${pad(minutes)}` : ''}`;
+    };
+
+    const diffLabelText = (seconds: number) => {
+      const totalMinutes = Math.round(seconds / 60);
+      const sign = totalMinutes >= 0 ? '+' : '−';
+      const abs = Math.abs(totalMinutes);
+      const hours = Math.floor(abs / 60);
+      const minutes = abs % 60;
+      if (hours === 0) return `${sign}${minutes} min`;
+      return minutes === 0 ? `${sign}${hours} h` : `${sign}${hours} h ${minutes} min`;
+    };
+
+    const weatherInfo = (code: number | null, isDay: boolean) => {
+      if (code === null) return { label: 'sin dato de clima', emoji: '🌡️' };
+      if (code === 0) return { label: 'despejado', emoji: isDay ? '☀️' : '🌙' };
+      if (code <= 2) return { label: 'parcialmente nublado', emoji: isDay ? '🌤️' : '☁️' };
+      if (code === 3) return { label: 'nublado', emoji: '☁️' };
+      if (code === 45 || code === 48) return { label: 'con niebla', emoji: '🌫️' };
+      if (code >= 51 && code <= 57) return { label: 'con llovizna', emoji: '🌦️' };
+      if (code >= 61 && code <= 67) return { label: 'con lluvia', emoji: '🌧️' };
+      if (code >= 71 && code <= 77) return { label: 'con nieve', emoji: '❄️' };
+      if (code >= 80 && code <= 82) return { label: 'con chubascos', emoji: '🌦️' };
+      if (code >= 95) return { label: 'con tormenta', emoji: '⛈️' };
+      return { label: 'con clima variable', emoji: '🌥️' };
+    };
+
+    const setText = (element: Element | null, value: string) => {
+      if (element) element.textContent = value;
+    };
+
+    const setState = (state: keyof typeof STATE_LABELS, message?: string) => {
+      panel.dataset.state = state;
+      panel.setAttribute('aria-busy', String(state === 'loading'));
+
+      if (stateBadge) {
+        stateBadge.dataset.state = state;
+        stateBadge.innerHTML = '';
+        const dot = document.createElement('span');
+        dot.className = 'rituals__state-dot';
+        dot.setAttribute('aria-hidden', 'true');
+        stateBadge.append(dot, document.createTextNode(STATE_LABELS[state] ?? state));
+      }
+
+      regions.loading.hidden = state !== 'loading';
+      regions.empty.hidden = state !== 'empty';
+      regions.error.hidden = state !== 'error';
+      regions.success.hidden = state !== 'success' && state !== 'selected';
+
+      if (message) setText(live, message);
+
+      if (state === 'success' || state === 'selected') renderPlan();
+    };
+
+    const showError = (message: string) => {
+      setText(errorCopy, message);
+      setState('error', message);
+    };
+
+    const zoneOffsetSeconds = (timeZone: string, now = Date.now()): number | null => {
+      try {
+        const formatter = new Intl.DateTimeFormat('en-US', {
+          timeZone,
+          timeZoneName: 'longOffset',
+        });
+        const part = formatter
+          .formatToParts(new Date(now))
+          .find((item) => item.type === 'timeZoneName');
+        const match = part?.value.match(/GMT([+-])(\d{1,2})(?::(\d{2}))?/);
+        if (!match) return null;
+        const sign = match[1] === '-' ? -1 : 1;
+        return sign * (Number(match[2]) * 3600 + Number(match[3] ?? 0) * 60);
+      } catch {
+        return null;
+      }
+    };
+
+    const fetchForecast = async (city: Hub): Promise<CityWeather> => {
+      if (simulateOffline) throw new Error('offline-simulado');
+
+      const url = new URL('https://api.open-meteo.com/v1/forecast');
+      url.searchParams.set('latitude', String(city.lat));
+      url.searchParams.set('longitude', String(city.lon));
+      url.searchParams.set('current', 'temperature_2m,is_day,weather_code');
+      url.searchParams.set('timezone', city.timezone ?? 'auto');
+
+      const response = await fetch(url.toString());
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+      const data = await response.json();
+      const current = data?.current ?? {};
+
+      return {
+        name: city.name,
+        country: city.country ?? '',
+        lat: city.lat,
+        lon: city.lon,
+        timezone: city.timezone,
+        abbreviation: data?.timezone_abbreviation ?? 'LOCAL',
+        utcOffsetSeconds:
+          typeof data?.utc_offset_seconds === 'number'
+            ? data.utc_offset_seconds
+            : (zoneOffsetSeconds(city.timezone ?? 'UTC') ?? 0),
+        temperature:
+          typeof current.temperature_2m === 'number' ? current.temperature_2m : null,
+        weatherCode:
+          typeof current.weather_code === 'number' ? current.weather_code : null,
+        isDay: Boolean(current.is_day),
+      };
+    };
+
+    const geocode = async (query: string): Promise<Hub[]> => {
+      if (simulateOffline) throw new Error('offline-simulado');
+
+      const url = new URL('https://geocoding-api.open-meteo.com/v1/search');
+      url.searchParams.set('name', query);
+      url.searchParams.set('count', '5');
+      url.searchParams.set('language', 'es');
+      url.searchParams.set('format', 'json');
+
+      const response = await fetch(url.toString());
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+      const data = await response.json();
+      const results = Array.isArray(data?.results) ? data.results : [];
+
+      return results.map((item: Record<string, unknown>) => ({
+        id: String(item.id ?? `${item.latitude}-${item.longitude}`),
+        name: String(item.name ?? query),
+        country: String(item.country ?? ''),
+        lat: Number(item.latitude),
+        lon: Number(item.longitude),
+      }));
+    };
+
+    const fallbackCity = (city: Hub): CityWeather => {
+      const known = city.timezone ? zoneOffsetSeconds(city.timezone) : null;
+      const estimated = Math.round(city.lon / 15) * 3600;
+      const offset = known ?? estimated;
+      return {
+        name: city.name,
+        country: city.country ?? '',
+        lat: city.lat,
+        lon: city.lon,
+        timezone: city.timezone,
+        abbreviation: city.abbreviation ?? offsetLabel(offset),
+        utcOffsetSeconds: offset,
+        temperature: null,
+        weatherCode: null,
+        isDay: true,
+      };
+    };
+
+    const hideResults = () => {
+      if (!resultsList) return;
+      resultsList.hidden = true;
+      resultsList.innerHTML = '';
+      lastResults = [];
+      input?.setAttribute('aria-expanded', 'false');
+    };
+
+    const chooseCity = (city: Hub) => {
+      currentCity = city;
+      if (input) input.value = city.name;
+      hideResults();
+      void loadTeam(city);
+    };
+
+    const renderResults = (results: Hub[]) => {
+      if (!resultsList) return;
+      lastResults = results;
+      resultsList.innerHTML = '';
+
+      results.forEach((result) => {
+        const item = document.createElement('li');
+        item.className = 'rituals__result';
+        item.setAttribute('role', 'option');
+        item.tabIndex = -1;
+
+        const strong = document.createElement('strong');
+        strong.textContent = result.name;
+
+        const span = document.createElement('span');
+        const place = [result.country].filter(Boolean).join('');
+        span.textContent = place || 'Ciudad';
+
+        item.append(strong, span);
+        item.addEventListener('click', () => chooseCity(result));
+        item.addEventListener('keydown', (event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            chooseCity(result);
+          }
+          if (event.key === 'Escape') {
+            hideResults();
+            input?.focus();
+          }
+          if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+            event.preventDefault();
+            const options = Array.from(
+              resultsList.querySelectorAll<HTMLElement>('[role="option"]'),
+            );
+            const index = options.indexOf(item);
+            const next = event.key === 'ArrowDown' ? options[index + 1] : options[index - 1];
+            next?.focus();
+          }
+        });
+
+        resultsList.appendChild(item);
+      });
+
+      resultsList.hidden = false;
+      input?.setAttribute('aria-expanded', 'true');
+      setText(searchHint, `${results.length} resultado(s). Elegí una ciudad para calcular el solapamiento.`);
+    };
+
+    const showEmpty = (query: string) => {
+      hideResults();
+      setText(
+        emptyCopy,
+        `Open-Meteo no encontró “${query}”. Probá con el nombre en español, sin abreviaturas, o volvé a los hubs sugeridos.`,
+      );
+      setState('empty', `Sin resultados para ${query}.`);
+    };
+
+    const renderCityWeather = (city: CityWeather) => {
+      const info = weatherInfo(city.weatherCode, city.isDay);
+      return {
+        time: formatClock(city.utcOffsetSeconds),
+        tz: city.abbreviation,
+        offset: offsetLabel(city.utcOffsetSeconds),
+        emoji: info.emoji,
+        temp: city.temperature === null ? '—' : `${Math.round(city.temperature)} °C`,
+        weather: info.label,
+      };
+    };
+
+    const segments = (startMinute: number, endMinute: number) => {
+      const result: Array<[number, number]> = [];
+      const length = endMinute - startMinute;
+      if (length <= 0) return result;
+      const start = ((startMinute % DAY) + DAY) % DAY;
+      const end = start + length;
+      if (end <= DAY) {
+        result.push([start, end]);
+      } else {
+        result.push([start, DAY]);
+        result.push([0, end - DAY]);
+      }
+      return result;
+    };
+
+    const paintLane = (
+      lane: HTMLElement | null,
+      startMinute: number,
+      endMinute: number,
+      className: string,
+    ) => {
+      if (!lane) return;
+      lane.innerHTML = '';
+      segments(startMinute, endMinute).forEach(([start, end]) => {
+        const block = document.createElement('span');
+        block.className = `rituals__block ${className}`;
+        block.style.left = `${(start / DAY) * 100}%`;
+        block.style.width = `${((end - start) / DAY) * 100}%`;
+        lane.appendChild(block);
+      });
+    };
+
+    const buildPlan = (): Plan | null => {
+      if (!base || !team) return null;
+
+      const diffSeconds = team.utcOffsetSeconds - base.utcOffsetSeconds;
+      const diffMin = diffSeconds / 60;
+      const overlapStart = Math.max(WORK_START, WORK_START - diffMin);
+      const overlapEnd = Math.min(WORK_END, WORK_END - diffMin);
+      const overlapMinutes = Math.max(0, overlapEnd - overlapStart);
+      const overlapHours = overlapMinutes / 60;
+
+      const ritual = rituals.find((item) => item.id === selectedRitual) ?? rituals[0];
+
+      const now = Date.now();
+      const baseMinutes = minutesOfDay(base.utcOffsetSeconds, now);
+      const teamMinutes = minutesOfDay(team.utcOffsetSeconds, now);
+      const inBaseHours = baseMinutes >= WORK_START && baseMinutes < WORK_END;
+      const inTeamHours = teamMinutes >= WORK_START && teamMinutes < WORK_END;
+      const outsideBoth = !inBaseHours && !inTeamHours;
+
+      const overlapScore = (overlapHours / 9) * 55;
+      const ritualScore = ritual.sync * 25 * Math.min(1, overlapHours / 2);
+      const hourScore = inBaseHours && inTeamHours ? 20 : inBaseHours || inTeamHours ? 10 : 0;
+
+      let score = Math.round(overlapScore + ritualScore + hourScore);
+      if (overlapMinutes <= 0) score = Math.min(score, 30);
+      score = Math.max(0, Math.min(100, score));
+
+      let verdict: Plan['verdict'];
+      if (overlapMinutes <= 0 || outsideBoth) verdict = 'async';
+      else if (ritual.id === 'daily' && overlapHours < 4) verdict = 'async';
+      else if (score >= 60) verdict = 'sync';
+      else if (score >= 35) verdict = 'hybrid';
+      else verdict = 'async';
+
+      let slot: Plan['slot'] = null;
+      if (overlapMinutes >= ritual.minutes) {
+        const earliest = overlapStart;
+        const latest = overlapEnd - ritual.minutes;
+        const preferred = Math.max(earliest, 10 * 60);
+        const startBA = Math.min(preferred, latest);
+        slot = {
+          startBA,
+          endBA: startBA + ritual.minutes,
+          startTeam: startBA + diffMin,
+          endTeam: startBA + ritual.minutes + diffMin,
+        };
+      }
+
+      return {
+        diffSeconds,
+        diffMin,
+        overlapStart,
+        overlapEnd,
+        overlapMinutes,
+        overlapHours,
+        ritual,
+        score,
+        verdict,
+        slot,
+        inBaseHours,
+        inTeamHours,
+      };
+    };
+
+    const renderPlan = () => {
+      const plan = buildPlan();
+      if (!plan || !base || !team) return;
+
+      const baseView = renderCityWeather(base);
+      const teamView = renderCityWeather(team);
+
+      setText(baseTime, baseView.time);
+      setText(baseTz, baseView.tz);
+      setText(baseOffset, baseView.offset);
+      setText(baseTemp, baseView.temp);
+      setText(baseWeather, baseView.weather);
+      setText(baseEmoji, baseView.emoji);
+
+      setText(teamName, team.name);
+      setText(teamTime, teamView.time);
+      setText(teamTz, teamView.tz);
+      setText(teamOffset, teamView.offset);
+      setText(teamTemp, teamView.temp);
+      setText(teamWeather, teamView.weather);
+      setText(teamEmoji, teamView.emoji);
+
+      setText(diffLabel, diffLabelText(plan.diffSeconds));
+
+      paintLane(laneBase, WORK_START, WORK_END, 'rituals__block--base');
+      paintLane(
+        laneTeam,
+        WORK_START - plan.diffMin,
+        WORK_END - plan.diffMin,
+        'rituals__block--team',
+      );
+      paintLane(laneGolden, plan.overlapStart, plan.overlapEnd, 'rituals__block--golden');
+
+      setText(
+        goldenText,
+        plan.overlapMinutes > 0
+          ? `Golden hours: ${formatMinutes(plan.overlapStart)} a ${formatMinutes(plan.overlapEnd)} (hora de Buenos Aires). Son ${plan.overlapHours.toFixed(1)} h de coincidencia real.`
+          : 'Hoy no hay horas hábiles compartidas entre los dos equipos.',
+      );
+
+      setText(
+        overlapValue,
+        `${plan.overlapHours.toFixed(plan.overlapHours % 1 === 0 ? 0 : 1)} h`,
+      );
+      if (overlapBar) {
+        overlapBar.style.width = `${Math.min(100, (plan.overlapMinutes / (9 * 60)) * 100)}%`;
+      }
+
+      setText(scoreValue, String(plan.score));
+      if (scoreBar) scoreBar.style.width = `${plan.score}%`;
+      setText(
+        scoreNote,
+        plan.score >= 60
+          ? 'Buen solapamiento para trabajar en vivo.'
+          : plan.score >= 35
+            ? 'Se puede sincronizar, pero conviene acotar.'
+            : 'Poco margen: el foco del equipo vale más que la reunión.',
+      );
+
+      const verdict = VERDICTS[plan.verdict];
+      verdictBadge?.setAttribute('data-verdict', plan.verdict);
+      setText(verdictEmoji, verdict.emoji);
+      setText(verdictLabel, verdict.label);
+      setText(verdictTitle, verdict.title);
+
+      let copy = '';
+      if (plan.verdict === 'async' && plan.overlapMinutes <= 0) {
+        copy = `Los husos de Buenos Aires y ${team.name} no se tocan en horario laboral. Forzar una reunión implica mover la jornada de alguien: mejor resolverlo con un video y comentarios escritos.`;
+      } else if (plan.verdict === 'async' && !plan.inBaseHours && !plan.inTeamHours) {
+        copy = `Ahora mismo ninguno de los dos equipos está en su horario laboral. Con ${plan.overlapHours.toFixed(1)} h de solapamiento, el ritual puede esperar a mañana: dejalo documentado y liberá la reunión.`;
+      } else if (plan.verdict === 'async') {
+        copy = `Hay ${plan.overlapHours.toFixed(1)} h de coincidencia y ${plan.ritual.label} pide ${plan.ritual.minutes} min. No alcanza para sostenerlo en vivo sin romper el foco: conviene un update asíncrono bien estructurado.`;
+      } else if (plan.verdict === 'hybrid') {
+        copy = `Coincidimos ${plan.overlapHours.toFixed(1)} h. Alcanza para destrabar una decisión puntual, pero no para sostener todo el ritual en vivo: mejor una sesión corta y el resto documentado.`;
+      } else {
+        copy = `Con ${plan.overlapHours.toFixed(1)} h de solapamiento, ${plan.ritual.label} entra completo en la ventana compartida. La reunión no compite con el foco: reemplaza idas y vueltas.`;
+      }
+      setText(verdictCopy, copy);
+
+      if (plan.slot && plan.verdict !== 'async') {
+        setText(
+          slotText,
+          `Franja ideal: ${formatMinutes(plan.slot.startBA)}–${formatMinutes(plan.slot.endBA)} ART · ${formatMinutes(plan.slot.startTeam)}–${formatMinutes(plan.slot.endTeam)} en ${team.name}.`,
+        );
+      } else if (plan.overlapMinutes > 0) {
+        setText(
+          slotText,
+          `No hay un bloque de ${plan.ritual.minutes} min dentro del solapamiento: partilo en dos bloques o resolvelo async.`,
+        );
+      } else {
+        setText(slotText, 'Sin franja compartida hoy: no hay reunión que valga una madrugada.');
+      }
+
+      if (kitList) {
+        kitList.innerHTML = '';
+        verdict.kit.forEach((item) => {
+          const li = document.createElement('li');
+          li.textContent = item;
+          kitList.appendChild(li);
+        });
+      }
+
+      setText(ritualDetail, plan.ritual.detail);
+
+      if (usingFallback || base.temperature === null || team.temperature === null) {
+        setText(
+          weatherText,
+          'Modo de respaldo: los husos horarios se calcularon sin consultar el clima, así que la referencia meteorológica queda fuera de este cálculo.',
+        );
+      } else {
+        const baseInfo = weatherInfo(base.weatherCode, base.isDay);
+        const teamInfo = weatherInfo(team.weatherCode, team.isDay);
+        const closer =
+          plan.verdict === 'sync'
+            ? 'Buen día para conocerse.'
+            : plan.verdict === 'async'
+              ? 'Hoy el foco gana: nos escribimos.'
+              : 'Un café corto y seguimos por escrito.';
+        setText(
+          weatherText,
+          `Además, ahora en Buenos Aires hace ${Math.round(base.temperature)} °C y está ${baseInfo.label}; en ${team.name}, ${Math.round(team.temperature)} °C y está ${teamInfo.label}. ${closer}`,
+        );
+      }
+    };
+
+    const loadTeam = async (city: Hub) => {
+      currentCity = city;
+      usingFallback = false;
+      const seq = ++loadSeq;
+
+      if (simulateOffline) {
+        showError(
+          'Modo offline simulado: la calculadora sigue respondiendo con el estado de error. Usá “Reintentar conexión” para volver a la API real o “Usar husos de respaldo”.',
+        );
+        return;
+      }
+
+      setState('loading');
+      setText(searchHint, `Consultando Open-Meteo para ${city.name}…`);
+
+      try {
+        const [baseData, teamData] = await Promise.all([
+          fetchForecast(config.baseCity),
+          fetchForecast(city),
+        ]);
+
+        if (seq !== loadSeq) return;
+
+        base = baseData;
+        team = teamData;
+
+        setState(
+          'success',
+          `Ciudad cargada: ${team.name}. Diferencia horaria de ${diffLabelText(team.utcOffsetSeconds - base.utcOffsetSeconds)}.`,
+        );
+        setText(searchHint, 'Elegí un hub tecnológico o escribí cualquier ciudad del mundo:');
+      } catch (error) {
+        if (seq !== loadSeq) return;
+        const detail = error instanceof Error ? error.message : 'error desconocido';
+        showError(
+          `No pudimos traer los datos en vivo (${detail}). Podés reintentar la conexión o continuar con husos horarios de respaldo para que la calculadora nunca deje de funcionar.`,
+        );
+      }
+    };
+
+    const renderOfflineButton = () => {
+      if (!offlineButton) return;
+      offlineButton.setAttribute('aria-pressed', String(simulateOffline));
+      offlineButton.textContent = simulateOffline ? 'Offline activo · desactivar' : 'Simular modo offline';
+    };
+
+    offlineButton?.addEventListener('click', () => {
+      simulateOffline = !simulateOffline;
+      renderOfflineButton();
+      if (simulateOffline) {
+        void loadTeam(currentCity);
+      } else if (currentCity) {
+        void loadTeam(currentCity);
+      }
+    });
+
+    retryButton?.addEventListener('click', () => {
+      simulateOffline = false;
+      renderOfflineButton();
+      void loadTeam(currentCity);
+    });
+
+    fallbackButton?.addEventListener('click', () => {
+      base = fallbackCity(config.baseCity);
+      team = fallbackCity(currentCity);
+      usingFallback = true;
+      setState(
+        'success',
+        `Modo de respaldo activo para ${currentCity.name}. Husos calculados localmente, sin clima.`,
+      );
+    });
+
+    backToHubsButton?.addEventListener('click', () => {
+      if (input) input.value = '';
+      hideResults();
+      setText(searchHint, 'Elegí un hub tecnológico o escribí cualquier ciudad del mundo:');
+      if (base && team) setState('success');
+      else void loadTeam(currentCity);
+    });
+
+    hubButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const index = Number(button.dataset.hub);
+        const hub = hubs[index];
+        if (!hub) return;
+        if (input) input.value = hub.name;
+        hideResults();
+        void loadTeam(hub);
+      });
+    });
+
+    ritualButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const id = button.dataset.ritual;
+        if (!id) return;
+        selectedRitual = id;
+        ritualButtons.forEach((item) => {
+          item.setAttribute('aria-pressed', String(item.dataset.ritual === id));
+          const stateLabel = item.querySelector<HTMLElement>('.rituals__ritual-state');
+          if (stateLabel) {
+            stateLabel.textContent =
+              item.dataset.ritual === id ? 'Seleccionado' : 'Tocar para elegir';
+          }
+        });
+        setState('selected', `Ritual seleccionado: ${id}. Diagnóstico actualizado.`);
+      });
+    });
+
+    input?.addEventListener('input', () => {
+      window.clearTimeout(searchTimer);
+      const query = input.value.trim();
+
+      if (query.length < 2) {
+        searchSeq += 1;
+        hideResults();
+        setText(searchHint, 'Elegí un hub tecnológico o escribí cualquier ciudad del mundo:');
+        return;
+      }
+
+      const seq = ++searchSeq;
+      setText(searchHint, `Buscando “${query}” en Open-Meteo…`);
+      searchTimer = window.setTimeout(() => {
+        void searchCities(query, seq);
+      }, 380);
+    });
+
+    const searchCities = async (query: string, seq: number) => {
+      try {
+        const results = await geocode(query);
+        if (seq !== searchSeq) return;
+        if (results.length === 0) {
+          showEmpty(query);
+          return;
+        }
+        if (panel.dataset.state === 'empty') {
+          setState(base && team ? 'success' : 'loading');
+        }
+        renderResults(results);
+      } catch {
+        if (seq !== searchSeq) return;
+        showError(
+          'No pudimos consultar el buscador de ciudades. Revisá la conexión o usá los hubs sugeridos mientras tanto.',
+        );
+      }
+    };
+
+    input?.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        hideResults();
+        return;
+      }
+      if (
+        (event.key === 'ArrowDown' || event.key === 'ArrowUp') &&
+        resultsList &&
+        !resultsList.hidden
+      ) {
+        event.preventDefault();
+        const options = Array.from(
+          resultsList.querySelectorAll<HTMLElement>('[role="option"]'),
+        );
+        const target = event.key === 'ArrowDown' ? options[0] : options[options.length - 1];
+        target?.focus();
+      }
+    });
+
+    form?.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const query = input?.value.trim();
+      if (!query) return;
+
+      if (lastResults.length > 0) {
+        chooseCity(lastResults[0]);
+        return;
+      }
+
+      const seq = ++searchSeq;
+      void (async () => {
+        try {
+          const results = await geocode(query);
+          if (seq !== searchSeq) return;
+          if (results.length > 0) chooseCity(results[0]);
+          else showEmpty(query);
+        } catch {
+          if (seq !== searchSeq) return;
+          showError(
+            'No pudimos consultar el buscador de ciudades. Revisá la conexión o usá los hubs sugeridos mientras tanto.',
+          );
+        }
+      })();
+    });
+
+    /* Reloj vivo: refresca las horas y el diagnóstico cada 30 segundos. */
+    window.setInterval(() => {
+      const state = panel.dataset.state;
+      if (state !== 'success' && state !== 'selected') return;
+      renderPlan();
+    }, 30000);
+
+    renderOfflineButton();
+    void loadTeam(currentCity);
+  }
+</script>
+
+<style>
+  .rituals {
+    background:
+      radial-gradient(ellipse 55% 40% at 82% 8%, rgba(247, 197, 102, 0.45), transparent 70%),
+      radial-gradient(ellipse 40% 35% at 10% 92%, rgba(220, 107, 25, 0.1), transparent 70%),
+      var(--color-bg);
+  }
+
+  .rituals__inner {
+    max-width: var(--container-width);
+    margin: 0 auto;
+  }
+
+  .rituals__stage {
+    position: relative;
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+
+  .rituals__sticker {
+    position: absolute;
+    display: grid;
+    place-items: center;
+    border: 2px solid var(--color-plum);
+    box-shadow: var(--shadow-sticker-sm);
+    font-family: var(--font-ui);
+    font-weight: 700;
+    z-index: 2;
+  }
+
+  .rituals__sticker--star {
+    top: -26px;
+    right: 5%;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: var(--color-mustard);
+    color: var(--color-plum);
+    font-size: 1.3rem;
+    transform: rotate(10deg);
+  }
+
+  .rituals__sticker--smile {
+    bottom: -20px;
+    left: 3%;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: var(--color-terracotta);
+    color: var(--color-text);
+    font-size: 1.2rem;
+    transform: rotate(-9deg);
+  }
+
+  .rituals__panel {
+    position: relative;
+    padding: clamp(18px, 3vw, 34px);
+    border: 2px solid var(--color-plum);
+    border-radius: var(--radius-xl);
+    background: var(--color-surface);
+    box-shadow: 12px 12px 0 rgba(108, 3, 69, 0.14);
+  }
+
+  .rituals__tape {
+    position: absolute;
+    top: -16px;
+    left: 50%;
+    width: 170px;
+    height: 32px;
+    transform: translateX(-50%) rotate(-2.5deg);
+    border: 1.5px solid rgba(108, 3, 69, 0.35);
+    border-radius: 4px;
+    background: repeating-linear-gradient(
+      45deg,
+      var(--color-mustard) 0 10px,
+      #f9d68f 10px 20px
+    );
+    opacity: 0.95;
+  }
+
+  .rituals__bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding-bottom: 16px;
+    border-bottom: 2px dashed rgba(108, 3, 69, 0.22);
+  }
+
+  .rituals__state {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border: 2px solid var(--color-plum);
+    border-radius: var(--radius-pill);
+    background: var(--color-mustard);
+    box-shadow: var(--shadow-sticker-sm);
+    font-family: var(--font-ui);
+    font-size: 0.74rem;
+    font-weight: 700;
+    color: var(--color-plum);
+    transition: background var(--transition), color var(--transition);
+  }
+
+  .rituals__state-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  .rituals__state[data-state='loading'] .rituals__state-dot {
+    animation: rituals-blink 1s ease-in-out infinite;
+  }
+
+  @keyframes rituals-blink {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.2;
+    }
+  }
+
+  .rituals__state[data-state='success'] {
+    background: var(--color-plum);
+    color: var(--color-cream);
+  }
+
+  .rituals__state[data-state='selected'] {
+    background: var(--color-terracotta);
+    color: var(--color-text);
+  }
+
+  .rituals__state[data-state='empty'] {
+    background: var(--color-bg);
+    color: var(--color-plum);
+    border-style: dashed;
+  }
+
+  .rituals__state[data-state='error'] {
+    background: var(--color-plum-deep);
+    color: var(--color-cream);
+    border-color: var(--color-terracotta);
+  }
+
+  .rituals__endpoint {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--color-text-muted);
+  }
+
+  .rituals__offline {
+    padding: 6px 12px;
+    border: 1.5px dashed var(--color-plum);
+    border-radius: var(--radius-pill);
+    background: transparent;
+    font-family: var(--font-ui);
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--color-plum);
+    transition: background var(--transition), color var(--transition);
+  }
+
+  .rituals__offline:hover {
+    background: var(--color-peach);
+  }
+
+  .rituals__offline[aria-pressed='true'] {
+    border-style: solid;
+    background: var(--color-terracotta);
+    color: var(--color-text);
+  }
+
+  .rituals__search {
+    position: relative;
+    padding: 20px 0 0;
+  }
+
+  .rituals__label {
+    display: block;
+    margin-bottom: 10px;
+    font-family: var(--font-ui);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-plum);
+  }
+
+  .rituals__search-row {
+    display: flex;
+    gap: 10px;
+    align-items: stretch;
+  }
+
+  .rituals__field {
+    position: relative;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .rituals__input {
+    width: 100%;
+    min-height: 50px;
+    padding: 12px 20px;
+    border: 2px solid var(--color-plum);
+    border-radius: var(--radius-pill);
+    background: var(--color-bg);
+    font-size: 0.95rem;
+    color: var(--color-text);
+    transition: box-shadow var(--transition), background var(--transition);
+  }
+
+  .rituals__input::placeholder {
+    color: var(--color-text-muted);
+  }
+
+  .rituals__input:focus {
+    outline: none;
+    background: var(--color-surface);
+    box-shadow: var(--shadow-sticker-sm);
+  }
+
+  .rituals__go {
+    min-height: 50px;
+    padding: 12px 26px;
+    border: 2px solid var(--color-plum);
+    border-radius: var(--radius-pill);
+    background: var(--color-plum);
+    font-family: var(--font-ui);
+    font-size: 0.86rem;
+    font-weight: 700;
+    color: var(--color-cream);
+    box-shadow: var(--shadow-sticker-sm);
+    transition: transform var(--transition), box-shadow var(--transition),
+      background var(--transition);
+  }
+
+  .rituals__go:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 5px 5px 0 var(--color-plum);
+    background: var(--color-plum-deep);
+  }
+
+  .rituals__hint {
+    margin-top: 12px;
+    font-size: 0.82rem;
+    color: var(--color-text-muted);
+  }
+
+  .rituals__hubs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .rituals__hub {
+    padding: 7px 14px;
+    border: 1.5px solid rgba(108, 3, 69, 0.32);
+    border-radius: var(--radius-pill);
+    background: var(--color-surface);
+    font-family: var(--font-ui);
+    font-size: 0.76rem;
+    font-weight: 600;
+    color: var(--color-plum-soft);
+    transition: transform var(--transition), background var(--transition),
+      border-color var(--transition), color var(--transition);
+  }
+
+  .rituals__hub:hover {
+    transform: translateY(-2px) rotate(-1deg);
+    border-color: var(--color-plum);
+    background: var(--color-mustard);
+    color: var(--color-plum);
+  }
+
+  .rituals__results {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    left: 0;
+    z-index: 20;
+    max-height: 260px;
+    overflow-y: auto;
+    padding: 6px;
+    border: 2px solid var(--color-plum);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-sticker);
+  }
+
+  .rituals__result {
+    display: grid;
+    gap: 1px;
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background var(--transition);
+  }
+
+  .rituals__result:hover,
+  .rituals__result:focus {
+    background: var(--color-peach);
+    outline: none;
+  }
+
+  .rituals__result strong {
+    font-family: var(--font-ui);
+    font-size: 0.88rem;
+    color: var(--color-plum);
+  }
+
+  .rituals__result span {
+    font-size: 0.74rem;
+    color: var(--color-text-muted);
+  }
+
+  /* --- Skeleton de carga --- */
+  .rituals__skeleton {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 22px;
+  }
+
+  .rituals__bone {
+    display: block;
+    height: 92px;
+    border-radius: var(--radius-md);
+    background: linear-gradient(
+      100deg,
+      var(--color-cream-deep) 20%,
+      var(--color-peach) 45%,
+      var(--color-cream-deep) 70%
+    );
+    background-size: 220% 100%;
+    animation: rituals-shimmer 1.4s linear infinite;
+  }
+
+  @keyframes rituals-shimmer {
+    from {
+      background-position: 150% 0;
+    }
+    to {
+      background-position: -50% 0;
+    }
+  }
+
+  /* --- Vacío y error --- */
+  .rituals__empty,
+  .rituals__error {
+    margin-top: 22px;
+    padding: clamp(24px, 4vw, 40px);
+    border: 2px dashed var(--color-plum);
+    border-radius: var(--radius-lg);
+    background: var(--color-bg);
+    text-align: center;
+  }
+
+  .rituals__empty-emoji,
+  .rituals__error-emoji {
+    margin-bottom: 8px;
+    font-size: 2rem;
+  }
+
+  .rituals__empty h3,
+  .rituals__error h3 {
+    margin-bottom: 8px;
+    font-size: clamp(1.2rem, 2.4vw, 1.6rem);
+  }
+
+  .rituals__empty p,
+  .rituals__error p {
+    max-width: 62ch;
+    margin: 0 auto 18px;
+    color: var(--color-text-muted);
+    font-size: 0.92rem;
+  }
+
+  .rituals__error {
+    border: 2px solid var(--color-plum);
+    border-left: 8px solid var(--color-terracotta);
+    background: var(--color-peach);
+  }
+
+  .rituals__error-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  /* --- Ciudades --- */
+  .rituals__success {
+    margin-top: 22px;
+  }
+
+  .rituals__cities {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    gap: 12px;
+    align-items: stretch;
+  }
+
+  .rituals__city {
+    display: grid;
+    gap: 4px;
+    padding: 18px;
+    border: 2px solid var(--color-plum);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sticker-sm);
+  }
+
+  .rituals__city--base {
+    background: var(--color-plum);
+    color: var(--color-cream);
+  }
+
+  .rituals__city--team {
+    background: var(--color-mustard);
+    color: var(--color-plum-deep);
+  }
+
+  .rituals__city-tag {
+    justify-self: start;
+    padding: 3px 9px;
+    border-radius: var(--radius-pill);
+    background: rgba(255, 248, 220, 0.18);
+    font-family: var(--font-ui);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .rituals__city--team .rituals__city-tag {
+    background: rgba(108, 3, 69, 0.14);
+  }
+
+  .rituals__city-name {
+    font-size: clamp(1.05rem, 2vw, 1.3rem);
+    color: inherit;
+  }
+
+  .rituals__city-time {
+    font-family: var(--font-ui);
+    font-size: clamp(1.9rem, 4.5vw, 2.6rem);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .rituals__city-meta {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    opacity: 0.8;
+  }
+
+  .rituals__city-weather {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1.5px dashed currentColor;
+    font-size: 0.8rem;
+    opacity: 0.92;
+  }
+
+  .rituals__city-emoji {
+    font-size: 1.4rem;
+    line-height: 1;
+  }
+
+  .rituals__bridge {
+    align-self: center;
+    display: grid;
+    place-items: center;
+    gap: 1px;
+    min-width: 86px;
+    padding: 10px 12px;
+    border: 2px solid var(--color-plum);
+    border-radius: var(--radius-pill);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-sticker-sm);
+    font-family: var(--font-ui);
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--color-plum);
+    transform: rotate(-2deg);
+  }
+
+  .rituals__bridge small {
+    font-size: 0.58rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  /* --- Rituales --- */
+  .rituals__fieldset {
+    margin-top: 22px;
+    padding: 0;
+    border: none;
+  }
+
+  .rituals__rituals {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .rituals__ritual {
+    position: relative;
+    display: grid;
+    gap: 2px;
+    padding: 14px 16px;
+    border: 2px solid var(--color-plum);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    color: var(--color-plum);
+    text-align: left;
+    transition: transform var(--transition), box-shadow var(--transition),
+      background var(--transition), color var(--transition);
+  }
+
+  .rituals__ritual:hover {
+    transform: translate(-1px, -2px) rotate(-0.6deg);
+    box-shadow: var(--shadow-sticker-sm);
+  }
+
+  .rituals__ritual-name {
+    font-family: var(--font-ui);
+    font-size: 0.88rem;
+    font-weight: 700;
+    line-height: 1.25;
+  }
+
+  .rituals__ritual-meta {
+    font-size: 0.74rem;
+    opacity: 0.82;
+  }
+
+  .rituals__ritual-state {
+    margin-top: 6px;
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    opacity: 0.75;
+  }
+
+  .rituals__ritual[aria-pressed='true'] {
+    box-shadow: var(--shadow-sticker-sm);
+    transform: translate(-1px, -1px);
+  }
+
+  .rituals__ritual[aria-pressed='true']::after {
+    content: '✓';
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    display: grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    border: 1.5px solid currentColor;
+    border-radius: 50%;
+    font-family: var(--font-ui);
+    font-size: 0.72rem;
+    font-weight: 700;
+  }
+
+  .rituals__ritual--plum[aria-pressed='true'] {
+    background: var(--color-plum);
+    color: var(--color-cream);
+  }
+
+  .rituals__ritual--terracotta[aria-pressed='true'] {
+    background: var(--color-terracotta);
+    color: var(--color-text);
+  }
+
+  .rituals__ritual--peach[aria-pressed='true'] {
+    background: var(--color-peach);
+    color: var(--color-plum);
+  }
+
+  .rituals__ritual--cream[aria-pressed='true'] {
+    background: var(--color-cream-deep);
+    color: var(--color-plum);
+  }
+
+  .rituals__ritual-detail {
+    margin-top: 10px;
+    font-size: 0.82rem;
+    color: var(--color-text-muted);
+  }
+
+  /* --- Barra de solapamiento --- */
+  .rituals__overlap {
+    margin-top: 22px;
+    padding: clamp(16px, 2.5vw, 22px);
+    border: 1.5px solid rgba(108, 3, 69, 0.25);
+    border-radius: var(--radius-lg);
+    background: var(--color-bg);
+  }
+
+  .rituals__overlap-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 6px;
+    margin-bottom: 14px;
+  }
+
+  .rituals__overlap-head h3 {
+    font-size: clamp(1.1rem, 2.2vw, 1.35rem);
+  }
+
+  .rituals__overlap-window {
+    font-family: var(--font-ui);
+    font-size: 0.68rem;
+    color: var(--color-text-muted);
+  }
+
+  .rituals__ruler {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    color: var(--color-text-muted);
+  }
+
+  .rituals__track {
+    display: grid;
+    gap: 6px;
+    margin: 8px 0 12px;
+    padding: 8px;
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+  }
+
+  .rituals__lane {
+    position: relative;
+    height: 18px;
+    border-radius: var(--radius-pill);
+    background: rgba(108, 3, 69, 0.08);
+    overflow: hidden;
+  }
+
+  .rituals__lane-label {
+    position: absolute;
+    top: 50%;
+    left: 6px;
+    z-index: 2;
+    transform: translateY(-50%);
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--color-plum);
+    opacity: 0.55;
+    pointer-events: none;
+  }
+
+  .rituals__lane-blocks {
+    position: absolute;
+    inset: 0;
+  }
+
+  .rituals__block {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    border-radius: var(--radius-pill);
+  }
+
+  .rituals__block--base {
+    background: var(--color-plum);
+  }
+
+  .rituals__block--team {
+    background: var(--color-terracotta);
+  }
+
+  .rituals__block--golden {
+    background: repeating-linear-gradient(
+      45deg,
+      var(--color-mustard) 0 8px,
+      #f9d68f 8px 16px
+    );
+    box-shadow: inset 0 0 0 1.5px var(--color-plum);
+  }
+
+  .rituals__lane--golden {
+    height: 14px;
+    background: rgba(247, 197, 102, 0.22);
+  }
+
+  .rituals__legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-size: 0.72rem;
+    color: var(--color-text-muted);
+  }
+
+  .rituals__legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-ui);
+    font-weight: 600;
+  }
+
+  .rituals__legend-item::before {
+    content: '';
+    width: 14px;
+    height: 8px;
+    border-radius: var(--radius-pill);
+  }
+
+  .rituals__legend-item--base::before {
+    background: var(--color-plum);
+  }
+
+  .rituals__legend-item--team::before {
+    background: var(--color-terracotta);
+  }
+
+  .rituals__legend-item--golden::before {
+    background: var(--color-mustard);
+    box-shadow: inset 0 0 0 1px var(--color-plum);
+  }
+
+  .rituals__legend-note {
+    margin-left: auto;
+    font-style: italic;
+  }
+
+  .rituals__golden-text {
+    margin-top: 10px;
+    padding: 10px 14px;
+    border: 1.5px dashed var(--color-plum);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface);
+    font-family: var(--font-ui);
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-plum);
+  }
+
+  .rituals__bar-readout {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 12px;
+  }
+
+  .rituals__bar-value {
+    min-width: 52px;
+    font-family: var(--font-ui);
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--color-plum);
+  }
+
+  .rituals__bar-track {
+    flex: 1;
+    height: 10px;
+    border: 1.5px solid var(--color-plum);
+    border-radius: var(--radius-pill);
+    background: var(--color-surface);
+    overflow: hidden;
+  }
+
+  .rituals__bar-track span {
+    display: block;
+    height: 100%;
+    width: 0;
+    border-radius: var(--radius-pill);
+    background: linear-gradient(90deg, var(--color-terracotta), var(--color-mustard));
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .rituals__bar-max {
+    font-family: var(--font-mono);
+    font-size: 0.64rem;
+    color: var(--color-text-muted);
+  }
+
+  /* --- Diagnóstico --- */
+  .rituals__diagnosis {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.3fr) minmax(0, 1fr);
+    gap: 14px;
+    margin-top: 18px;
+  }
+
+  .rituals__score,
+  .rituals__verdict,
+  .rituals__kit {
+    padding: 18px;
+    border: 2px solid var(--color-plum);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+  }
+
+  .rituals__score {
+    display: grid;
+    align-content: start;
+    gap: 6px;
+    background: var(--color-mustard);
+  }
+
+  .rituals__score-label {
+    font-family: var(--font-ui);
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-plum);
+  }
+
+  .rituals__score-value {
+    font-family: var(--font-display);
+    font-size: clamp(2.4rem, 5vw, 3.2rem);
+    font-weight: 700;
+    line-height: 1;
+    color: var(--color-plum);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .rituals__score-value small {
+    font-size: 0.45em;
+    vertical-align: super;
+  }
+
+  .rituals__score-track {
+    height: 12px;
+    margin-top: 4px;
+    border: 1.5px solid var(--color-plum);
+    border-radius: var(--radius-pill);
+    background: var(--color-surface);
+    overflow: hidden;
+  }
+
+  .rituals__score-track span {
+    display: block;
+    height: 100%;
+    width: 0;
+    border-radius: var(--radius-pill);
+    background: linear-gradient(90deg, var(--color-plum), var(--color-terracotta));
+    transition: width 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .rituals__score-note {
+    font-size: 0.72rem;
+    line-height: 1.45;
+    color: var(--color-plum-deep);
+    opacity: 0.85;
+  }
+
+  .rituals__verdict {
+    display: grid;
+    align-content: start;
+    gap: 8px;
+  }
+
+  .rituals__verdict-badge {
+    justify-self: start;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 6px 13px;
+    border: 2px solid var(--color-plum);
+    border-radius: var(--radius-pill);
+    font-family: var(--font-ui);
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--color-plum);
+    background: var(--color-mustard);
+    box-shadow: var(--shadow-sticker-sm);
+  }
+
+  .rituals__verdict-badge[data-verdict='async'] {
+    background: var(--color-plum);
+    color: var(--color-cream);
+    border-color: var(--color-plum-deep);
+  }
+
+  .rituals__verdict-badge[data-verdict='hybrid'] {
+    background: var(--color-peach);
+    color: var(--color-plum-deep);
+  }
+
+  .rituals__verdict h3 {
+    font-family: var(--font-display);
+    font-size: clamp(1.05rem, 2vw, 1.25rem);
+    line-height: 1.2;
+    color: var(--color-plum);
+  }
+
+  .rituals__verdict-copy {
+    font-size: 0.82rem;
+    line-height: 1.5;
+    color: var(--color-text);
+  }
+
+  .rituals__slot {
+    margin-top: 2px;
+    padding: 8px 12px;
+    border: 1.5px dashed var(--color-plum);
+    border-radius: var(--radius-sm);
+    background: var(--color-cream-deep);
+    font-family: var(--font-ui);
+    font-size: 0.74rem;
+    font-weight: 600;
+    line-height: 1.45;
+    color: var(--color-plum);
+  }
+
+  .rituals__kit {
+    border-color: var(--color-plum-deep);
+    background: var(--color-plum);
+    box-shadow: var(--shadow-sticker-sm);
+  }
+
+  .rituals__kit-label {
+    margin-bottom: 8px;
+    font-family: var(--font-ui);
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-mustard);
+  }
+
+  .rituals__kit ul {
+    display: grid;
+    gap: 7px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .rituals__kit li {
+    position: relative;
+    padding-left: 18px;
+    font-size: 0.78rem;
+    line-height: 1.45;
+    color: var(--color-ink-muted);
+  }
+
+  .rituals__kit li::before {
+    content: '\2726';
+    position: absolute;
+    left: 0;
+    color: var(--color-mustard);
+  }
+
+  .rituals__weather {
+    margin-top: 14px;
+    padding: 12px 16px;
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-cream-deep);
+    font-size: 0.8rem;
+    line-height: 1.5;
+    color: var(--color-plum-deep);
+  }
+
+  .rituals__source {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 0.74rem;
+    line-height: 1.5;
+    color: var(--color-text-muted);
+  }
+
+  .rituals__source a {
+    color: var(--color-plum);
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-color: var(--color-mustard);
+    text-underline-offset: 3px;
+  }
+
+  .rituals__source a:hover {
+    color: var(--color-terracotta-deep);
+  }
+
+  @media (max-width: 980px) {
+    .rituals__cities {
+      grid-template-columns: 1fr;
+    }
+
+    .rituals__bridge {
+      justify-self: center;
+      min-width: 74px;
+      transform: rotate(0deg);
+    }
+
+    .rituals__diagnosis {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .rituals__kit {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (max-width: 700px) {
+    .rituals__rituals {
+      grid-template-columns: 1fr;
+    }
+
+    .rituals__diagnosis {
+      grid-template-columns: 1fr;
+    }
+
+    .rituals__kit {
+      grid-column: auto;
+    }
+
+    .rituals__legend-note {
+      margin-left: 0;
+      width: 100%;
+    }
+
+    .rituals__sticker--star {
+      right: -6px;
+    }
+
+    .rituals__sticker--smile {
+      left: -6px;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .rituals__search-row {
+      flex-direction: column;
+    }
+
+    .rituals__go {
+      width: 100%;
+    }
+
+    .rituals__bar {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .rituals__panel {
+      padding: 18px 16px;
+    }
+
+    .rituals__tape {
+      width: 120px;
+    }
+
+    .rituals__city {
+      padding: 14px;
+    }
+
+    .rituals__ruler span {
+      font-size: 0.56rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rituals *,
+    .rituals *::before,
+    .rituals *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>

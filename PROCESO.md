@@ -26,8 +26,8 @@ La resolución fue:
 - **Hero + una única sección “Sobre mí”**, sin duplicar información.
 - **Cuatro proyectos reales** presentados como selección, no como totalidad.
 - **Páginas individuales** para cada proyecto, con URL propia.
-- **Tres componentes propios**: `ProjectExplorer`, `WorkflowSimulator` y `AlbumLab`.
-- **iTunes Search API** como API externa visible, con estados de carga, éxito, vacío, error y respaldo.
+- **Tres componentes propios**: `ProjectExplorer`, `WorkflowSimulator` y `AgileRitualCalculator`.
+- **Open-Meteo** como API externa visible (geocoding + forecast), con estados de carga, éxito, selección, vacío, error y respaldo.
 - **Posicionamiento formal**: Abril Mancuso, Project Manager & Diseñadora UX/UI.
 - **Documentación y commits** que permiten reconstruir el proceso.
 
@@ -81,13 +81,23 @@ El perfil anterior no las respondía con suficiente claridad. La nueva versión 
 | Framework | AstroJS 6.4.8 | Sitio estático, componentes, poco JS, build simple. |
 | Lenguaje | TypeScript / JavaScript | Tipos para datos y lógica de cliente. |
 | Estilos | CSS con custom properties | Control total, sin dependencias, responsive. |
-| API | iTunes Search API | Pública, sin token, con CORS y portadas reales para trabajar identidad visual. |
+| API | Open-Meteo | Pública, sin token y con CORS; geocoding y forecast en un mismo proveedor. |
 | Rutas | `getStaticPaths()` | Una página estática por proyecto. |
 | Persistencia | `localStorage` | Recordar el enfoque de lectura de proyectos. |
 
 ### Por qué Astro y no una SPA
 
 El portfolio es contenido con interacciones acotadas. Astro entrega HTML estático y carga JavaScript solo donde hace falta. Una SPA agregaría routing, hidratación y estado global sin mejorar la experiencia central.
+
+### Sistema visual
+
+El rediseño buscó una identidad cálida y editorial, no un template genérico:
+
+- **Paleta:** crema `#FFF8DC` como base, ciruela `#6C0345` para texto y superficies oscuras, terracota `#DC6B19` como acento y mostaza `#F7C566` para destacados.
+- **Tipografías:** Fraunces para display, Space Grotesk para interfaz y etiquetas, DM Sans para lectura.
+- **Recursos gráficos:** bordes de 2 px, sombras duras tipo sticker, radios de 10 a 36 px, stickers, subrayados dibujados, rotaciones leves y un fondo con grilla de papel.
+- **Contraste:** el texto sobre terracota y mostaza usa tinta `#3B0A24`; sobre ciruela se usa crema.
+- **Componentes:** un único sistema de botones, etiquetas y tarjetas reutilizado en Hero, Sobre mí, Proyectos, Proceso y Rituales.
 
 ### Estructura de la página principal
 
@@ -96,7 +106,7 @@ El portfolio es contenido con interacciones acotadas. Astro entrega HTML estáti
 #sobre-mi     Perfil profesional
 #proyectos    Explorador de proyectos
 #proceso      Simulador de proceso
-#identidad    iTunes Search API
+#rituales     Calculadora de rituales (Open-Meteo)
 #contacto     Footer
 ```
 
@@ -126,13 +136,13 @@ Cada página se genera con `getStaticPaths()` desde `src/data/projects.ts` y con
 ### Flujo de datos
 
 ```
-src/data/*.ts
+src/data/*.ts + configuración del componente
   → componentes .astro (build time)
     → HTML estático
       → getStaticPaths() genera /proyectos/[id]
         → scripts de cliente (interacción)
-          → iTunes Search API (fetch en el navegador)
-            → set de respaldo local si falla
+          → Open-Meteo (geocoding + forecast en el navegador)
+            → husos calculados localmente con Intl si la API falla
 ```
 
 ---
@@ -201,38 +211,38 @@ Cada etapa muestra:
 
 **Por qué es significativa:** convierte el “proceso” en algo verificable. No es una lista estática: se puede recorrer y explicar en la defensa.
 
-### 4.3 `AlbumLab`
+### 4.3 `AgileRitualCalculator`
 
 **Archivos:**
 
-- `src/components/AlbumLab.astro`
-- `src/data/albums.ts`
+- `src/components/AgileRitualCalculator.astro`
 
-**Qué resuelve:** consumir una API externa real, leer la identidad visual de una portada y traducirla a un sistema de diseño acotado.
+**Qué resuelve:** diagnosticar si un ritual ágil conviene en vivo, híbrido o asíncrono, cruzando la agenda de Buenos Aires con la ciudad del equipo.
 
 **Funciones:**
 
-- Busca álbumes por artista en iTunes Search API.
-- Muestra hasta 12 resultados con portada, título, artista, año y género.
-- Permite seleccionar un álbum y regenerar el manual.
-- Extrae una paleta de cinco colores de la portada con `canvas` y `getImageData`.
-- Conserva el peso de cada color y lo muestra en una tira proporcional.
-- Asigna nombres descriptivos en español y roles: dominante, acento, claro, profundo y apoyo.
-- Elige una dupla tipográfica curada según el género: Fraunces, Archivo Black o Space Grotesk, siempre con DM Sans para lectura.
-- Genera un análisis de diseño en primera persona: lectura de la portada, color dominante, qué transmite cada color, hipótesis de aplicación, tono, tokens CSS y vista aplicada.
-- Permite copiar cada HEX y el bloque completo de tokens.
-- Tiene carga, éxito, vacío, error y set de ejemplo.
-- Timeout de 12 segundos con `AbortController` y race guards.
-- Set local en `src/data/albums.ts`.
-- Mensaje `noscript`.
+- Hubs sugeridos (San Francisco, Madrid, CDMX, Londres, Berlín, São Paulo) y búsqueda libre de cualquier ciudad.
+- Dos consultas en paralelo con `Promise.all`: Buenos Aires y la ciudad elegida.
+- Hora local, huso, temperatura y clima de cada ciudad.
+- Ventana laboral de 9:00 a 18:00 desplazada por huso y solapamiento de 24 horas en tres carriles: Buenos Aires, equipo y golden hours.
+- Índice de viabilidad 0–100, veredicto, franja sugerida y kit de herramientas.
+- Cuatro rituales seleccionables con `aria-pressed`: Kickoff (60 min), Critique (45), Planning (45) y Daily (15).
+- Estados de carga, éxito, selección, vacío y error; respaldo local y modo offline simulado.
+- Reloj vivo que refresca el diagnóstico cada 30 segundos.
 
-**Por qué es significativa:** es la API externa visible y, al mismo tiempo, una demostración de criterio de diseño. No es un listado de tarjetas: obliga a observar una imagen, extraer una paleta, ordenar roles, elegir tipografías y comunicar el alcance de la interpretación.
+**Cómo se calcula:**
 
-**Por qué está en el portfolio:** un PM y una diseñadora UX/UI trabajan con identidades que ya existen. El manual muestra cómo se lee un material, cómo se traduce a sistema y cómo se evita presentar una interpretación como verdad oficial.
+- `diffMin` es la diferencia de husos en minutos.
+- La ventana del equipo se desplaza dentro de las 24 horas y se intersecta con la de Buenos Aires.
+- El índice suma horas compartidas (hasta 55), afinidad sincrónica del ritual (hasta 25) y presencia en horario laboral (hasta 20).
+- `>= 60` sincrónico, `>= 35` híbrido, el resto async. Se fuerza async sin solapamiento, fuera de horario en ambas ciudades o con Daily por debajo de 4 horas compartidas.
+- La franja sugerida prioriza las 10:00 de Buenos Aires y se traduce a la hora del equipo.
+
+**Por qué es significativa:** es la API externa visible y, al mismo tiempo, una decisión de PM. No muestra datos por mostrarlos: los convierte en una recomendación operativa con herramientas concretas. Además ejercita los estados difíciles (vacío, error, respaldo) y el teclado en un combobox.
 
 ---
 
-## 5. API externa: iTunes Search API
+## 5. API externa: Open-Meteo
 
 ### 5.1 Por qué se descartaron las opciones anteriores
 
@@ -253,139 +263,138 @@ Luego se probó Hacker News API con un radar de señales. Tenía datos reales, p
 
 - Las señales eran conversaciones técnicas que no conectaban con los proyectos de diseño.
 - El radar exigía explicar demasiado contexto externo.
-- El vínculo con la identidad visual y con los casos de Billie y Tini no existía.
 
-Se reemplazó por un **manual de identidad instantáneo** con iTunes Search API:
+Más tarde se usó iTunes Search API para un manual de identidad. Funcionaba como demostración visual, pero ataba la sección a un catálogo de música y a contenido de terceros.
 
-- Portadas reales y reconocibles.
-- Búsqueda libre de cualquier artista.
-- Extracción de paleta desde la imagen.
-- Tipografía curada y tokens aplicables.
-- Un relato claro: leer una identidad, traducirla a sistema y comunicar el alcance.
+Se reemplazó por una **calculadora de rituales ágiles** con Open-Meteo:
+
+- La hora y el clima reales son el insumo del diagnóstico.
+- El resultado es una decisión de gestión reconocible para cualquier equipo distribuido.
+- La API no se muestra como adorno: alimenta el cálculo.
+- No hay contenido de terceros ni portadas que explicar.
 
 ### 5.2 Ubicación exacta en pantalla
 
-La sección se llama **“Identidad: un manual en segundos”**.
+La sección se llama **“¿Reunión en vivo o async? Calculá el ritual correcto”**.
 
 Está:
 
 - Después de **“Proceso de trabajo”**.
 - Antes del footer de contacto.
-- En la navegación: link **“Identidad”** (`#identidad`).
-
-Además incluye un bloque previo, **“Un ejemplo de mi trabajo”**, que explica el valor del ejercicio antes de mostrar la API.
+- En la navegación: link **“Rituales”** (`#rituales`).
 
 ### 5.3 Ubicación exacta en el código
 
 | Responsabilidad | Archivo | Marcas / funciones |
 | --- | --- | --- |
-| Sección visible | `src/components/AlbumLab.astro` | `id="identidad"`, `data-album-lab` |
-| Render en la página | `src/pages/index.astro` | `<AlbumLab />` |
-| Badge de estado | `src/components/AlbumLab.astro` | `data-badge`, `data-badge-text`, `updateBadge` |
-| Endpoint visible | `src/components/AlbumLab.astro` | `.album-lab__endpoint` |
-| Buscador | `src/components/AlbumLab.astro` | `data-search-form`, `data-search-input`, `loadAlbums` |
-| Ejemplos rápidos | `src/components/AlbumLab.astro` | `data-example` |
-| Grilla de álbumes | `src/components/AlbumLab.astro` | `.album-lab__grid`, `data-grid`, `renderGrid` |
-| Selección | `src/components/AlbumLab.astro` | `data-album-id`, `aria-pressed`, `selectAlbum` |
-| Portada y metadata | `src/components/AlbumLab.astro` | `data-cover`, `data-album-title`, `data-album-artist`, `data-album-meta` |
-| Paleta | `src/components/AlbumLab.astro` | `data-palette`, `extractPalette`, `renderPalette` |
-| Tipografía | `src/components/AlbumLab.astro` | `getTypographyPair`, `renderTypography` |
-| Tokens | `src/components/AlbumLab.astro` | `buildTokens`, `data-tokens`, `data-copy-tokens` |
-| Vista aplicada | `src/components/AlbumLab.astro` | `data-preview`, `applyPreview` |
-| Estados | `src/components/AlbumLab.astro` | `setView`, `data-loading`, `data-content`, `data-empty`, `data-error` |
-| Fetch | `src/components/AlbumLab.astro` | `loadAlbums`, `fetchJson`, `AbortController` |
-| Normalización | `src/data/albums.ts` | `toAlbum`, `getArtworkUrl` |
-| Tipografías curadas | `src/data/albums.ts` | `typographyPairs`, `getTypographyPair` |
-| Respaldo | `src/data/albums.ts` | `fallbackAlbums` |
+| Sección visible | `src/components/AgileRitualCalculator.astro` | `id="rituales"`, `data-rituals` |
+| Render en la página | `src/pages/index.astro` | `<AgileRitualCalculator />` |
+| Badge de estado | `src/components/AgileRitualCalculator.astro` | `data-state-badge`, `setState` |
+| Endpoint visible | `src/components/AgileRitualCalculator.astro` | `.rituals__endpoint` |
+| Buscador | `src/components/AgileRitualCalculator.astro` | `data-search-form`, `data-city-input`, `geocode` |
+| Resultados | `src/components/AgileRitualCalculator.astro` | `data-results`, `renderResults` |
+| Hubs sugeridos | `src/components/AgileRitualCalculator.astro` | `data-hub`, `hubs` |
+| Estado vacío | `src/components/AgileRitualCalculator.astro` | `data-region="empty"`, `showEmpty`, `data-back-to-hubs` |
+| Estado de error | `src/components/AgileRitualCalculator.astro` | `data-region="error"`, `showError`, `data-retry`, `data-fallback` |
+| Modo offline | `src/components/AgileRitualCalculator.astro` | `data-offline`, `simulateOffline` |
+| Reloj y clima | `src/components/AgileRitualCalculator.astro` | `fetchForecast`, `weatherInfo`, `renderCityWeather` |
+| Husos horarios | `src/components/AgileRitualCalculator.astro` | `zoneOffsetSeconds`, `fallbackCity` |
+| Solapamiento | `src/components/AgileRitualCalculator.astro` | `buildPlan`, `paintLane`, `data-lane-base` / `-team` / `-golden` |
+| Diagnóstico | `src/components/AgileRitualCalculator.astro` | `data-score`, `data-verdict-badge`, `data-kit`, `data-slot` |
+| Configuración | `src/components/AgileRitualCalculator.astro` | `#rituals-config` (`set:html` + JSON) |
+| Anuncios | `src/components/AgileRitualCalculator.astro` | `data-live`, `aria-live="polite"` |
 
-### 5.4 Endpoint
+### 5.4 Endpoints
 
+```text
+GET https://geocoding-api.open-meteo.com/v1/search?name={ciudad}&count=5&language=es&format=json
+GET https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}&current=temperature_2m,is_day,weather_code&timezone=auto
 ```
-GET https://itunes.apple.com/search?term={artista}&entity=album&limit=12&country=US
-```
 
-- No requiere token ni clave.
-- Devuelve JSON público con CORS habilitado (`access-control-allow-origin: *`).
-- `entity=album` limita la búsqueda a álbumes.
-- `limit=12` acota la grilla.
-- `country=US` amplía el catálogo disponible.
-- La portada llega como `artworkUrl100`; `getArtworkUrl` reemplaza el sufijo por `600x600bb` para trabajar con una imagen de mayor tamaño.
-- Se usa `cache: 'no-store'` para traer resultados frescos.
-- La API tiene límites de uso informales; por eso existe el set de ejemplo local.
+- No requieren token ni clave.
+- Devuelven JSON público con CORS habilitado.
+- `count=5` acota los resultados y `language=es` prioriza nombres en español.
+- `timezone=auto` devuelve `utc_offset_seconds` y `timezone_abbreviation`: la base del cálculo de husos.
+- `current` pide temperatura, si es de día y el código WMO que se traduce a emoji y descripción.
 
 ### 5.5 Respuesta usada
 
+Geocoding:
+
 ```json
 {
-  "resultCount": 12,
   "results": [
     {
-      "collectionId": 1739659134,
-      "collectionName": "HIT ME HARD AND SOFT",
-      "artistName": "Billie Eilish",
-      "artworkUrl100": "https://is1-ssl.mzstatic.com/.../100x100bb.jpg",
-      "releaseDate": "2024-05-17T07:00:00Z",
-      "trackCount": 11,
-      "primaryGenreName": "Alternative",
-      "collectionViewUrl": "https://music.apple.com/us/album/..."
+      "id": 3117735,
+      "name": "Madrid",
+      "country": "España",
+      "latitude": 40.4165,
+      "longitude": -3.70256,
+      "timezone": "Europe/Madrid"
     }
   ]
 }
 ```
 
-`toAlbum` valida que existan `collectionId`, `collectionName` y `artworkUrl100`. Si falta el artista, usa `Artista desconocido`; si falta el género, `Música`; si falta la fecha, `s/f`. Los resultados se deduplican por `collectionId` y se ordenan para priorizar coincidencias exactas del artista buscado antes de recortar a 12.
+Forecast:
+
+```json
+{
+  "timezone": "Europe/Madrid",
+  "timezone_abbreviation": "GMT+1",
+  "utc_offset_seconds": 3600,
+  "current": {
+    "temperature_2m": 14.3,
+    "is_day": 1,
+    "weather_code": 3
+  }
+}
+```
+
+`fetchForecast` verifica `response.ok` y toma `current`; si `utc_offset_seconds` no viene, usa `zoneOffsetSeconds` con `Intl`. `geocode` filtra con `Array.isArray` y normaliza con `String()` y `Number()`.
 
 ### 5.6 Estados implementados
 
 | Estado | Badge | Qué se ve | Disparador |
 | --- | --- | --- | --- |
-| Carga de búsqueda | `Buscando álbumes…` | Skeleton + `aria-busy` | Al buscar o reintentar |
-| Carga del manual | `Analizando portada…` | Skeleton del manual | Al seleccionar un álbum |
-| Éxito | `Manual generado` | Grilla, portada, paleta, tipografía, tokens y preview | Respuesta válida + canvas disponible |
-| Vacío | `Sin resultados` | Mensaje y acciones | Búsqueda sin álbumes |
-| Error | `Error de conexión` | Mensaje, reintento y set de ejemplo | Fallo de red, timeout o formato inválido |
-| Respaldo | `Set de ejemplo` | Álbumes locales | Botón “Ver set de ejemplo” |
+| Carga | `Cargando datos…` | Skeleton + `aria-busy` | Al iniciar, cambiar de ciudad o reintentar |
+| Éxito | `Contenido disponible` | Tarjetas, solapamiento, índice, veredicto y kit | Respuesta válida de Open-Meteo |
+| Selección | `Ritual seleccionado` | Panel recalculado para el ritual elegido | Clic o teclado en un ritual |
+| Vacío | `Sin resultados` | Mensaje, ciudad buscada y botón a hubs | Geocoding sin resultados |
+| Error | `Error de conexión` | Mensaje, reintento y respaldo | Fallo de red, HTTP no-OK u offline simulado |
+| Respaldo | `Contenido disponible` | Husos locales, sin clima | Botón “Usar husos de respaldo” |
 
 ### 5.7 Controles visibles para la defensa
 
-- **Buscar un artista**: consulta iTunes y actualiza la grilla.
-- **Usar un ejemplo rápido**: Billie Eilish, Tini, Dua Lipa o Bad Bunny.
-- **Seleccionar un álbum**: actualiza portada, paleta, tira proporcional, nombres de color, análisis, tipografía, tokens y preview.
-- **Copiar un HEX**: confirma en `aria-live`.
-- **Copiar tokens**: descarga el bloque CSS listo para usar.
-- **Reintentar consulta**: disponible en los estados vacío y error.
-- **Ver set de ejemplo**: carga álbumes locales para demostrar la interfaz sin depender de la red.
+- **Elegir un hub**: San Francisco, Madrid, CDMX, Londres, Berlín o São Paulo.
+- **Buscar una ciudad**: consulta el geocoding y muestra resultados navegables con teclado.
+- **Cambiar de ritual**: recalcula índice, veredicto, franja y kit al instante.
+- **Simular modo offline**: demuestra el estado de error sin desconectar la red.
+- **Reintentar conexión**: vuelve a la API real.
+- **Usar husos de respaldo**: calcula sin red y mantiene la herramienta operativa.
 
 ### 5.8 Decisiones técnicas de la API
 
-- **Timeout:** `AbortController` corta a los 12 segundos.
-- **Race guards:** `requestId` y `manualRequestId` evitan que una respuesta vieja pise una búsqueda o un manual más reciente.
-- **Validación:** se descartan ítems sin id, nombre o portada.
-- **Deduplicación:** `Set<number>` por `collectionId`.
-- **Orden:** las coincidencias exactas de artista se muestran primero; después las que incluyen el término.
-- **Paleta:** la portada se dibuja en un canvas de 96×96, se agrupan píxeles en buckets de color, se promedian y se eligen hasta cinco colores con distancia mínima. Si no hay suficientes, se generan variantes del dominante.
-- **Peso:** cada color conserva la cantidad de píxeles que lo respaldan; la tira superior usa ese peso para mostrar proporciones reales.
-- **Nombres:** `rgbToHsl` + `getHueFamily` + `describeColor` convierten cada HEX en una etiqueta legible como `azul profundo` o `rosa claro`.
-- **Análisis:** `buildAnalysis` arma un texto en primera persona con el color dominante, el acento, la tipografía elegida y una aplicación posible. Es una hipótesis de diseño, no un dato oficial.
-- **Roles:** el color más frecuente es dominante; el más saturado, acento; el más claro y el más oscuro completan la escala.
-- **Contraste:** `contrastText` elige texto claro u oscuro según luminancia relativa; el umbral es `0.179`.
-- **Tipografía:** `getTypographyPair` mapea género a una dupla curada. No se infiere de la imagen.
-- **Tokens:** `buildTokens` genera variables CSS de fondo, superficie, texto, acento, borde y fuentes.
-- **Seguridad:** `textContent` y APIs del DOM, nunca `innerHTML` con datos de la API.
-- **Copiar:** `navigator.clipboard.writeText` con confirmación en `aria-live` y fallback si el navegador lo bloquea.
-- **Respaldo:** la sección nunca queda rota.
-- **Sin secretos:** no hay claves ni variables de entorno.
-- **Cache:** `no-store` para datos frescos.
+- **Sin backend ni secretos:** todo ocurre en el navegador.
+- **Configuración única:** `hubs`, `rituals` y ciudad base se serializan desde el frontmatter a JSON.
+- **Consultas en paralelo:** `Promise.all` evita esperar dos veces.
+- **Debounce de 380 ms** en el buscador.
+- **Validación defensiva:** `response.ok`, tipos numéricos y arrays antes de renderizar.
+- **Seguridad:** `textContent` y nodos del DOM, nunca `innerHTML` con datos externos.
+- **Husos:** `utc_offset_seconds` de la API y, en respaldo, `Intl.DateTimeFormat` con `longOffset`; si no hay zona IANA, se estima por longitud.
+- **Reloj vivo:** `setInterval` de 30 segundos.
+- **Offline simulable:** permite demostrar el estado de error en la defensa.
+- **Respaldo local:** la calculadora nunca queda en blanco.
 
 ### 5.9 Limitaciones y ética
 
-- iTunes no devuelve tipografías; la dupla es una recomendación curada, no un dato de la API.
-- El manual es una interpretación, no el manual oficial de la discográfica.
-- La paleta es heurística: portadas con texto, logos o degradés pueden producir colores que no son los oficiales de la marca.
-- Los resultados pueden incluir singles, colaboraciones o ediciones regionales.
-- La API puede fallar, tardar o limitar requests; existe set de ejemplo.
-- Las portadas pertenecen a sus respectivos titulares y se usan con fines educativos y de portfolio.
-- El servicio es externo y puede cambiar sin aviso.
+- Open-Meteo es externo: puede fallar, tardar o limitar requests.
+- El clima es contexto humano, no altera el veredicto.
+- La ventana 9–18 es una convención de referencia.
+- La franja sugerida prioriza 10:00 de Buenos Aires y puede requerir ajuste manual.
+- El horario de verano depende del huso IANA; el respaldo usa la base de zonas del navegador.
+- Sin backend no hay caché compartida: cada visita consulta la API.
+- No se guardan búsquedas ni datos personales.
 
 ---
 
@@ -413,8 +422,15 @@ GET https://itunes.apple.com/search?term={artista}&entity=album&limit=12&country
 
 - El video no tiene subtítulos ni audiodescripción.
 - Las fuentes de Google pueden fallar; hay fallback del sistema.
-- El manual depende de red e iTunes Search API.
+- La calculadora depende de red y Open-Meteo para la hora y el clima; el respaldo local cubre los husos, no el clima.
 - No se hizo auditoría formal con lector de pantalla; se aplicaron criterios manuales y revisión de contraste.
+
+### Aportes del componente de rituales
+
+- Buscador con `role="combobox"`, `aria-expanded`, listbox de opciones y navegación con flechas, Enter y Escape.
+- Rituales y control de offline con `aria-pressed`.
+- Carga con `aria-busy`, error con `role="alert"` y anuncios con `aria-live="polite"`.
+- Contraste de texto sobre terracota y mostaza resuelto con tinta `#3B0A24`.
 
 ### Por qué importa
 
@@ -428,11 +444,14 @@ La accesibilidad no es un extra: es parte del trabajo de UX/UI. Un portfolio que
 
 | Ancho | Cambios |
 | --- | --- |
-| `900px` | Menú mobile, Hero a una columna, proceso horizontal, manual a una columna. |
-| `820px` | Páginas de proyecto: datos, métricas y lecturas a una columna. |
-| `700px` | Panel del manual y acciones apiladas. |
-| `640px` | Tarjetas y toolbar a una columna. |
-| `560px` | Página de proyecto con padding reducido, paginación y footer apilados. |
+| `1000px` | Explorador de proyectos: toolbar y selector se reacomodan. |
+| `980px` | Hero a una columna; calculadora con tarjetas de ciudad apiladas y diagnóstico en dos columnas. |
+| `900px` | Menú mobile, proceso horizontal. |
+| `820px` | Sobre mí y páginas de proyecto a una columna. |
+| `700px` | Rituales en una columna, diagnóstico apilado y leyenda a ancho completo. |
+| `640px` | Carrusel de imágenes y controles apilados. |
+| `620px` | Tarjetas de proyecto a una columna. |
+| `560px` | Hero, footer y páginas de proyecto con padding reducido; buscador y barra de estado apilados. |
 
 ### Estrategia
 
@@ -444,60 +463,53 @@ La accesibilidad no es un extra: es parte del trabajo de UX/UI. Un portfolio que
 
 ---
 
-## 8. Verificación manual realizada
+## 8. Verificación realizada
 
-No hay tests automatizados. La verificación combinó el servidor de desarrollo, `curl` y Chrome headless con CDP.
+No hay tests automatizados.
 
-### Verificación técnica realizada
+### Verificación estructural
 
-- [x] El servidor de desarrollo compila la página principal y las páginas de proyecto sin errores.
-- [x] Las cuatro rutas `/proyectos/[id]` responden con `200`.
-- [x] Las tarjetas de proyecto enlazan a `/proyectos/[id]` y no abren modales.
-- [x] Los links de navegación usan rutas absolutas (`/#...`) y funcionan desde las páginas de proyecto.
-- [x] Las páginas de proyecto incluyen video o carrusel según el caso.
-- [x] La sección `#identidad` renderiza badge, endpoint, buscador, ejemplos y grilla.
-- [x] La carga inicial con **Billie Eilish** devuelve 10 álbumes y genera el manual del primero.
-- [x] La búsqueda **Tini** devuelve 12 álbumes y prioriza **Cupido** de TINI.
-- [x] La selección de un álbum actualiza portada, paleta de 5 colores, tira proporcional, nombres de color, análisis, tipografía, tokens y vista aplicada.
-- [x] La tarjeta seleccionada muestra su mini paleta y todas las tarjetas tienen foco visible, hover y acción “Ver análisis”.
-- [x] La portada del manual ya no usa `sticky`: no se superpone con el preview al scrollear.
-- [x] El análisis se genera en primera persona y menciona colores, qué transmiten y una aplicación concreta.
-- [x] El estado de error se disparó con red offline; el set de ejemplo carga 4 álbumes y una paleta de 5 colores.
-- [x] La sección de proyectos ya no contiene `ProjectDialog` ni `data-open-dialog`.
-- [x] El HTML generado incluye los cuatro links a las páginas individuales.
-- [x] No hay scroll horizontal a 360, 390, 768 ni 1440 px.
+- [x] Los 13 archivos `.astro` compilan con `@astrojs/compiler` sin errores de sintaxis.
+- [x] `index.astro` renderiza `Hero`, `About`, `ProjectExplorer`, `WorkflowSimulator` y `AgileRitualCalculator`.
+- [x] `AlbumLab` y `albums.ts` se eliminaron y no quedan referencias en `src/`.
+- [x] Los links de navegación usan rutas absolutas (`/#...`) y el menú apunta a `#rituales`.
+- [x] El componente declara los cinco estados y los controles de reintento, respaldo y offline.
+- [x] La configuración de hubs y rituales se serializa a JSON desde el frontmatter.
 
 ### Verificación de la API
 
 ```bash
-curl -sS -D - "https://itunes.apple.com/search?term=Billie%20Eilish&entity=album&limit=12&country=US"
-curl -sS -D - -o /dev/null "https://is1-ssl.mzstatic.com/image/thumb/.../600x600bb.jpg"
+curl -sS -D - -H "Origin: http://localhost:4321" "https://geocoding-api.open-meteo.com/v1/search?name=Madrid&count=2&language=es&format=json"
+curl -sS -D - -H "Origin: http://localhost:4321" "https://api.open-meteo.com/v1/forecast?latitude=40.4168&longitude=-3.7038&current=temperature_2m,is_day,weather_code&timezone=auto"
 ```
 
 Se verificó:
 
-- Respuesta `200`.
-- `access-control-allow-origin: *` en la API y en las portadas de `mzstatic.com`.
-- La respuesta incluye `collectionId`, `collectionName`, `artistName`, `artworkUrl100`, `releaseDate`, `trackCount`, `primaryGenreName` y `collectionViewUrl`.
-- El reemplazo de `100x100bb.jpg` por `600x600bb.jpg` devuelve una portada válida.
-- El canvas puede leer los píxeles de la portada sin error de CORS.
-- El manual carga 5 colores y una dupla tipográfica coherente con el género.
+- Respuesta `200` en ambos endpoints.
+- `access-control-allow-origin: *` al enviar `Origin`.
+- Los resultados del geocoding incluyen `id`, `name`, `country`, `latitude`, `longitude` y `timezone`.
+- El forecast devuelve `utc_offset_seconds`, `timezone_abbreviation` (`GMT+1` para Madrid), `current.temperature_2m`, `is_day` y `weather_code`.
+- El límite informado es de 600 requests por minuto (`x-ratelimit-limit`).
 
 ### Pendiente de prueba manual en navegador
 
+- [ ] Carga inicial de la calculadora con el hub por defecto.
+- [ ] Búsqueda de una ciudad, navegación con flechas y selección con Enter.
+- [ ] Cambio de ritual y recálculo inmediato del veredicto.
+- [ ] Estado vacío con una búsqueda inexistente.
+- [ ] Estado de error con el toggle offline, reintento y respaldo local.
+- [ ] Solapamiento correcto en husos extremos (San Francisco y Tokio).
 - [ ] Menú mobile: abrir, cerrar y navegar.
 - [ ] Selector de Mirada: cambio, persistencia y resaltados.
 - [ ] Filtros, búsqueda y estado vacío de proyectos.
 - [ ] Carrusel de imágenes con botones y teclado.
 - [ ] Tabs del proceso con flechas, Home y End.
-- [ ] Manual: timeout de 12 segundos y búsqueda sin resultados.
-- [ ] Copiar HEX y tokens en un navegador real con permisos de clipboard.
 - [ ] Revisión de scroll horizontal en 360, 768 y 1280 px.
 - [ ] Auditoría con lector de pantalla.
 - [ ] Tests automatizados.
 - [ ] Build de producción final.
 - [ ] Deploy y URL pública.
-- [ ] Completar repositorio y deploy en README.
+- [ ] Completar la URL de deploy en README.
 
 ---
 
@@ -514,6 +526,7 @@ Se verificó:
 | 7 | `docs: add readme and defense guide` | Documentación y guía de defensa. |
 | 8 | `refactor: unify presentation and rebuild interactive components` | Hero + Sobre mí unificados, ProjectExplorer, WorkflowSimulator y primer dashboard de API. |
 | 9 | `feat: add itunes album identity lab` | Manual de identidad instantáneo, extracción de paleta, tipografía curada y documentación final. |
+| 10 | `feat: redesign portfolio and add agile rituals calculator` | Nueva identidad visual y calculadora de rituales ágiles con Open-Meteo en lugar del manual de identidad. |
 
 ---
 
@@ -543,15 +556,15 @@ Se verificó:
    - Mostrar entregables, herramientas y preguntas.
    - Navegar con teclado para demostrar accesibilidad.
 
-5. **Manual de identidad (2 min)**
-   - Ir a `#identidad`.
-   - Leer el bloque **“Un ejemplo de mi trabajo”**.
-   - Mostrar el badge, el endpoint visible y el buscador.
-   - Buscar **Tini** y seleccionar **Cupido**.
-   - Mostrar la paleta extraída, los roles de color, la tipografía y los tokens.
-   - Copiar un HEX o los tokens.
-   - Aclarar que la paleta sale de la portada, pero la tipografía es una recomendación curada y que el manual no es el oficial de la discográfica.
-   - Mostrar el set de ejemplo para explicar el respaldo.
+5. **Rituales (2 min)**
+   - Ir a `#rituales`.
+   - Mostrar el badge, el endpoint visible y los hubs sugeridos.
+   - Elegir **San Francisco** y leer la diferencia horaria y el clima.
+   - Cambiar de **Kickoff** a **Daily** y mostrar cómo cambia el veredicto y el kit.
+   - Explicar el índice: solapamiento + afinidad del ritual + horario laboral.
+   - Activar **Simular modo offline** para mostrar el estado de error.
+   - Reintentar y, si sigue sin red, usar **husos de respaldo**.
+   - Aclarar que el clima es contexto y que el cálculo se apoya en husos y ventana laboral.
 
 6. **Cierre (30 s)**
    - “La API no está escondida: está integrada al relato de producto.”
@@ -559,33 +572,33 @@ Se verificó:
 
 ### 10.2 Preguntas probables y respuestas
 
-**¿Por qué iTunes Search API y no GitHub, una API de color, perfiles ficticios o Hacker News?**
+**¿Por qué Open-Meteo y no las APIs anteriores?**
 
-Porque el perfil es PM + UX/UI y el ejercicio tenía que conectar con identidad visual. Una API de color era un ejercicio suelto; los perfiles ficticios se parecían a un CRUD; Hacker News traía datos reales pero ajenos a los proyectos de diseño. iTunes devuelve portadas reales, permite buscar cualquier artista y conecta con los casos de Billie y Tini.
+Porque el resultado ahora es una decisión de PM, no un ejercicio visual suelto. The Color API era un ejercicio de color; Random User generaba perfiles ficticios que parecían un CRUD; Hacker News traía datos ajenos a los proyectos; iTunes ataba la sección a un catálogo de música y a contenido de terceros. Open-Meteo aporta hora, huso y clima reales, que se convierten en un diagnóstico de coordinación.
 
-**¿El manual es el manual oficial del artista?**
+**¿Cómo calculás el solapamiento?**
 
-No. Es una interpretación. La paleta se extrae de la portada y la tipografía es una dupla curada según el género. La interfaz lo aclara en el bloque metodológico y en la nota del manual.
+Se toma la ventana laboral de 9:00 a 18:00 en minutos (540 a 1080) para cada ciudad. La diferencia de husos desplaza la ventana del equipo y la intersección con la de Buenos Aires da el solapamiento real. Si la intersección es negativa, se fuerza cero.
 
-**¿Cómo extraés la paleta?**
+**¿Cómo decidís el veredicto?**
 
-La portada se carga con `crossOrigin="anonymous"`, se dibuja en un canvas de 96×96 y se leen los píxeles con `getImageData`. Se agrupan colores en buckets, se promedian y se eligen hasta cinco con distancia mínima. Si la imagen falla o no hay suficientes colores, se usa una paleta base.
-
-**¿Cómo asignás los roles de color?**
-
-El color más frecuente es dominante; el más saturado, acento; el más claro y el más oscuro completan la escala. El texto se elige por luminancia relativa con umbral `0.179`.
-
-**¿Por qué la tipografía no sale de la API?**
-
-Porque iTunes no devuelve tipografías. La dupla se elige con una tabla curada por género: Fraunces para editorial, Archivo Black para pop/latino/urbano y Space Grotesk para electrónica. Se presenta como recomendación, no como dato.
+El índice suma horas compartidas (hasta 55), afinidad sincrónica del ritual (hasta 25) y presencia en horario laboral (hasta 20). Con `>= 60` recomienda sincrónico, con `>= 35` híbrido y el resto async. Se fuerza async cuando no hay solapamiento, cuando ninguna de las dos ciudades está en horario laboral o cuando el Daily no alcanza 4 horas compartidas.
 
 **¿Qué pasa si la API falla?**
 
-La sección tiene estado de error, reintento y set de ejemplo local. Si falla solo la portada, el manual sigue con una paleta base y lo informa.
+La calculadora pasa al estado de error con dos salidas: reintentar la conexión o calcular los husos localmente con `Intl.DateTimeFormat`. El respaldo mantiene el diagnóstico operativo, aunque sin clima. También hay un botón para simular el modo offline y demostrar el estado en la defensa.
+
+**¿El clima influye en la decisión?**
+
+No. El clima es contexto humano del encuentro (“hace 15 °C y está nublado en Madrid”). El veredicto se calcula solo con husos, ventana laboral y duración del ritual.
+
+**¿Cómo manejás los husos y el horario de verano?**
+
+La API devuelve `utc_offset_seconds` y `timezone_abbreviation` para la zona IANA de la ciudad. En respaldo se usa `Intl.DateTimeFormat` con `timeZoneName: 'longOffset'`; si no hay zona conocida, se estima por longitud. El horario de verano lo resuelve la base de zonas, no una regla propia.
 
 **¿Cómo evitás que una respuesta vieja pise una nueva?**
 
-Cada búsqueda incrementa `requestId` y cada manual incrementa `manualRequestId`. Si la respuesta no coincide con la última solicitud, se descarta. También se aborta la consulta anterior con `AbortController`.
+Cada búsqueda incrementa `searchSeq` y cada carga de ciudad incrementa `loadSeq`. Si la respuesta no coincide con el contador vigente, se descarta. El buscador además usa un debounce de 380 ms para no disparar una request por tecla.
 
 **¿Cómo manejás seguridad?**
 
@@ -654,16 +667,16 @@ Subtítulos y audiodescripción del video, auditoría con lector de pantalla, te
 - [x] Páginas individuales para cada proyecto.
 - [x] Componente 1: `ProjectExplorer` con selector de Mirada.
 - [x] Componente 2: `WorkflowSimulator` con tabs accesibles.
-- [x] Componente 3: `AlbumLab` con iTunes Search API.
+- [x] Componente 3: `AgileRitualCalculator` con Open-Meteo.
 - [x] API visible con badge y endpoint.
-- [x] Estados: carga, éxito, vacío, error y respaldo.
+- [x] Estados: carga, éxito, selección, vacío, error y respaldo.
 - [x] Controles para demostrar estados.
 - [x] Responsive.
 - [x] Accesibilidad.
 - [x] README actualizado.
 - [x] PROCESO actualizado.
 - [x] Commits progresivos.
-- [ ] URL de repositorio.
+- [x] URL de repositorio.
 - [ ] URL de deploy.
 - [ ] Build de producción final.
 - [ ] Auditoría formal con lector de pantalla.
@@ -672,8 +685,8 @@ Subtítulos y audiodescripción del video, auditoría con lector de pantalla, te
 
 ## 13. Próximos pasos
 
-1. Completar `README.md` con URL de repositorio y deploy.
-2. Ejecutar build de producción y revisar `dist/`.
+1. Completar `README.md` con la URL de deploy.
+2. Ejecutar la prueba manual en navegador de los estados de la calculadora.
 3. Publicar en Vercel, Netlify o GitHub Pages.
 4. Agregar subtítulos y audiodescripción al video.
 5. Hacer una auditoría con lector de pantalla.
@@ -687,13 +700,12 @@ Subtítulos y audiodescripción del video, auditoría con lector de pantalla, te
 - `src/data/projects.ts`: cuatro proyectos y metadatos.
 - `src/data/miradas.ts`: contenido de las dos miradas.
 - `src/data/workflow.ts`: cinco etapas del proceso.
-- `src/data/albums.ts`: configuración de iTunes Search API, normalización, tipografías curadas y respaldo.
+- `src/components/AgileRitualCalculator.astro`: calculadora de rituales, husos, solapamiento, diagnóstico y API.
 - `src/components/ProjectExplorer.astro`: explorador y selector de Mirada.
 - `src/components/ProjectCard.astro`: tarjetas de proyecto con enlace a la página individual.
 - `src/components/ProjectMedia.astro`: video y carrusel de imágenes.
 - `src/pages/proyectos/[id].astro`: página individual de cada proyecto.
 - `src/components/WorkflowSimulator.astro`: proceso interactivo.
-- `src/components/AlbumLab.astro`: manual de identidad, paleta, tipografía y API.
 - `src/components/Hero.astro`: presentación profesional.
 - `src/components/About.astro`: Sobre mí.
 - `src/layouts/BaseLayout.astro`: documento, navegación y footer.

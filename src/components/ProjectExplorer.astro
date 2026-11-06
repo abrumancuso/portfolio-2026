@@ -344,11 +344,11 @@ const defaultMirada: MiradaId = 'producto';
   }
 
   .projects__note {
-    padding: 22px;
-    border: 1px solid var(--color-border);
-    border-left: 4px solid var(--color-accent-deep);
-    border-radius: var(--radius-md);
-    background: var(--color-bg-alt);
+    padding: 24px;
+    border: 2px solid var(--color-plum);
+    border-radius: var(--radius-lg);
+    background: var(--color-peach);
+    box-shadow: var(--shadow-sticker-sm);
   }
 
   .projects__note p {
@@ -364,9 +364,10 @@ const defaultMirada: MiradaId = 'producto';
 
   .explorer {
     padding: clamp(18px, 3vw, 28px);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-lg);
+    border: 2px solid var(--color-plum);
+    border-radius: var(--radius-xl);
     background: var(--color-bg-alt);
+    box-shadow: 10px 10px 0 rgba(108, 3, 69, 0.1);
   }
 
   .explorer__toolbar {
@@ -382,7 +383,7 @@ const defaultMirada: MiradaId = 'producto';
   }
 
   .explorer__label {
-    font-family: var(--font-display);
+    font-family: var(--font-ui);
     font-size: 0.72rem;
     font-weight: 600;
     letter-spacing: 0.1em;
@@ -400,34 +401,36 @@ const defaultMirada: MiradaId = 'producto';
   .explorer__chip,
   .explorer__view button {
     min-height: 40px;
-    padding: 8px 13px;
-    border: 1px solid var(--color-border);
-    border-radius: 100px;
+    padding: 8px 14px;
+    border: 1.5px solid rgba(108, 3, 69, 0.3);
+    border-radius: var(--radius-pill);
     background: var(--color-surface);
-    font-family: var(--font-display);
+    font-family: var(--font-ui);
     font-size: 0.78rem;
-    font-weight: 500;
-    color: var(--color-text-muted);
-    transition: background var(--transition), color var(--transition), border-color var(--transition);
+    font-weight: 600;
+    color: var(--color-plum-soft);
+    transition: background var(--transition), color var(--transition),
+      border-color var(--transition), transform var(--transition);
   }
 
   .explorer__chip:hover,
   .explorer__view button:hover {
-    border-color: var(--color-accent-deep);
-    color: var(--color-accent-deep);
+    border-color: var(--color-plum);
+    color: var(--color-plum);
+    transform: translateY(-1px);
   }
 
   .explorer__chip[aria-pressed='true'],
   .explorer__view button[aria-pressed='true'] {
-    border-color: var(--color-accent-deep);
-    background: var(--color-accent-deep);
-    color: #fff;
+    border-color: var(--color-plum);
+    background: var(--color-plum);
+    color: var(--color-cream);
   }
 
   .explorer__view {
     padding: 4px;
-    border: 1px solid var(--color-border);
-    border-radius: 100px;
+    border: 1.5px solid rgba(108, 3, 69, 0.3);
+    border-radius: var(--radius-pill);
     background: var(--color-surface);
     gap: 2px;
   }
@@ -435,25 +438,32 @@ const defaultMirada: MiradaId = 'producto';
   .explorer__view button {
     border: none;
     background: transparent;
-    border-radius: 100px;
+    border-radius: var(--radius-pill);
   }
 
   .explorer__view button[aria-pressed='true'] {
-    background: var(--color-accent-deep);
+    background: var(--color-plum);
   }
 
   .explorer__search {
     width: 100%;
-    min-height: 44px;
-    padding: 10px 14px;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-sm);
+    min-height: 46px;
+    padding: 10px 18px;
+    border: 2px solid rgba(108, 3, 69, 0.3);
+    border-radius: var(--radius-pill);
     background: var(--color-surface);
     font-size: 0.9rem;
+    transition: border-color var(--transition), box-shadow var(--transition);
+  }
+
+  .explorer__search:focus {
+    border-color: var(--color-plum);
+    box-shadow: var(--shadow-sticker-sm);
+    outline: none;
   }
 
   .explorer__search::placeholder {
-    color: #8a817a;
+    color: var(--color-text-muted);
   }
 
   .explorer__statusbar {
@@ -464,7 +474,7 @@ const defaultMirada: MiradaId = 'producto';
     gap: 12px;
     margin: 18px 0 12px;
     padding-top: 16px;
-    border-top: 1px solid var(--color-border);
+    border-top: 2px dashed rgba(108, 3, 69, 0.25);
   }
 
   .explorer__status {
@@ -476,7 +486,7 @@ const defaultMirada: MiradaId = 'producto';
     min-height: 36px;
     padding: 6px 10px;
     border-radius: var(--radius-sm);
-    font-family: var(--font-display);
+    font-family: var(--font-ui);
     font-size: 0.76rem;
     font-weight: 600;
     color: var(--color-accent-deep);
@@ -489,8 +499,8 @@ const defaultMirada: MiradaId = 'producto';
     gap: 12px;
     margin-bottom: 18px;
     padding: clamp(16px, 2.5vw, 22px);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
+    border: 1.5px solid rgba(108, 3, 69, 0.25);
+    border-radius: var(--radius-lg);
     background: var(--color-surface);
   }
 
@@ -503,7 +513,7 @@ const defaultMirada: MiradaId = 'producto';
   }
 
   .explorer__mode-current {
-    font-family: var(--font-display);
+    font-family: var(--font-ui);
     font-size: 0.9rem;
     font-weight: 600;
     color: var(--color-accent-deep);
@@ -514,7 +524,7 @@ const defaultMirada: MiradaId = 'producto';
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 6px;
     padding: 4px;
-    border: 1px solid var(--color-border);
+    border: 1.5px solid rgba(108, 3, 69, 0.25);
     border-radius: var(--radius-md);
     background: var(--color-bg-alt);
   }
@@ -523,7 +533,7 @@ const defaultMirada: MiradaId = 'producto';
     min-height: 48px;
     padding: 10px 14px;
     border-radius: var(--radius-sm);
-    font-family: var(--font-display);
+    font-family: var(--font-ui);
     font-size: 0.8rem;
     font-weight: 600;
     line-height: 1.35;
@@ -534,14 +544,14 @@ const defaultMirada: MiradaId = 'producto';
   }
 
   .explorer__mode-button:hover {
-    background: var(--color-surface);
-    color: var(--color-accent-deep);
+    background: var(--color-peach);
+    color: var(--color-plum);
   }
 
   .explorer__mode-button[aria-pressed='true'] {
-    background: var(--color-ink);
-    color: #fff;
-    box-shadow: 0 6px 16px rgba(28, 25, 23, 0.14);
+    background: var(--color-plum);
+    color: var(--color-cream);
+    box-shadow: var(--shadow-sticker-sm);
   }
 
   .explorer__mode-description {
@@ -574,15 +584,15 @@ const defaultMirada: MiradaId = 'producto';
 
   .explorer__empty {
     padding: clamp(28px, 5vw, 48px);
-    border: 1px dashed var(--color-border);
-    border-radius: var(--radius-md);
+    border: 2px dashed var(--color-plum);
+    border-radius: var(--radius-lg);
     background: var(--color-surface);
     text-align: center;
   }
 
   .explorer__empty-title {
     margin-bottom: 8px;
-    font-family: var(--font-display);
+    font-family: var(--font-ui);
     font-size: 1.2rem;
     font-weight: 600;
   }
