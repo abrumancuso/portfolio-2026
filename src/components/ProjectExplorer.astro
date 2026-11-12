@@ -15,14 +15,18 @@ const defaultMirada: MiradaId = 'producto';
   <div class="projects__inner">
     <header class="projects__header">
       <div class="projects__intro">
+        <svg class="projects__sparkle deco" viewBox="0 0 40 40" width="32" height="32" aria-hidden="true" focusable="false">
+          <path d="M20 3c1.8 9.4 4.8 12.4 14.2 14.2C24.8 19 21.8 22 20 31.4 18.2 22 15.2 19 5.8 17.2 15.2 15.4 18.2 12.4 20 3Z" fill="#F7C566" stroke="#6C0345" stroke-width="1.6" stroke-linejoin="round" />
+        </svg>
+
         <span class="section-header__eyebrow">Proyectos</span>
         <h2 id="proyectos-title">
           Selección de proyectos
           <span class="projects__circle">
             destacados
-            <svg class="projects__circle-svg" viewBox="0 0 240 90" preserveAspectRatio="none" fill="none" stroke="#DC6B19" stroke-linecap="round" aria-hidden="true" focusable="false">
-              <path d="M120 8C46 6 10 24 12 46c2 24 54 38 112 38 62 0 112-16 112-38 0-22-44-38-110-38" stroke-width="2.4" />
-              <path d="M128 15C60 13 24 29 26 47c2 20 50 32 100 32 54 0 98-14 98-34 0-19-40-32-96-32" stroke-width="1.4" opacity="0.75" />
+            <svg class="projects__circle-svg" viewBox="0 0 260 26" preserveAspectRatio="none" fill="none" stroke="#DC6B19" stroke-linecap="round" aria-hidden="true" focusable="false">
+              <path d="M6 16c50-9 108-12 248-5" stroke-width="2.6" />
+              <path d="M16 22c62-6 116-8 228-5" stroke-width="1.4" opacity="0.6" />
             </svg>
           </span>
         </h2>
@@ -364,11 +368,23 @@ const defaultMirada: MiradaId = 'producto';
   }
 
   .projects__intro h2 {
-    margin: 10px 0 14px;
+    margin: 10px 0 24px;
     font-size: clamp(1.9rem, 4.5vw, 3rem);
   }
 
   /* --- Capa decorativa editorial --- */
+  .projects__intro {
+    position: relative;
+  }
+
+  .projects__sparkle {
+    position: absolute;
+    top: -12px;
+    right: clamp(6px, 10vw, 90px);
+    z-index: 1;
+    transform: rotate(12deg);
+  }
+
   .projects__circle {
     position: relative;
     display: inline-block;
@@ -376,10 +392,10 @@ const defaultMirada: MiradaId = 'producto';
 
   .projects__circle-svg {
     position: absolute;
-    left: -16px;
-    top: -14px;
-    width: calc(100% + 32px);
-    height: calc(100% + 26px);
+    left: -4%;
+    bottom: -0.42em;
+    width: 108%;
+    height: 0.55em;
     overflow: visible;
     pointer-events: none;
   }
@@ -720,6 +736,10 @@ const defaultMirada: MiradaId = 'producto';
 
     .explorer__control:last-child {
       grid-column: 1 / -1;
+    }
+
+    .projects__sparkle {
+      display: none;
     }
 
     .explorer__arrow {

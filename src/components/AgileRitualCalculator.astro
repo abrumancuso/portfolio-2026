@@ -140,9 +140,39 @@ const defaultRitual = rituals.find((ritual) => ritual.id === config.defaultRitua
     <SectionHeading
       eyebrow="Servicios"
       title="Elegí tu servicio"
-      description="Te propongo cómo lo abordaría. Paso 1: dónde está tu equipo. Paso 2: qué necesitás. Con eso armo una propuesta concreta y coordinamos una primera reunión de 30 minutos para ver cómo encaja en tu proyecto."
       id="rituales-title"
     />
+
+    <div class="rituals__intro">
+      <svg class="rituals__intro-sparkle deco" viewBox="0 0 40 40" width="26" height="26" aria-hidden="true" focusable="false">
+        <path d="M20 3c1.8 9.4 4.8 12.4 14.2 14.2C24.8 19 21.8 22 20 31.4 18.2 22 15.2 19 5.8 17.2 15.2 15.4 18.2 12.4 20 3Z" fill="#F7C566" stroke="#6C0345" stroke-width="1.6" stroke-linejoin="round" />
+      </svg>
+
+      <ol class="rituals__steps">
+        <li class="rituals__step">
+          <span class="rituals__step-badge">
+            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 2c1 5.4 2.6 7 8 8-5.4 1-7 2.6-8 8-1-5.4-2.6-7-8-8 5.4-1 7-2.6 8-8Z" />
+            </svg>
+            Paso 01
+          </span>
+          <span class="rituals__step-text">Indicá en qué ciudad está tu equipo</span>
+        </li>
+        <li class="rituals__step rituals__step--alt">
+          <span class="rituals__step-badge">
+            <svg viewBox="0 0 26 14" width="16" height="10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M2 8c6-5 13-6 20-2" />
+              <path d="M17 2c2 1.6 3.4 3 4.6 5.4" />
+            </svg>
+            Paso 02
+          </span>
+          <span class="rituals__step-text">Elegí qué servicio o reunión necesitás coordinar</span>
+        </li>
+      </ol>
+      <p class="rituals__intro-note">
+        <span aria-hidden="true">✦</span> Con eso cruzo nuestros husos horarios en tiempo real y armamos una primera sesión de 30 minutos a medida.
+      </p>
+    </div>
 
     <div class="rituals__stage">
       <span class="folder__tab folder__tab--terracotta rituals__tab">Propuesta en vivo</span>
@@ -345,9 +375,12 @@ const defaultRitual = rituals.find((ritual) => ritual.id === config.defaultRitua
     </div>
 
     <p class="rituals__source">
-      Datos en vivo de
+      <span class="rituals__source-mark" aria-hidden="true">✦</span>
+      Sincronización en tiempo real conectada a la API de
       <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Open-Meteo</a>
-      (geocoding y zonas horarias). Sin API key, sin backend y sin guardar búsquedas.
+      (geocoding y husos horarios). Tus búsquedas son 100% privadas y no se
+      almacenan datos. Si querés coordinar el encuentro, presioná el botón
+      <strong>Agendar la reunión</strong>.
     </p>
 
     <p class="visually-hidden" role="status" aria-live="polite" data-live></p>
@@ -3606,6 +3639,112 @@ const defaultRitual = rituals.find((ritual) => ritual.id === config.defaultRitua
   @media (max-width: 720px) {
     .rituals__star,
     .rituals__sync {
+      display: none;
+    }
+  }
+
+  /* --- Intro de pasos (Paso 01 / Paso 02) --- */
+  .rituals__intro {
+    position: relative;
+    margin-bottom: clamp(26px, 4vw, 40px);
+  }
+
+  .rituals__intro-sparkle {
+    position: absolute;
+    top: -14px;
+    right: clamp(4px, 3vw, 28px);
+    transform: rotate(10deg);
+  }
+
+  .rituals__steps {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+
+  .rituals__step {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 12px;
+    padding: 14px 16px;
+    border: 1.5px solid var(--color-plum);
+    border-radius: 3px;
+    background: var(--color-surface);
+    box-shadow: 3px 3px 0 rgba(108, 3, 69, 0.16);
+    transform: rotate(-0.7deg);
+  }
+
+  .rituals__step--alt {
+    background: var(--color-cream-deep);
+    transform: rotate(0.7deg);
+  }
+
+  .rituals__step-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    flex: none;
+    padding: 4px 11px;
+    border: 1.5px solid var(--color-plum);
+    border-radius: 999px;
+    background: var(--color-mustard);
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-plum);
+  }
+
+  .rituals__step--alt .rituals__step-badge {
+    background: var(--color-terracotta);
+    color: var(--color-cream);
+  }
+
+  .rituals__step-badge svg {
+    flex: none;
+  }
+
+  .rituals__step-text {
+    font-family: var(--font-ui);
+    font-size: 0.95rem;
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--color-plum);
+  }
+
+  .rituals__intro-note {
+    max-width: 70ch;
+    font-family: var(--font-ui);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--color-text-muted);
+  }
+
+  .rituals__intro-note span {
+    margin-right: 4px;
+    color: var(--color-terracotta);
+    font-weight: 700;
+  }
+
+  .rituals__source-mark {
+    margin-right: 2px;
+    color: var(--color-terracotta);
+  }
+
+  .rituals__source strong {
+    color: var(--color-plum);
+    font-weight: 700;
+  }
+
+  @media (max-width: 760px) {
+    .rituals__steps {
+      grid-template-columns: 1fr;
+    }
+
+    .rituals__intro-sparkle {
       display: none;
     }
   }

@@ -15,6 +15,10 @@ import { workflowStages } from '../data/workflow';
     <div class="workflow__folder">
       <span class="folder__tab folder__tab--mustard">Proceso</span>
 
+      <svg class="workflow__sparkle deco" viewBox="0 0 40 40" width="30" height="30" aria-hidden="true" focusable="false">
+        <path d="M20 3c1.8 9.4 4.8 12.4 14.2 14.2C24.8 19 21.8 22 20 31.4 18.2 22 15.2 19 5.8 17.2 15.2 15.4 18.2 12.4 20 3Z" fill="#F7C566" stroke="#6C0345" stroke-width="1.6" stroke-linejoin="round" />
+      </svg>
+
       <div class="workflow__board" data-workflow>
       <div class="workflow__timeline" role="tablist" aria-label="Etapas del proceso de trabajo" aria-orientation="vertical">
         {workflowStages.map((stage, index) => (
@@ -78,10 +82,6 @@ import { workflowStages } from '../data/workflow';
       </div>
       </div>
     </div>
-
-    <p class="workflow__hint">
-      Las etapas también se pueden recorrer con las flechas del teclado.
-    </p>
 
     <p class="visually-hidden" role="status" aria-live="polite" data-workflow-status></p>
   </div>
@@ -158,6 +158,14 @@ import { workflowStages } from '../data/workflow';
 
   .workflow__folder > .folder__tab {
     left: clamp(16px, 4vw, 40px);
+  }
+
+  .workflow__sparkle {
+    position: absolute;
+    top: 2px;
+    right: clamp(14px, 4vw, 40px);
+    z-index: 3;
+    transform: rotate(-8deg);
   }
 
   .workflow__board {
@@ -349,18 +357,6 @@ import { workflowStages } from '../data/workflow';
     display: none;
   }
 
-  .workflow__hint {
-    margin-top: 18px;
-    padding-top: 14px;
-    border-top: 1px solid rgba(108, 3, 69, 0.18);
-    font-family: var(--font-ui);
-    font-size: 0.78rem;
-    font-weight: 500;
-    letter-spacing: 0;
-    color: var(--color-text-muted);
-    text-align: center;
-  }
-
   @media (max-width: 900px) {
     .workflow__board {
       grid-template-columns: 1fr;
@@ -400,6 +396,10 @@ import { workflowStages } from '../data/workflow';
       left: 16px;
       padding-inline: 14px;
       font-size: 0.6rem;
+    }
+
+    .workflow__sparkle {
+      display: none;
     }
   }
 </style>
