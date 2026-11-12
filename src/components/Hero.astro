@@ -3,6 +3,35 @@ import { heroAreas, heroBody, heroEyebrow, heroFirstName, heroLastName, heroRole
 ---
 
 <section class="hero" id="inicio" aria-labelledby="hero-title">
+  <span class="hero__margin deco" aria-hidden="true">
+    ABRU MANCUSO * PORTFOLIO 2026 * BUENOS AIRES, ARG
+  </span>
+
+  <svg class="hero__flower hero__flower--retro deco" viewBox="0 0 100 100" width="66" height="66" aria-hidden="true" focusable="false">
+    <g fill="#F7C566" stroke="#6C0345" stroke-width="2" stroke-linejoin="round">
+      <path d="M50 50C41 44 37 27 50 14c13 13 9 30 0 36Z" />
+      <path d="M50 50C41 44 37 27 50 14c13 13 9 30 0 36Z" transform="rotate(72 50 50)" />
+      <path d="M50 50C41 44 37 27 50 14c13 13 9 30 0 36Z" transform="rotate(144 50 50)" />
+      <path d="M50 50C41 44 37 27 50 14c13 13 9 30 0 36Z" transform="rotate(216 50 50)" />
+      <path d="M50 50C41 44 37 27 50 14c13 13 9 30 0 36Z" transform="rotate(288 50 50)" />
+    </g>
+    <circle cx="50" cy="50" r="6" fill="#6C0345" />
+  </svg>
+
+  <svg class="hero__flower hero__flower--drawn deco" viewBox="0 0 80 112" width="46" height="64" fill="none" stroke="#6C0345" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+    <path d="M24 10c-3 4-4 8-4 12M36 10c-3 4-4 8-4 12" />
+    <g>
+      <ellipse cx="40" cy="26" rx="7" ry="11" />
+      <ellipse cx="40" cy="26" rx="7" ry="11" transform="rotate(72 40 38)" />
+      <ellipse cx="40" cy="26" rx="7" ry="11" transform="rotate(144 40 38)" />
+      <ellipse cx="40" cy="26" rx="7" ry="11" transform="rotate(216 40 38)" />
+      <ellipse cx="40" cy="26" rx="7" ry="11" transform="rotate(288 40 38)" />
+    </g>
+    <circle cx="40" cy="38" r="5" />
+    <path d="M40 44c2 16-2 28-1 42" />
+    <path d="M39 70c-8-3-13 2-14 8 7 1 12-2 14-8Z" />
+  </svg>
+
   <div class="hero__inner">
     <div class="hero__content">
       <p class="hero__eyebrow"><span class="hero__dot" aria-hidden="true"></span>{heroEyebrow}</p>
@@ -11,6 +40,10 @@ import { heroAreas, heroBody, heroEyebrow, heroFirstName, heroLastName, heroRole
         {heroFirstName}
         <span class="hero__last">{heroLastName}</span>
       </h1>
+
+      <span class="hero__highlighter deco-highlighter" aria-hidden="true">
+        UX/UI & Digital PM · 4.º año UMAI
+      </span>
 
       <p class="hero__role">{heroRole}</p>
       <p class="hero__thesis">{heroBody}</p>
@@ -24,6 +57,14 @@ import { heroAreas, heroBody, heroEyebrow, heroFirstName, heroLastName, heroRole
       <div class="hero__actions">
         <a class="btn btn--primary" href="#proyectos">Explorar proyectos</a>
         <a class="btn btn--ghost" href="#rituales">Probar la calculadora</a>
+
+        <div class="hero__cta-note deco" aria-hidden="true">
+          <svg viewBox="0 0 90 44" width="82" height="40" fill="none" stroke="#6C0345" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 38C24 34 44 24 60 8" />
+            <path d="M46 10c6-2 11-2 15-1M61 5c1 5 1 9 0 13" />
+          </svg>
+          <span class="deco-note">empezá por acá</span>
+        </div>
       </div>
     </div>
 
@@ -182,6 +223,61 @@ import { heroAreas, heroBody, heroEyebrow, heroFirstName, heroLastName, heroRole
     display: flex;
     flex-wrap: wrap;
     gap: 12px;
+  }
+
+  /* --- Capa decorativa editorial (no interactiva) --- */
+  .hero__content {
+    position: relative;
+  }
+
+  .hero__margin {
+    position: absolute;
+    left: clamp(4px, 1.2vw, 12px);
+    top: 50%;
+    transform: translateY(-50%) rotate(180deg);
+    writing-mode: vertical-rl;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--color-plum);
+    opacity: 0.5;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .hero__highlighter {
+    top: -26px;
+    right: clamp(0px, 1.5vw, 12px);
+  }
+
+  .hero__flower--retro {
+    right: clamp(8px, 3vw, 42px);
+    bottom: clamp(64px, 11vw, 132px);
+    transform: rotate(-8deg);
+    z-index: 1;
+  }
+
+  .hero__flower--drawn {
+    left: clamp(12px, 3.5vw, 46px);
+    top: clamp(96px, 15vw, 172px);
+    transform: rotate(6deg);
+    z-index: 1;
+  }
+
+  .hero__cta-note {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 2px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transform: rotate(-2deg);
+  }
+
+  .hero__cta-note svg {
+    flex: none;
   }
 
   .hero__index {
@@ -354,6 +450,15 @@ import { heroAreas, heroBody, heroEyebrow, heroFirstName, heroLastName, heroRole
     }
 
     .hero__scroll {
+      display: none;
+    }
+  }
+
+  @media (max-width: 760px) {
+    .hero__margin,
+    .hero__flower,
+    .hero__cta-note,
+    .hero__highlighter {
       display: none;
     }
   }

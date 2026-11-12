@@ -8,6 +8,7 @@ import { about, site } from '../data/site';
 
     <div class="about__inner">
       <figure class="about__media">
+        <span class="about__tape deco-tape" aria-hidden="true"></span>
         <img
           src="/perfil.jpg"
           alt="Retrato de Abril Mancuso"
@@ -16,6 +17,10 @@ import { about, site } from '../data/site';
           loading="eager"
           decoding="async"
         />
+        <svg class="about__star deco" viewBox="0 0 60 60" width="40" height="40" fill="none" stroke="#6C0345" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true" focusable="false">
+          <path d="M30 5 37 23 56 23 41 34 47 53 30 41 13 53 19 34 4 23 23 23Z" />
+          <path d="M30 16v18M22 30l8-6 8 6" opacity="0.5" />
+        </svg>
         <figcaption>
           <span>{site.name}</span>
           <span>{site.location}</span>
@@ -23,6 +28,20 @@ import { about, site } from '../data/site';
       </figure>
 
       <div class="about__content">
+        <svg class="about__flower deco" viewBox="0 0 80 112" width="42" height="58" fill="none" stroke="#6C0345" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+          <path d="M24 10c-3 4-4 8-4 12M36 10c-3 4-4 8-4 12" />
+          <g>
+            <ellipse cx="40" cy="26" rx="7" ry="11" />
+            <ellipse cx="40" cy="26" rx="7" ry="11" transform="rotate(72 40 38)" />
+            <ellipse cx="40" cy="26" rx="7" ry="11" transform="rotate(144 40 38)" />
+            <ellipse cx="40" cy="26" rx="7" ry="11" transform="rotate(216 40 38)" />
+            <ellipse cx="40" cy="26" rx="7" ry="11" transform="rotate(288 40 38)" />
+          </g>
+          <circle cx="40" cy="38" r="5" />
+          <path d="M40 44c2 16-2 28-1 42" />
+          <path d="M39 70c-8-3-13 2-14 8 7 1 12-2 14-8Z" />
+        </svg>
+
         <header class="about__head">
           <span class="section-header__eyebrow">Sobre mí</span>
           <h2 id="sobre-mi-title">Project Manager & <span class="script">UX/UI</span> Designer</h2>
@@ -145,6 +164,30 @@ import { about, site } from '../data/site';
   .about__content {
     position: relative;
     z-index: 1;
+  }
+
+  /* --- Capa decorativa editorial --- */
+  .about__tape {
+    top: -13px;
+    left: 50%;
+    margin-left: -46px;
+    transform: rotate(4deg);
+  }
+
+  .about__star {
+    position: absolute;
+    top: -15px;
+    right: -13px;
+    z-index: 5;
+    transform: rotate(-10deg);
+  }
+
+  .about__flower {
+    position: absolute;
+    top: -8px;
+    right: 6px;
+    z-index: 0;
+    transform: rotate(8deg);
   }
 
   .about__head {
@@ -331,6 +374,11 @@ import { about, site } from '../data/site';
       left: 18px;
       padding-inline: 14px;
       font-size: 0.62rem;
+    }
+
+    .about__flower,
+    .about__star {
+      display: none;
     }
   }
 </style>

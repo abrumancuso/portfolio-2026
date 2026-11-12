@@ -550,3 +550,92 @@ html[data-mirada='gestion'] [data-mirada-panel='gestion'] {
   outline-offset: 4px;
   background: rgba(247, 197, 102, 0.28);
 }
+
+/* ============================================================
+   CAPA DECORATIVA EDITORIAL (le FLEUR* / CALL ME IF YOU GET LOST)
+   Sólo decoración: todo va con aria-hidden y pointer-events:none.
+   No altera estructura, layout, tipografías ni interacción.
+   ============================================================ */
+
+.deco {
+  pointer-events: none;
+  user-select: none;
+}
+
+/* --- Asterisco de marca en etiquetas/footer --- */
+.folder__tab--mustard::after,
+.footer__eyebrow::after {
+  content: '*';
+  margin-left: 2px;
+  font-family: var(--font-display);
+  font-size: 1.15em;
+  line-height: 0;
+  vertical-align: super;
+  color: var(--color-terracotta);
+}
+
+/* --- Etiqueta de resaltador inclinada --- */
+.deco-highlighter {
+  position: absolute;
+  z-index: 3;
+  padding: 5px 11px 6px;
+  border-radius: 1px 6px 2px 5px;
+  background: var(--color-mustard);
+  color: var(--color-plum-deep);
+  font-family: var(--font-script);
+  font-style: italic;
+  font-size: 0.98rem;
+  line-height: 1.1;
+  letter-spacing: 0;
+  text-transform: none;
+  white-space: nowrap;
+  transform: rotate(-4deg);
+  box-shadow: 2px 2px 0 rgba(108, 3, 69, 0.18);
+  pointer-events: none;
+}
+
+/* --- Cinta adhesiva crema semitransparente --- */
+.deco-tape {
+  position: absolute;
+  z-index: 4;
+  width: 92px;
+  height: 24px;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(255, 248, 220, 0.65) 0 7px,
+      rgba(236, 217, 171, 0.55) 7px 9px
+    );
+  border-left: 1px solid rgba(108, 3, 69, 0.12);
+  border-right: 1px solid rgba(108, 3, 69, 0.12);
+  box-shadow: 0 2px 4px rgba(108, 3, 69, 0.1);
+  transform: rotate(4deg);
+  pointer-events: none;
+}
+
+/* --- Nota manuscrita breve (usa la script editorial existente) --- */
+.deco-note {
+  font-family: var(--font-script);
+  font-style: italic;
+  font-size: 0.98rem;
+  line-height: 1.1;
+  letter-spacing: 0;
+  color: var(--color-terracotta-deep);
+  pointer-events: none;
+}
+
+/* --- Botón secundario estilo tira de papel --- */
+.btn--behance {
+  transform: rotate(-1deg);
+  border-radius: 1px 5px 2px 6px;
+}
+
+.btn--behance:hover {
+  transform: rotate(-1deg) translateY(-1px);
+}
+
+@media (max-width: 640px) {
+  .deco-highlighter {
+    font-size: 0.85rem;
+  }
+}

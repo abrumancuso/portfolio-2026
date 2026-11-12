@@ -91,8 +91,9 @@ const searchText = [
 
       <a class="project-card__open" href={`/proyectos/${project.id}`}>
         Ver caso completo
-        <svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M7 17 17 7M8 7h9v9" stroke-linecap="round" stroke-linejoin="round" />
+        <svg class="project-card__open-arrow" aria-hidden="true" width="40" height="12" viewBox="0 0 40 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M1 6h34" />
+          <path d="M29 1l6 5-6 5" />
         </svg>
       </a>
     </div>
@@ -322,7 +323,7 @@ const searchText = [
     margin-top: auto;
     padding: 10px 16px;
     border: 1.5px solid var(--color-plum);
-    border-radius: 2px;
+    border-radius: 1px 5px 2px 6px;
     background: var(--color-surface);
     color: var(--color-plum);
     font-family: var(--font-ui);
@@ -330,12 +331,19 @@ const searchText = [
     font-weight: 600;
     letter-spacing: 0;
     text-transform: none;
-    transition: background var(--transition), color var(--transition);
+    transform: rotate(-1deg);
+    transition: background var(--transition), color var(--transition),
+      transform var(--transition);
   }
 
   .project-card__open:hover {
     background: var(--color-plum);
     color: var(--color-cream);
+    transform: rotate(-1deg) translateY(-1px);
+  }
+
+  .project-card__open-arrow {
+    flex: none;
   }
 
   .project-card__technical {

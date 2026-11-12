@@ -147,6 +147,12 @@ const defaultRitual = rituals.find((ritual) => ritual.id === config.defaultRitua
     <div class="rituals__stage">
       <span class="folder__tab folder__tab--terracotta rituals__tab">Propuesta en vivo</span>
 
+      <svg class="rituals__star deco" viewBox="0 0 60 60" width="38" height="38" fill="none" stroke="#6C0345" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true" focusable="false">
+        <path d="M30 5 37 23 56 23 41 34 47 53 30 41 13 53 19 34 4 23 23 23Z" />
+        <path d="M30 16v18M22 30l8-6 8 6" opacity="0.5" />
+      </svg>
+      <span class="rituals__sync deco-highlighter" aria-hidden="true">Real-time sync</span>
+
       <div class="rituals__panel" data-rituals data-state="loading" aria-busy="true">
         <div class="rituals__bar">
           <span class="rituals__state" data-state-badge data-state="loading">
@@ -3576,5 +3582,31 @@ const defaultRitual = rituals.find((ritual) => ritual.id === config.defaultRitua
     font-family: var(--font-ui);
     font-size: 0.82rem;
     line-height: 1.5;
+  }
+
+  /* --- Capa decorativa editorial --- */
+  .rituals__stage {
+    position: relative;
+  }
+
+  .rituals__star {
+    position: absolute;
+    top: -22px;
+    right: clamp(170px, 24vw, 240px);
+    z-index: 4;
+    transform: rotate(-8deg);
+  }
+
+  .rituals__sync {
+    top: -14px;
+    right: clamp(14px, 3vw, 34px);
+    z-index: 4;
+  }
+
+  @media (max-width: 720px) {
+    .rituals__star,
+    .rituals__sync {
+      display: none;
+    }
   }
 </style>

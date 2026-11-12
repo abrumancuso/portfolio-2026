@@ -16,7 +16,16 @@ const defaultMirada: MiradaId = 'producto';
     <header class="projects__header">
       <div class="projects__intro">
         <span class="section-header__eyebrow">Proyectos</span>
-        <h2 id="proyectos-title">Selección de proyectos destacados</h2>
+        <h2 id="proyectos-title">
+          Selección de proyectos
+          <span class="projects__circle">
+            destacados
+            <svg class="projects__circle-svg" viewBox="0 0 240 90" preserveAspectRatio="none" fill="none" stroke="#DC6B19" stroke-linecap="round" aria-hidden="true" focusable="false">
+              <path d="M120 8C46 6 10 24 12 46c2 24 54 38 112 38 62 0 112-16 112-38 0-22-44-38-110-38" stroke-width="2.4" />
+              <path d="M128 15C60 13 24 29 26 47c2 20 50 32 100 32 54 0 98-14 98-34 0-19-40-32-96-32" stroke-width="1.4" opacity="0.75" />
+            </svg>
+          </span>
+        </h2>
         <p>
           Una selección de trabajos que muestra distintas capas de mi práctica:
           motion graphics, visualización 3D, diseño estratégico e identidad visual.
@@ -90,6 +99,7 @@ const defaultMirada: MiradaId = 'producto';
             stroke-linejoin="round"
           />
         </svg>
+        <span class="explorer__arrow-note deco-note" aria-hidden="true">mirá más acá</span>
       </div>
 
       <div class="explorer__toolbar">
@@ -356,6 +366,30 @@ const defaultMirada: MiradaId = 'producto';
   .projects__intro h2 {
     margin: 10px 0 14px;
     font-size: clamp(1.9rem, 4.5vw, 3rem);
+  }
+
+  /* --- Capa decorativa editorial --- */
+  .projects__circle {
+    position: relative;
+    display: inline-block;
+  }
+
+  .projects__circle-svg {
+    position: absolute;
+    left: -16px;
+    top: -14px;
+    width: calc(100% + 32px);
+    height: calc(100% + 26px);
+    overflow: visible;
+    pointer-events: none;
+  }
+
+  .explorer__arrow-note {
+    position: absolute;
+    right: clamp(10px, 3vw, 26px);
+    bottom: 8px;
+    transform: rotate(-3deg);
+    z-index: 1;
   }
 
   .projects__intro p {
@@ -697,6 +731,10 @@ const defaultMirada: MiradaId = 'producto';
     }
 
     .explorer__arrow {
+      display: none;
+    }
+
+    .explorer__arrow-note {
       display: none;
     }
   }
