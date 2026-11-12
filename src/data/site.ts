@@ -35,7 +35,7 @@ export const heroLastName = 'Mancuso';
 export const heroRole = 'Project Manager & Diseñadora UX/UI';
 
 export const heroBody =
-  'Transformo ideas sueltas en experiencias digitales con identidad, orden y sentido. Me muevo entre el Diseño UX/UI, la dirección visual y el Project Management: investigo qué necesita realmente el usuario, diseño interfaces que enamoran y organizo al equipo para que el producto se haga realidad sin perder su esencia en el camino.';
+  'Diseño experiencias, gestiono procesos. Integro la estrategia de producto, la interfaz visual y la ejecución técnica. Me dedico a investigar fricciones, prototipar soluciones claras y coordinar el avance del proyecto para que el equipo trabaje sin trabas. y sentido. Me muevo entre el Diseño UX/UI, la dirección visual y el Project Management: investigo qué necesita realmente el usuario, diseño interfaces que enamoran y organizo al equipo para que el producto se haga realidad sin perder su esencia en el camino.';
 
 export const heroAreas = [
   { number: '01', label: 'Gestión de Proyectos Digitales' },
@@ -46,7 +46,7 @@ export const heroAreas = [
 export const about = {
   paragraphs: [
     'Soy <strong>Abril Mancuso</strong>, Project Manager y Diseñadora UX/UI. Estoy cursando el cuarto año de la <strong>Licenciatura en Tecnología Multimedial en la Universidad Maimónides (UMAI)</strong>, donde construí un perfil que integra gestión de proyectos, diseño de experiencia y desarrollo.',
-    'Mi diferencial es liderar el ciclo completo de un producto digital: investigar el problema, definir el alcance, priorizar el roadmap, diseñar flujos e interfaces y acompañar el handoff con el equipo de desarrollo. Esa combinación me permite tomar decisiones de producto con criterio técnico, cuidar la viabilidad de la implementación y sostener la calidad visual y la accesibilidad en cada entrega.',
+    'Mi diferencial es liderar el ciclo completo de un producto digital: investigar el problema, definir el alcance, organizar los tiempos, diseñar flujos e interfaces y acompañar la entrega al equipo de desarrollo. Esta combinación me da el criterio técnico para saber qué es viable, asegurando que la calidad visual y la accesibilidad lleguen intactas al producto final',
     'Trabajo con equipos multidisciplinarios, documento decisiones y traduzco objetivos de negocio en experiencias claras. Busco aportar una mirada estratégica y operativa: que el proyecto avance, que el equipo tenga claridad y que la persona usuaria encuentre una interfaz que le resuelva el problema.',
   ],
   tags: [
