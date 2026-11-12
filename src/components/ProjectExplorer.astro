@@ -40,6 +40,13 @@ const defaultMirada: MiradaId = 'producto';
       </div>
 
       <aside class="projects__note" aria-label="Sobre esta selección de proyectos">
+        <svg class="projects__heart deco" viewBox="0 0 40 36" width="24" height="22" fill="none" stroke="#DC6B19" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+          <path d="M20 31S5 21 5 12a7 7 0 0 1 15-2 7 7 0 0 1 15 2c0 9-15 19-15 19Z" />
+        </svg>
+        <svg class="projects__note-arrow deco" viewBox="0 0 90 60" width="78" height="52" fill="none" stroke="#DC6B19" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+          <path d="M10 8c22 3 38 16 44 34" />
+          <path d="M47 37 54 42 57 33" />
+        </svg>
         <p>
           <strong>La selección presentada reúne algunos de los proyectos</strong> en
           los que apliqué diseño de experiencia, estrategia y desarrollo. El portfolio
@@ -86,16 +93,16 @@ const defaultMirada: MiradaId = 'producto';
           {miradaDescriptions[defaultMirada]}
         </p>
 
-        <svg class="explorer__arrow" aria-hidden="true" viewBox="0 0 110 64" width="96" height="56">
+        <svg class="explorer__arrow" aria-hidden="true" viewBox="0 0 100 48" width="88" height="42">
           <path
-            d="M102 8c-26 3-46 17-56 42"
+            d="M92 6c-26 2-48 12-62 30"
             fill="none"
             stroke="#DC6B19"
             stroke-width="1.5"
             stroke-linecap="round"
           />
           <path
-            d="M36 42c2 6 6 10 12 13M48 55c-6 0-11-2-15-6"
+            d="M39 33 30 36 31 27"
             fill="none"
             stroke="#DC6B19"
             stroke-width="1.5"
@@ -385,6 +392,22 @@ const defaultMirada: MiradaId = 'producto';
     transform: rotate(12deg);
   }
 
+  .projects__heart {
+    position: absolute;
+    top: -13px;
+    right: 18px;
+    transform: rotate(12deg);
+  }
+
+  .projects__note-arrow {
+    position: absolute;
+    bottom: -38px;
+    left: clamp(18px, 5vw, 60px);
+    z-index: 2;
+    transform: rotate(4deg);
+    pointer-events: none;
+  }
+
   .projects__circle {
     position: relative;
     display: inline-block;
@@ -402,8 +425,8 @@ const defaultMirada: MiradaId = 'producto';
 
   .explorer__arrow-note {
     position: absolute;
-    right: clamp(10px, 3vw, 26px);
-    bottom: 8px;
+    right: 120px;
+    bottom: 2px;
     transform: rotate(-3deg);
     z-index: 1;
   }
@@ -669,8 +692,8 @@ const defaultMirada: MiradaId = 'producto';
 
   .explorer__arrow {
     position: absolute;
-    right: clamp(6px, 2vw, 22px);
-    bottom: -26px;
+    right: clamp(8px, 3vw, 28px);
+    bottom: -18px;
     transform: rotate(-4deg);
     pointer-events: none;
   }
@@ -738,7 +761,8 @@ const defaultMirada: MiradaId = 'producto';
       grid-column: 1 / -1;
     }
 
-    .projects__sparkle {
+    .projects__sparkle,
+    .projects__note-arrow {
       display: none;
     }
 
@@ -752,6 +776,10 @@ const defaultMirada: MiradaId = 'producto';
   }
 
   @media (max-width: 700px) {
+    .projects__heart {
+      display: none;
+    }
+
     .explorer {
       padding: 16px;
     }

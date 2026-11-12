@@ -162,7 +162,7 @@ const defaultRitual = rituals.find((ritual) => ritual.id === config.defaultRitua
           <span class="rituals__step-badge">
             <svg viewBox="0 0 26 14" width="16" height="10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M2 8c6-5 13-6 20-2" />
-              <path d="M17 2c2 1.6 3.4 3 4.6 5.4" />
+              <path d="M20 2 22 6 17 7" />
             </svg>
             Paso 02
           </span>
@@ -172,6 +172,11 @@ const defaultRitual = rituals.find((ritual) => ritual.id === config.defaultRitua
       <p class="rituals__intro-note">
         <span aria-hidden="true">✦</span> Con eso cruzo nuestros husos horarios en tiempo real y armamos una primera sesión de 30 minutos a medida.
       </p>
+
+      <svg class="rituals__note-arrow deco" viewBox="0 0 90 60" width="72" height="48" fill="none" stroke="#DC6B19" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+        <path d="M10 8c22 3 38 16 44 34" />
+        <path d="M47 37 54 42 57 33" />
+      </svg>
     </div>
 
     <div class="rituals__stage">
@@ -180,6 +185,9 @@ const defaultRitual = rituals.find((ritual) => ritual.id === config.defaultRitua
       <svg class="rituals__star deco" viewBox="0 0 60 60" width="38" height="38" fill="none" stroke="#6C0345" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true" focusable="false">
         <path d="M30 5 37 23 56 23 41 34 47 53 30 41 13 53 19 34 4 23 23 23Z" />
         <path d="M30 16v18M22 30l8-6 8 6" opacity="0.5" />
+      </svg>
+      <svg class="rituals__heart deco" viewBox="0 0 40 36" width="24" height="22" fill="none" stroke="#DC6B19" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+        <path d="M20 31S5 21 5 12a7 7 0 0 1 15-2 7 7 0 0 1 15 2c0 9-15 19-15 19Z" />
       </svg>
       <span class="rituals__sync deco-highlighter" aria-hidden="true">Real-time sync</span>
 
@@ -3085,7 +3093,15 @@ const defaultRitual = rituals.find((ritual) => ritual.id === config.defaultRitua
 
   .rituals {
     overflow: clip;
-    background: var(--color-bg);
+    background:
+      repeating-linear-gradient(
+        0deg,
+        rgba(108, 3, 69, 0.045) 0 1px,
+        transparent 1px 30px
+      ),
+      radial-gradient(ellipse 55% 40% at 82% 8%, rgba(247, 197, 102, 0.32), transparent 70%),
+      radial-gradient(ellipse 36% 30% at 8% 96%, rgba(220, 107, 25, 0.08), transparent 70%),
+      var(--color-bg);
   }
 
   .rituals::before {
@@ -3636,9 +3652,18 @@ const defaultRitual = rituals.find((ritual) => ritual.id === config.defaultRitua
     z-index: 4;
   }
 
+  .rituals__heart {
+    position: absolute;
+    top: -20px;
+    left: clamp(150px, 18vw, 230px);
+    z-index: 4;
+    transform: rotate(10deg);
+  }
+
   @media (max-width: 720px) {
     .rituals__star,
-    .rituals__sync {
+    .rituals__sync,
+    .rituals__heart {
       display: none;
     }
   }
@@ -3654,6 +3679,15 @@ const defaultRitual = rituals.find((ritual) => ritual.id === config.defaultRitua
     top: -14px;
     right: clamp(4px, 3vw, 28px);
     transform: rotate(10deg);
+  }
+
+  .rituals__note-arrow {
+    position: absolute;
+    right: clamp(14px, 4vw, 44px);
+    bottom: -34px;
+    z-index: 2;
+    transform: rotate(3deg);
+    pointer-events: none;
   }
 
   .rituals__steps {
@@ -3744,7 +3778,8 @@ const defaultRitual = rituals.find((ritual) => ritual.id === config.defaultRitua
       grid-template-columns: 1fr;
     }
 
-    .rituals__intro-sparkle {
+    .rituals__intro-sparkle,
+    .rituals__note-arrow {
       display: none;
     }
   }

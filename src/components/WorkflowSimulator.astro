@@ -3,7 +3,7 @@ import SectionHeading from './SectionHeading.astro';
 import { workflowStages } from '../data/workflow';
 ---
 
-<section class="workflow section section--alt" id="proceso" aria-labelledby="proceso-title">
+<section class="workflow section section--alt bg-wash" id="proceso" aria-labelledby="proceso-title">
   <div class="container">
     <SectionHeading
       eyebrow="Proceso de trabajo"
@@ -17,6 +17,11 @@ import { workflowStages } from '../data/workflow';
 
       <svg class="workflow__sparkle deco" viewBox="0 0 40 40" width="30" height="30" aria-hidden="true" focusable="false">
         <path d="M20 3c1.8 9.4 4.8 12.4 14.2 14.2C24.8 19 21.8 22 20 31.4 18.2 22 15.2 19 5.8 17.2 15.2 15.4 18.2 12.4 20 3Z" fill="#F7C566" stroke="#6C0345" stroke-width="1.6" stroke-linejoin="round" />
+      </svg>
+
+      <svg class="workflow__arrow deco" viewBox="0 0 80 50" width="70" height="44" fill="none" stroke="#DC6B19" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+        <path d="M10 8c18 3 30 14 36 30" />
+        <path d="M39 33 46 38 48 30" />
       </svg>
 
       <div class="workflow__board" data-workflow>
@@ -81,6 +86,10 @@ import { workflowStages } from '../data/workflow';
         ))}
       </div>
       </div>
+
+      <svg class="workflow__star deco" viewBox="0 0 60 60" width="32" height="32" fill="none" stroke="#DC6B19" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true" focusable="false">
+        <path d="M30 5 37 23 56 23 41 34 47 53 30 41 13 53 19 34 4 23 23 23Z" />
+      </svg>
     </div>
 
     <p class="visually-hidden" role="status" aria-live="polite" data-workflow-status></p>
@@ -166,6 +175,24 @@ import { workflowStages } from '../data/workflow';
     right: clamp(14px, 4vw, 40px);
     z-index: 3;
     transform: rotate(-8deg);
+  }
+
+  .workflow__arrow {
+    position: absolute;
+    top: -8px;
+    left: clamp(160px, 20vw, 260px);
+    z-index: 3;
+    transform: rotate(-2deg);
+    pointer-events: none;
+  }
+
+  .workflow__star {
+    position: absolute;
+    right: clamp(20px, 5vw, 60px);
+    bottom: -16px;
+    z-index: 3;
+    transform: rotate(10deg);
+    pointer-events: none;
   }
 
   .workflow__board {
@@ -398,7 +425,9 @@ import { workflowStages } from '../data/workflow';
       font-size: 0.6rem;
     }
 
-    .workflow__sparkle {
+    .workflow__sparkle,
+    .workflow__arrow,
+    .workflow__star {
       display: none;
     }
   }

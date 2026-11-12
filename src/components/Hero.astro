@@ -2,7 +2,7 @@
 import { heroAreas, heroBody, heroEyebrow, heroFirstName, heroLastName, heroRole } from '../data/site';
 ---
 
-<section class="hero" id="inicio" aria-labelledby="hero-title">
+<section class="hero starfield" id="inicio" aria-labelledby="hero-title">
   <span class="hero__margin deco" aria-hidden="true">
     ABRU MANCUSO * PORTFOLIO 2026 * BUENOS AIRES, ARG
   </span>
@@ -32,6 +32,14 @@ import { heroAreas, heroBody, heroEyebrow, heroFirstName, heroLastName, heroRole
     <path d="M39 70c-8-3-13 2-14 8 7 1 12-2 14-8Z" />
   </svg>
 
+  <svg class="hero__heart deco" viewBox="0 0 40 36" width="24" height="22" fill="none" stroke="#DC6B19" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+    <path d="M20 31S5 21 5 12a7 7 0 0 1 15-2 7 7 0 0 1 15 2c0 9-15 19-15 19Z" />
+  </svg>
+
+  <svg class="hero__twinkle deco" viewBox="0 0 40 40" width="20" height="20" fill="none" stroke="#6C0345" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true" focusable="false">
+    <path d="M20 4c1.6 8.4 4.2 11 12.6 12.6C24.2 18.2 21.6 20.8 20 29.2 18.4 20.8 15.8 18.2 7.4 16.6 15.8 15 18.4 12.4 20 4Z" />
+  </svg>
+
   <div class="hero__inner">
     <div class="hero__content">
       <p class="hero__eyebrow"><span class="hero__dot" aria-hidden="true"></span>{heroEyebrow}</p>
@@ -59,7 +67,7 @@ import { heroAreas, heroBody, heroEyebrow, heroFirstName, heroLastName, heroRole
         <div class="hero__cta-note deco" aria-hidden="true">
           <svg viewBox="0 0 90 44" width="82" height="40" fill="none" stroke="#6C0345" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M6 38C24 34 44 24 60 8" />
-            <path d="M46 10c6-2 11-2 15-1M61 5c1 5 1 9 0 13" />
+            <path d="M51 10 60 8 58 17" />
           </svg>
           <span class="deco-note">empezá por acá</span>
         </div>
@@ -272,6 +280,23 @@ import { heroAreas, heroBody, heroEyebrow, heroFirstName, heroLastName, heroRole
     z-index: 1;
   }
 
+  .hero__heart {
+    position: absolute;
+    top: 58%;
+    right: clamp(4px, 2vw, 24px);
+    z-index: 1;
+    transform: rotate(12deg);
+    opacity: 0.9;
+  }
+
+  .hero__twinkle {
+    position: absolute;
+    bottom: 17%;
+    left: clamp(8px, 3vw, 42px);
+    z-index: 1;
+    transform: rotate(-14deg);
+  }
+
   .hero__cta-note {
     position: absolute;
     top: calc(100% + 8px);
@@ -463,6 +488,8 @@ import { heroAreas, heroBody, heroEyebrow, heroFirstName, heroLastName, heroRole
   @media (max-width: 760px) {
     .hero__margin,
     .hero__flower,
+    .hero__heart,
+    .hero__twinkle,
     .hero__cta-note {
       display: none;
     }

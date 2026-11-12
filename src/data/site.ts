@@ -44,10 +44,10 @@ export const heroAreas = [
 ] as const;
 
 export const about = {
-  lead: 'Project Manager y Diseñadora UX/UI con formación técnica multimedial.',
   paragraphs: [
-    'Desde chica soy inquieta y curiosa por cómo funcionan las cosas visuales y tecnológicas. Hoy, en mi 4.° año de Tecnología Multimedial en <strong>UMAI</strong>, encontré mi lugar uniendo dos mundos que suelen ir separados: la sensibilidad estética del diseño y la cabeza estratégica de la gestión.',
-    'Puedo bajar una identidad visual en Illustrator, prototipar un flujo completo en Figma, animar una pieza en After Effects y sentarme a hablar de igual a igual con desarrollo porque entiendo cómo se escribe el código. No solo diseño pantallas: cuido el proyecto completo de principio a fin.',
+    'Soy <strong>Abril Mancuso</strong>, Project Manager y Diseñadora UX/UI. Estoy cursando el cuarto año de la <strong>Licenciatura en Tecnología Multimedial en la Universidad Maimónides (UMAI)</strong>, donde construí un perfil que integra gestión de proyectos, diseño de experiencia y desarrollo.',
+    'Mi diferencial es liderar el ciclo completo de un producto digital: investigar el problema, definir el alcance, priorizar el roadmap, diseñar flujos e interfaces y acompañar el handoff con el equipo de desarrollo. Esa combinación me permite tomar decisiones de producto con criterio técnico, cuidar la viabilidad de la implementación y sostener la calidad visual y la accesibilidad en cada entrega.',
+    'Trabajo con equipos multidisciplinarios, documento decisiones y traduzco objetivos de negocio en experiencias claras. Busco aportar una mirada estratégica y operativa: que el proyecto avance, que el equipo tenga claridad y que la persona usuaria encuentre una interfaz que le resuelva el problema.',
   ],
   tags: [
     'FIGMA',

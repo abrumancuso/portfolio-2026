@@ -2,7 +2,7 @@
 import { about, site } from '../data/site';
 ---
 
-<section class="about section" id="sobre-mi" aria-labelledby="sobre-mi-title">
+<section class="about section bg-grid" id="sobre-mi" aria-labelledby="sobre-mi-title">
   <div class="about__folder">
     <span class="folder__tab folder__tab--terracotta">Sobre mí</span>
 
@@ -20,6 +20,9 @@ import { about, site } from '../data/site';
         <svg class="about__star deco" viewBox="0 0 60 60" width="40" height="40" fill="none" stroke="#6C0345" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true" focusable="false">
           <path d="M30 5 37 23 56 23 41 34 47 53 30 41 13 53 19 34 4 23 23 23Z" />
           <path d="M30 16v18M22 30l8-6 8 6" opacity="0.5" />
+        </svg>
+        <svg class="about__heart deco" viewBox="0 0 40 36" width="26" height="24" fill="none" stroke="#DC6B19" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+          <path d="M20 31S5 21 5 12a7 7 0 0 1 15-2 7 7 0 0 1 15 2c0 9-15 19-15 19Z" />
         </svg>
         <figcaption>
           <span>{site.name}</span>
@@ -45,7 +48,6 @@ import { about, site } from '../data/site';
         <header class="about__head">
           <span class="section-header__eyebrow">Sobre mí</span>
           <h2 id="sobre-mi-title">Project Manager & <span class="script">UX/UI</span> Designer</h2>
-          <p class="about__subtitle">Con formación técnica multimedial.</p>
         </header>
 
         <p class="about__umai">Cursando 4.º año de la Lic. en Tecnología Multimedial · UMAI</p>
@@ -65,28 +67,15 @@ import { about, site } from '../data/site';
           <a class="about__text-link" href="#proceso">Ver cómo trabajo</a>
         </div>
 
-        <svg class="about__arrow" aria-hidden="true" viewBox="0 0 120 72" width="108" height="64">
-          <path
-            d="M8 10c28 3 50 18 60 46"
-            fill="none"
-            stroke="#DC6B19"
-            stroke-width="1.5"
-            stroke-linecap="round"
-          />
-          <path
-            d="M52 50c5 6 10 9 16 11M68 61c-6-1-11-4-15-9"
-            fill="none"
-            stroke="#DC6B19"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
       </div>
     </div>
 
     <aside class="about__feature" aria-label="Enfoque de trabajo">
       <div class="about__feature-card">
+        <svg class="about__arrow" aria-hidden="true" viewBox="0 0 90 60" width="78" height="52" focusable="false">
+          <path d="M8 8c20 3 34 15 42 34" fill="none" stroke="#DC6B19" stroke-width="1.6" stroke-linecap="round" />
+          <path d="M42 38 50 42 51 33" fill="none" stroke="#DC6B19" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
         <span class="paper-clip" aria-hidden="true"></span>
         <p class="about__feature-kicker">Enfoque</p>
         <p class="about__feature-text">
@@ -182,6 +171,14 @@ import { about, site } from '../data/site';
     transform: rotate(-10deg);
   }
 
+  .about__heart {
+    position: absolute;
+    top: -13px;
+    left: -15px;
+    z-index: 5;
+    transform: rotate(-12deg);
+  }
+
   .about__flower {
     position: absolute;
     top: -8px;
@@ -219,15 +216,6 @@ import { about, site } from '../data/site';
     letter-spacing: 0;
     text-transform: none;
     color: var(--color-terracotta);
-  }
-
-  .about__subtitle {
-    max-width: 42ch;
-    color: var(--color-text-muted);
-    font-family: var(--font-ui);
-    font-size: clamp(1.15rem, 1.8vw, 1.4rem);
-    font-weight: 500;
-    line-height: 1.5;
   }
 
   .about__umai {
@@ -285,9 +273,9 @@ import { about, site } from '../data/site';
 
   .about__arrow {
     position: absolute;
-    right: clamp(0px, 3vw, 26px);
-    bottom: -46px;
-    z-index: 0;
+    top: -38px;
+    left: 58%;
+    z-index: 2;
     transform: rotate(4deg);
     pointer-events: none;
   }
@@ -377,7 +365,8 @@ import { about, site } from '../data/site';
     }
 
     .about__flower,
-    .about__star {
+    .about__star,
+    .about__heart {
       display: none;
     }
   }
