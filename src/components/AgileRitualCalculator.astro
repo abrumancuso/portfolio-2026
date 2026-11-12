@@ -3304,11 +3304,11 @@ const defaultRitual = rituals.find((ritual) => ritual.id === config.defaultRitua
       border-color var(--transition);
   }
 
-  .rituals__ritual:nth-child(1),
-  .rituals__ritual:nth-child(2),
-  .rituals__ritual:nth-child(3),
-  .rituals__ritual:nth-child(4),
-  .rituals__ritual:nth-child(5) {
+  .rituals__ritual:not([aria-pressed='true']):nth-child(1),
+  .rituals__ritual:not([aria-pressed='true']):nth-child(2),
+  .rituals__ritual:not([aria-pressed='true']):nth-child(3),
+  .rituals__ritual:not([aria-pressed='true']):nth-child(4),
+  .rituals__ritual:not([aria-pressed='true']):nth-child(5) {
     background: var(--color-surface);
   }
 
@@ -3608,5 +3608,17 @@ const defaultRitual = rituals.find((ritual) => ritual.id === config.defaultRitua
     .rituals__sync {
       display: none;
     }
+  }
+
+  /* Estado seleccionado del Paso 2: color de marca para que no se pierda */
+  .rituals__ritual[aria-pressed='true'] {
+    border: 2px solid var(--color-plum);
+    background: var(--color-mustard);
+    color: var(--color-plum);
+    box-shadow: 4px 4px 0 var(--color-plum);
+  }
+
+  .rituals__ritual[aria-pressed='true']:hover {
+    border-color: var(--color-plum);
   }
 </style>
