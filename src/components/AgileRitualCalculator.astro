@@ -138,20 +138,16 @@ const defaultRitual = rituals.find((ritual) => ritual.id === config.defaultRitua
 <section class="rituals section" id="rituales" aria-labelledby="rituales-title">
   <div class="container rituals__inner">
     <SectionHeading
-      eyebrow="Servicios · propuesta en vivo"
-      title="Elegí el servicio y te propongo cómo lo abordaría"
-      description="Paso 1: dónde está tu equipo. Paso 2: qué necesitás. Con eso armo una propuesta concreta y coordinamos una primera reunión de 30 minutos para ver cómo encaja en tu proyecto."
+      eyebrow="Servicios"
+      title="Elegí tu servicio"
+      description="Te propongo cómo lo abordaría. Paso 1: dónde está tu equipo. Paso 2: qué necesitás. Con eso armo una propuesta concreta y coordinamos una primera reunión de 30 minutos para ver cómo encaja en tu proyecto."
       id="rituales-title"
     />
 
     <div class="rituals__stage">
-      <span class="rituals__sticker rituals__sticker--star" aria-hidden="true">✦</span>
-      <span class="rituals__sticker rituals__sticker--smile" aria-hidden="true">☺</span>
       <span class="folder__tab folder__tab--terracotta rituals__tab">Propuesta en vivo</span>
 
       <div class="rituals__panel" data-rituals data-state="loading" aria-busy="true">
-        <span class="rituals__tape" aria-hidden="true"></span>
-
         <div class="rituals__bar">
           <span class="rituals__state" data-state-badge data-state="loading">
             <span class="rituals__state-dot" aria-hidden="true"></span>
@@ -213,7 +209,6 @@ const defaultRitual = rituals.find((ritual) => ritual.id === config.defaultRitua
 
         <!-- Estado 4: vacío -->
         <div class="rituals__empty" data-region="empty" hidden>
-          <p class="rituals__empty-emoji" aria-hidden="true">🔍✨</p>
           <h3>No encontramos esa ciudad</h3>
           <p data-empty-copy>
             Open-Meteo no devolvió resultados. Probá con otro nombre o volvé a
@@ -226,7 +221,6 @@ const defaultRitual = rituals.find((ritual) => ritual.id === config.defaultRitua
 
         <!-- Estado 5: error / fallback -->
         <div class="rituals__error" data-region="error" hidden role="alert">
-          <p class="rituals__error-emoji" aria-hidden="true">🛠️</p>
           <h3>Se cortó la conexión con Open-Meteo</h3>
           <p data-error-copy>
             No pudimos traer la hora y la zona horaria en vivo. La herramienta no se
@@ -1086,10 +1080,7 @@ const defaultRitual = rituals.find((ritual) => ritual.id === config.defaultRitua
 
 <style>
   .rituals {
-    background:
-      radial-gradient(ellipse 55% 40% at 82% 8%, rgba(247, 197, 102, 0.45), transparent 70%),
-      radial-gradient(ellipse 40% 35% at 10% 92%, rgba(220, 107, 25, 0.1), transparent 70%),
-      var(--color-bg);
+    background: var(--color-bg);
   }
 
   .rituals__inner {
@@ -1119,65 +1110,12 @@ const defaultRitual = rituals.find((ritual) => ritual.id === config.defaultRitua
     margin: 0 auto;
   }
 
-  .rituals__sticker {
-    position: absolute;
-    display: grid;
-    place-items: center;
-    border: 2px solid var(--color-plum);
-    box-shadow: var(--shadow-sticker-sm);
-    font-family: var(--font-ui);
-    font-weight: 700;
-    z-index: 2;
-  }
-
-  .rituals__sticker--star {
-    top: -26px;
-    right: 5%;
-    width: 52px;
-    height: 52px;
-    border-radius: 50%;
-    background: var(--color-mustard);
-    color: var(--color-plum);
-    font-size: 1.3rem;
-    transform: rotate(10deg);
-  }
-
-  .rituals__sticker--smile {
-    bottom: -20px;
-    left: 3%;
-    width: 46px;
-    height: 46px;
-    border-radius: 50%;
-    background: var(--color-terracotta);
-    color: var(--color-text);
-    font-size: 1.2rem;
-    transform: rotate(-9deg);
-  }
-
   .rituals__panel {
     position: relative;
-    padding: clamp(18px, 3vw, 34px);
-    border: 2px solid var(--color-plum);
-    border-radius: var(--radius-xl);
+    padding: clamp(24px, 3.5vw, 40px);
+    border: 1.5px solid var(--color-plum);
+    border-radius: 0 8px 8px 8px;
     background: var(--color-surface);
-    box-shadow: 12px 12px 0 rgba(108, 3, 69, 0.14);
-  }
-
-  .rituals__tape {
-    position: absolute;
-    top: -16px;
-    left: 50%;
-    width: 170px;
-    height: 32px;
-    transform: translateX(-50%) rotate(-2.5deg);
-    border: 1.5px solid rgba(108, 3, 69, 0.35);
-    border-radius: 4px;
-    background: repeating-linear-gradient(
-      45deg,
-      var(--color-mustard) 0 10px,
-      #f9d68f 10px 20px
-    );
-    opacity: 0.95;
   }
 
   .rituals__bar {
@@ -1187,21 +1125,20 @@ const defaultRitual = rituals.find((ritual) => ritual.id === config.defaultRitua
     justify-content: space-between;
     gap: 10px;
     padding-bottom: 16px;
-    border-bottom: 2px dashed rgba(108, 3, 69, 0.22);
+    border-bottom: 1px solid rgba(108, 3, 69, 0.18);
   }
 
   .rituals__state {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 6px 14px;
-    border: 2px solid var(--color-plum);
-    border-radius: var(--radius-pill);
-    background: var(--color-mustard);
-    box-shadow: var(--shadow-sticker-sm);
+    padding: 6px 12px;
+    border: 1.5px solid var(--color-plum);
+    border-radius: 2px;
+    background: var(--color-bg-alt);
     font-family: var(--font-ui);
-    font-size: 0.74rem;
-    font-weight: 700;
+    font-size: 0.76rem;
+    font-weight: 600;
     color: var(--color-plum);
     transition: background var(--transition), color var(--transition);
   }
@@ -1240,7 +1177,6 @@ const defaultRitual = rituals.find((ritual) => ritual.id === config.defaultRitua
   .rituals__state[data-state='empty'] {
     background: var(--color-bg);
     color: var(--color-plum);
-    border-style: dashed;
   }
 
   .rituals__state[data-state='error'] {
@@ -1257,22 +1193,21 @@ const defaultRitual = rituals.find((ritual) => ritual.id === config.defaultRitua
 
   .rituals__offline {
     padding: 6px 12px;
-    border: 1.5px dashed var(--color-plum);
-    border-radius: var(--radius-pill);
+    border: 1.5px solid var(--color-plum);
+    border-radius: 2px;
     background: transparent;
     font-family: var(--font-ui);
-    font-size: 0.7rem;
+    font-size: 0.76rem;
     font-weight: 600;
     color: var(--color-plum);
     transition: background var(--transition), color var(--transition);
   }
 
   .rituals__offline:hover {
-    background: var(--color-peach);
+    background: var(--color-mustard);
   }
 
   .rituals__offline[aria-pressed='true'] {
-    border-style: solid;
     background: var(--color-terracotta);
     color: var(--color-text);
   }
@@ -1286,10 +1221,9 @@ const defaultRitual = rituals.find((ritual) => ritual.id === config.defaultRitua
     display: block;
     margin-bottom: 10px;
     font-family: var(--font-ui);
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
+    font-size: 0.92rem;
+    font-weight: 600;
+    letter-spacing: 0;
     color: var(--color-plum);
   }
 
@@ -1307,14 +1241,15 @@ const defaultRitual = rituals.find((ritual) => ritual.id === config.defaultRitua
 
   .rituals__input {
     width: 100%;
-    min-height: 50px;
-    padding: 12px 20px;
-    border: 2px solid var(--color-plum);
-    border-radius: var(--radius-pill);
+    min-height: 46px;
+    padding: 10px 14px;
+    border: 1.5px solid var(--color-plum);
+    border-radius: 2px;
     background: var(--color-bg);
+    font-family: var(--font-ui);
     font-size: 0.95rem;
     color: var(--color-text);
-    transition: box-shadow var(--transition), background var(--transition);
+    transition: border-color var(--transition);
   }
 
   .rituals__input::placeholder {
@@ -1323,33 +1258,29 @@ const defaultRitual = rituals.find((ritual) => ritual.id === config.defaultRitua
 
   .rituals__input:focus {
     outline: none;
-    background: var(--color-surface);
-    box-shadow: var(--shadow-sticker-sm);
+    border-color: var(--color-terracotta);
   }
 
   .rituals__go {
-    min-height: 50px;
-    padding: 12px 26px;
-    border: 2px solid var(--color-plum);
-    border-radius: var(--radius-pill);
+    min-height: 46px;
+    padding: 10px 22px;
+    border: 1.5px solid var(--color-plum);
+    border-radius: 2px;
     background: var(--color-plum);
     font-family: var(--font-ui);
     font-size: 0.86rem;
-    font-weight: 700;
+    font-weight: 600;
     color: var(--color-cream);
-    box-shadow: var(--shadow-sticker-sm);
-    transition: transform var(--transition), box-shadow var(--transition),
-      background var(--transition);
+    transition: background var(--transition);
   }
 
   .rituals__go:hover {
-    transform: translate(-2px, -2px);
-    box-shadow: 5px 5px 0 var(--color-plum);
     background: var(--color-plum-deep);
   }
 
   .rituals__hint {
     margin-top: 12px;
+    font-family: var(--font-ui);
     font-size: 0.82rem;
     color: var(--color-text-muted);
   }
@@ -1364,21 +1295,18 @@ const defaultRitual = rituals.find((ritual) => ritual.id === config.defaultRitua
   .rituals__hub {
     padding: 7px 14px;
     border: 1.5px solid rgba(108, 3, 69, 0.32);
-    border-radius: var(--radius-pill);
+    border-radius: 2px;
     background: var(--color-surface);
     font-family: var(--font-ui);
-    font-size: 0.76rem;
-    font-weight: 600;
-    color: var(--color-plum-soft);
-    transition: transform var(--transition), background var(--transition),
-      border-color var(--transition), color var(--transition);
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--color-plum);
+    transition: background var(--transition), border-color var(--transition);
   }
 
   .rituals__hub:hover {
-    transform: translateY(-2px) rotate(-1deg);
     border-color: var(--color-plum);
     background: var(--color-mustard);
-    color: var(--color-plum);
   }
 
   .rituals__results {
@@ -1390,10 +1318,9 @@ const defaultRitual = rituals.find((ritual) => ritual.id === config.defaultRitua
     max-height: 260px;
     overflow-y: auto;
     padding: 6px;
-    border: 2px solid var(--color-plum);
-    border-radius: var(--radius-md);
+    border: 1.5px solid var(--color-plum);
+    border-radius: 3px;
     background: var(--color-surface);
-    box-shadow: var(--shadow-sticker);
   }
 
   .rituals__result {
@@ -1458,16 +1385,10 @@ const defaultRitual = rituals.find((ritual) => ritual.id === config.defaultRitua
   .rituals__error {
     margin-top: 22px;
     padding: clamp(24px, 4vw, 40px);
-    border: 2px dashed var(--color-plum);
-    border-radius: var(--radius-lg);
+    border: 1.5px solid var(--color-plum);
+    border-radius: 3px;
     background: var(--color-bg);
     text-align: center;
-  }
-
-  .rituals__empty-emoji,
-  .rituals__error-emoji {
-    margin-bottom: 8px;
-    font-size: 2rem;
   }
 
   .rituals__empty h3,
@@ -1481,13 +1402,13 @@ const defaultRitual = rituals.find((ritual) => ritual.id === config.defaultRitua
     max-width: 62ch;
     margin: 0 auto 18px;
     color: var(--color-text-muted);
+    font-family: var(--font-ui);
     font-size: 0.92rem;
   }
 
   .rituals__error {
-    border: 2px solid var(--color-plum);
-    border-left: 8px solid var(--color-terracotta);
-    background: var(--color-peach);
+    border-left: 4px solid var(--color-terracotta);
+    background: var(--color-bg-alt);
   }
 
   .rituals__error-actions {
@@ -1513,9 +1434,8 @@ const defaultRitual = rituals.find((ritual) => ritual.id === config.defaultRitua
     display: grid;
     gap: 4px;
     padding: 18px;
-    border: 2px solid var(--color-plum);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-sticker-sm);
+    border: 1.5px solid var(--color-plum);
+    border-radius: 3px;
   }
 
   .rituals__city--base {
@@ -1587,15 +1507,13 @@ const defaultRitual = rituals.find((ritual) => ritual.id === config.defaultRitua
     gap: 1px;
     min-width: 86px;
     padding: 10px 12px;
-    border: 2px solid var(--color-plum);
-    border-radius: var(--radius-pill);
+    border: 1.5px solid var(--color-plum);
+    border-radius: 2px;
     background: var(--color-surface);
-    box-shadow: var(--shadow-sticker-sm);
     font-family: var(--font-ui);
     font-size: 0.88rem;
     font-weight: 700;
     color: var(--color-plum);
-    transform: rotate(-2deg);
   }
 
   .rituals__bridge small {
@@ -1624,18 +1542,17 @@ const defaultRitual = rituals.find((ritual) => ritual.id === config.defaultRitua
     display: grid;
     gap: 2px;
     padding: 14px 16px;
-    border: 2px solid var(--color-plum);
-    border-radius: var(--radius-md);
+    border: 1.5px solid var(--color-plum);
+    border-radius: 3px;
     background: var(--color-surface);
     color: var(--color-plum);
     text-align: left;
-    transition: transform var(--transition), box-shadow var(--transition),
-      background var(--transition), color var(--transition);
+    transition: background var(--transition), color var(--transition),
+      border-color var(--transition);
   }
 
   .rituals__ritual:hover {
-    transform: translate(-1px, -2px) rotate(-0.6deg);
-    box-shadow: var(--shadow-sticker-sm);
+    border-color: var(--color-terracotta);
   }
 
   .rituals__ritual-name {
@@ -1660,8 +1577,7 @@ const defaultRitual = rituals.find((ritual) => ritual.id === config.defaultRitua
   }
 
   .rituals__ritual[aria-pressed='true'] {
-    box-shadow: var(--shadow-sticker-sm);
-    transform: translate(-1px, -1px);
+    border-color: var(--color-plum);
   }
 
   .rituals__ritual[aria-pressed='true']::after {
@@ -1881,11 +1797,10 @@ const defaultRitual = rituals.find((ritual) => ritual.id === config.defaultRitua
   /* --- Propuesta de trabajo --- */
   .rituals__proposal {
     margin-top: 20px;
-    padding: clamp(20px, 3vw, 30px);
-    border: 2px solid var(--color-plum);
-    border-radius: var(--radius-lg);
+    padding: clamp(22px, 3vw, 32px);
+    border: 1.5px solid var(--color-plum);
+    border-radius: 3px;
     background: var(--color-surface);
-    box-shadow: var(--shadow-sticker-sm);
   }
 
   .rituals__proposal-head {
@@ -1939,14 +1854,18 @@ const defaultRitual = rituals.find((ritual) => ritual.id === config.defaultRitua
     margin-top: 14px;
     font-family: var(--font-display);
     font-size: clamp(1.4rem, 3vw, 2rem);
+    font-weight: 400;
+    line-height: 0.95;
+    letter-spacing: -0.01em;
     color: var(--color-plum);
   }
 
   .rituals__proposal-text {
     max-width: 68ch;
     margin-top: 8px;
-    font-size: 0.95rem;
-    line-height: 1.6;
+    font-family: var(--font-ui);
+    font-size: 0.98rem;
+    line-height: 1.65;
     color: var(--color-text);
   }
 
@@ -1956,8 +1875,8 @@ const defaultRitual = rituals.find((ritual) => ritual.id === config.defaultRitua
     gap: 14px;
     margin: 20px 0;
     padding: 16px 0;
-    border-top: 1.5px dashed var(--color-border-strong);
-    border-bottom: 1.5px dashed var(--color-border-strong);
+    border-top: 1px solid rgba(108, 3, 69, 0.18);
+    border-bottom: 1px solid rgba(108, 3, 69, 0.18);
   }
 
   .rituals__proposal-body {
@@ -1978,8 +1897,8 @@ const defaultRitual = rituals.find((ritual) => ritual.id === config.defaultRitua
 
   .rituals__proposal-block--outcome {
     padding: 16px;
-    border-radius: var(--radius-md);
-    background: var(--color-cream-deep);
+    border-radius: 2px;
+    background: var(--color-bg-alt);
   }
 
   .rituals__proposal-outcome {
@@ -1992,7 +1911,8 @@ const defaultRitual = rituals.find((ritual) => ritual.id === config.defaultRitua
 
   .rituals__proposal-note {
     margin-top: 10px;
-    font-size: 0.8rem;
+    font-family: var(--font-ui);
+    font-size: 0.82rem;
     line-height: 1.5;
     color: var(--color-text-muted);
   }
@@ -2005,7 +1925,7 @@ const defaultRitual = rituals.find((ritual) => ritual.id === config.defaultRitua
     gap: 14px;
     margin-top: 20px;
     padding-top: 16px;
-    border-top: 1.5px dashed var(--color-border-strong);
+    border-top: 1px solid rgba(108, 3, 69, 0.18);
   }
 
   .rituals__proposal-footer .rituals__proposal-note {
@@ -2018,20 +1938,20 @@ const defaultRitual = rituals.find((ritual) => ritual.id === config.defaultRitua
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 11px 20px;
-    border-radius: var(--radius-pill);
+    padding: 10px 18px;
+    border: 1.5px solid var(--color-plum);
+    border-radius: 2px;
     background: var(--color-plum);
     color: var(--color-cream);
     font-family: var(--font-ui);
-    font-size: 0.85rem;
-    font-weight: 700;
+    font-size: 0.86rem;
+    font-weight: 600;
     text-decoration: none;
-    transition: background 160ms ease, transform 160ms ease;
+    transition: background 160ms ease;
   }
 
   .rituals__cta:hover {
     background: var(--color-terracotta);
-    transform: translateY(-1px);
   }
 
   .rituals__cta span {
@@ -3118,5 +3038,543 @@ const defaultRitual = rituals.find((ritual) => ritual.id === config.defaultRitua
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
     }
+  }
+
+  /* ============================================================
+     CORRECCIÓN EDITORIAL · limpia decoraciones y jerarquiza
+     ============================================================ */
+
+  .rituals {
+    overflow: clip;
+    background: var(--color-bg);
+  }
+
+  .rituals::before {
+    content: none;
+  }
+
+  .rituals__stage {
+    padding-top: 36px;
+  }
+
+  .rituals__tab {
+    left: clamp(16px, 4vw, 42px);
+    z-index: 3;
+  }
+
+  .rituals__panel {
+    border: 1.5px solid var(--color-plum);
+    border-radius: 0 8px 8px 8px;
+    background: var(--color-surface);
+    box-shadow: none;
+  }
+
+  .rituals__tape,
+  .rituals__sticker {
+    display: none;
+  }
+
+  .rituals__bar {
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(108, 3, 69, 0.18);
+  }
+
+  .rituals__state {
+    padding: 6px 12px;
+    border: 1.5px solid var(--color-plum);
+    border-radius: 2px;
+    font-family: var(--font-ui);
+    font-size: 0.76rem;
+    font-weight: 600;
+    letter-spacing: 0;
+    text-transform: none;
+    box-shadow: none;
+  }
+
+  .rituals__state[data-state='success'] {
+    background: var(--color-plum);
+    color: var(--color-cream);
+  }
+
+  .rituals__state[data-state='selected'] {
+    background: var(--color-terracotta);
+    color: var(--color-text);
+  }
+
+  .rituals__state[data-state='empty'] {
+    border-style: solid;
+    background: var(--color-bg);
+    color: var(--color-plum);
+  }
+
+  .rituals__state[data-state='error'] {
+    border-color: var(--color-terracotta);
+    background: var(--color-plum-deep);
+    color: var(--color-cream);
+  }
+
+  .rituals__offline {
+    border: 1.5px solid var(--color-plum);
+    border-radius: 2px;
+    font-family: var(--font-ui);
+    font-size: 0.76rem;
+    font-weight: 600;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  .rituals__offline:hover {
+    background: var(--color-mustard);
+  }
+
+  .rituals__offline[aria-pressed='true'] {
+    background: var(--color-terracotta);
+    color: var(--color-text);
+  }
+
+  .rituals__label {
+    font-family: var(--font-ui);
+    font-size: 0.92rem;
+    font-weight: 600;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  .rituals__input {
+    border: 1.5px solid var(--color-plum);
+    border-radius: 2px;
+    background: var(--color-bg);
+    font-family: var(--font-ui);
+    box-shadow: none;
+  }
+
+  .rituals__input::placeholder {
+    font-family: var(--font-ui);
+    font-size: 0.92rem;
+  }
+
+  .rituals__input:focus {
+    background: var(--color-surface);
+    border-color: var(--color-terracotta);
+    box-shadow: none;
+  }
+
+  .rituals__go {
+    border: 1.5px solid var(--color-plum);
+    border-radius: 2px;
+    font-family: var(--font-ui);
+    font-size: 0.86rem;
+    font-weight: 600;
+    letter-spacing: 0;
+    text-transform: none;
+    box-shadow: none;
+  }
+
+  .rituals__go:hover {
+    background: var(--color-plum-deep);
+    box-shadow: none;
+  }
+
+  .rituals__hub {
+    padding: 7px 12px;
+    border: 1.5px solid rgba(108, 3, 69, 0.32);
+    border-radius: 2px;
+    font-family: var(--font-ui);
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--color-plum);
+    box-shadow: none;
+  }
+
+  .rituals__hub:nth-child(3n + 1),
+  .rituals__hub:nth-child(3n + 2),
+  .rituals__hub:nth-child(3n) {
+    background: var(--color-surface);
+  }
+
+  .rituals__hub:hover {
+    background: var(--color-mustard);
+    color: var(--color-plum);
+    transform: none;
+    box-shadow: none;
+  }
+
+  .rituals__results {
+    border: 1.5px solid var(--color-plum);
+    border-radius: 3px;
+    box-shadow: none;
+  }
+
+  .rituals__result strong {
+    font-family: var(--font-ui);
+    font-weight: 600;
+  }
+
+  .rituals__result span {
+    font-family: var(--font-ui);
+    font-size: 0.76rem;
+  }
+
+  .rituals__empty,
+  .rituals__error {
+    border: 1.5px solid var(--color-plum);
+    border-radius: 3px;
+    background: var(--color-bg);
+    box-shadow: none;
+    transform: none;
+  }
+
+  .rituals__error {
+    border-left: 4px solid var(--color-terracotta);
+    background: var(--color-bg-alt);
+  }
+
+  .rituals__empty h3,
+  .rituals__error h3 {
+    font-family: var(--font-display);
+    font-size: clamp(1.25rem, 2.6vw, 1.7rem);
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+  }
+
+  .rituals__city {
+    border: 1.5px solid var(--color-plum);
+    border-radius: 3px;
+    box-shadow: none;
+    transform: none;
+  }
+
+  .rituals__city--team {
+    background: var(--color-mustard);
+    transform: none;
+  }
+
+  .rituals__city-tag {
+    border: 1px solid currentColor;
+    border-radius: 2px;
+    font-family: var(--font-ui);
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+
+  .rituals__city-name {
+    font-family: var(--font-display);
+    font-size: clamp(1.1rem, 2vw, 1.35rem);
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+  }
+
+  .rituals__city-time {
+    font-family: var(--font-ui);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .rituals__bridge {
+    border: 1.5px solid var(--color-plum);
+    border-radius: 2px;
+    font-family: var(--font-ui);
+    font-size: 0.82rem;
+    font-weight: 600;
+    box-shadow: none;
+    transform: none;
+  }
+
+  .rituals__rituals {
+    gap: 10px;
+  }
+
+  .rituals__ritual {
+    padding: 15px 17px 13px;
+    border: 1.5px solid var(--color-plum);
+    border-radius: 3px;
+    box-shadow: none;
+    transition: background var(--transition), color var(--transition),
+      border-color var(--transition);
+  }
+
+  .rituals__ritual:nth-child(1),
+  .rituals__ritual:nth-child(2),
+  .rituals__ritual:nth-child(3),
+  .rituals__ritual:nth-child(4),
+  .rituals__ritual:nth-child(5) {
+    background: var(--color-surface);
+  }
+
+  .rituals__ritual:hover {
+    border-color: var(--color-terracotta);
+    transform: none;
+    box-shadow: none;
+  }
+
+  .rituals__ritual[aria-pressed='true'] {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .rituals__ritual-name {
+    font-family: var(--font-ui);
+    font-size: 0.92rem;
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  .rituals__ritual-meta {
+    font-family: var(--font-ui);
+    font-size: 0.76rem;
+    letter-spacing: 0;
+  }
+
+  .rituals__ritual-state {
+    margin-top: 8px;
+    font-family: var(--font-ui);
+    font-size: 0.72rem;
+    letter-spacing: 0;
+  }
+
+  .rituals__ritual[aria-pressed='true']::after {
+    border: 1.5px solid currentColor;
+    border-radius: 50%;
+    font-family: var(--font-ui);
+  }
+
+  .rituals__ritual-detail {
+    font-family: var(--font-ui);
+    font-size: 0.86rem;
+  }
+
+  .rituals__proposal {
+    margin-top: 24px;
+    padding: clamp(22px, 3vw, 34px);
+    border: 1.5px solid var(--color-plum);
+    border-radius: 3px;
+    background: var(--color-surface);
+    box-shadow: none;
+    transform: none;
+  }
+
+  .rituals__proposal::before {
+    content: none;
+  }
+
+  .rituals__proposal-badge {
+    padding: 5px 11px;
+    border: 1.5px solid var(--color-plum);
+    border-radius: 2px;
+    font-family: var(--font-ui);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0;
+    box-shadow: none;
+  }
+
+  .rituals__proposal-goal {
+    font-family: var(--font-ui);
+    font-style: normal;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--color-text-muted);
+  }
+
+  .rituals__proposal-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.6rem, 3.2vw, 2.2rem);
+    font-weight: 400;
+    line-height: 0.95;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+  }
+
+  .rituals__proposal-text {
+    max-width: 66ch;
+    font-family: var(--font-ui);
+    font-size: 0.98rem;
+    line-height: 1.65;
+  }
+
+  .rituals__proposal-facts {
+    border-top: 1px solid rgba(108, 3, 69, 0.18);
+    border-bottom: 1px solid rgba(108, 3, 69, 0.18);
+  }
+
+  .rituals__fact {
+    padding: 10px 12px;
+    border: 1.5px solid rgba(108, 3, 69, 0.32);
+    border-radius: 2px;
+    background: var(--color-bg-alt);
+    box-shadow: none;
+  }
+
+  .rituals__fact dt {
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.06em;
+  }
+
+  .rituals__fact dd {
+    font-family: var(--font-ui);
+    font-size: 0.98rem;
+    font-weight: 700;
+    letter-spacing: 0;
+  }
+
+  .rituals__proposal-label {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+  }
+
+  .rituals__agenda-list li::before {
+    border: 1.5px solid var(--color-plum);
+    border-radius: 50%;
+    background: var(--color-mustard);
+    font-family: var(--font-ui);
+    font-size: 0.66rem;
+  }
+
+  .rituals__proposal-block--outcome {
+    border: 1.5px solid var(--color-plum);
+    border-radius: 2px;
+    background: var(--color-bg-alt);
+    box-shadow: none;
+    transform: none;
+  }
+
+  .rituals__proposal-outcome {
+    font-family: var(--font-ui);
+    font-weight: 600;
+    color: var(--color-plum);
+  }
+
+  .rituals__proposal-footer {
+    border-top: 1px solid rgba(108, 3, 69, 0.18);
+  }
+
+  .rituals__cta {
+    padding: 10px 18px;
+    border: 1.5px solid var(--color-plum);
+    border-radius: 2px;
+    font-family: var(--font-ui);
+    font-size: 0.86rem;
+    font-weight: 600;
+    letter-spacing: 0;
+    text-transform: none;
+    box-shadow: none;
+  }
+
+  .rituals__cta:hover {
+    background: var(--color-terracotta);
+    transform: none;
+    box-shadow: none;
+  }
+
+  .rituals__source {
+    font-family: var(--font-ui);
+    font-size: 0.78rem;
+    letter-spacing: 0;
+  }
+
+  .rituals__brief {
+    margin-top: 18px;
+    padding: clamp(18px, 3vw, 26px);
+    border: 1.5px solid var(--color-plum);
+    border-radius: 3px;
+    background: var(--color-surface);
+    box-shadow: none;
+  }
+
+  .rituals__brief-badge {
+    padding: 5px 11px;
+    border: 1.5px solid var(--color-plum);
+    border-radius: 2px;
+    background: var(--color-mustard);
+    font-family: var(--font-ui);
+    font-size: 0.74rem;
+    font-weight: 600;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--color-plum);
+  }
+
+  .rituals__brief-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.25rem, 2.4vw, 1.6rem);
+    font-weight: 400;
+    line-height: 0.95;
+    letter-spacing: -0.01em;
+    color: var(--color-plum);
+  }
+
+  .rituals__score,
+  .rituals__verdict,
+  .rituals__kit {
+    padding: 18px;
+    border: 1.5px solid var(--color-plum);
+    border-radius: 3px;
+    box-shadow: none;
+  }
+
+  .rituals__score-value {
+    font-family: var(--font-ui);
+    font-size: clamp(2.2rem, 4vw, 2.8rem);
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .rituals__verdict-badge {
+    padding: 6px 11px;
+    border: 1.5px solid var(--color-plum);
+    border-radius: 2px;
+    font-family: var(--font-ui);
+    font-size: 0.74rem;
+    font-weight: 600;
+    letter-spacing: 0;
+    text-transform: none;
+    box-shadow: none;
+  }
+
+  .rituals__verdict h3 {
+    font-family: var(--font-display);
+    font-size: clamp(1.05rem, 2vw, 1.25rem);
+    font-weight: 400;
+    line-height: 0.95;
+    letter-spacing: -0.01em;
+  }
+
+  .rituals__verdict-copy {
+    font-family: var(--font-ui);
+    font-size: 0.86rem;
+    line-height: 1.55;
+  }
+
+  .rituals__slot {
+    border: 1px solid rgba(108, 3, 69, 0.3);
+    border-radius: 2px;
+    background: var(--color-bg-alt);
+  }
+
+  .rituals__kit {
+    border-color: var(--color-plum);
+    background: var(--color-plum);
+  }
+
+  .rituals__kit-label {
+    font-family: var(--font-ui);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+  }
+
+  .rituals__kit li {
+    font-family: var(--font-ui);
+    font-size: 0.82rem;
+    line-height: 1.5;
   }
 </style>

@@ -7,13 +7,13 @@ import { workflowStages } from '../data/workflow';
   <div class="container">
     <SectionHeading
       eyebrow="Proceso de trabajo"
-      title="Cómo paso de una idea compleja a un producto ejecutado"
-      description="Un tablero interactivo con las cinco etapas que aplico para gestionar y diseñar un producto digital. Cada etapa reúne entregables, herramientas y las preguntas que resuelvo para reducir la incertidumbre y sostener el avance del proyecto."
+      title="De la idea al producto"
+      description="Cómo paso de una idea compleja a un producto ejecutado. Un tablero interactivo con las cinco etapas que aplico para gestionar y diseñar un producto digital. Cada etapa reúne entregables, herramientas y las preguntas que resuelvo para reducir la incertidumbre y sostener el avance del proyecto."
       id="proceso-title"
     />
 
     <div class="workflow__folder">
-      <span class="folder__tab folder__tab--acid">Proceso</span>
+      <span class="folder__tab folder__tab--mustard">Proceso</span>
 
       <div class="workflow__board" data-workflow>
       <div class="workflow__timeline" role="tablist" aria-label="Etapas del proceso de trabajo" aria-orientation="vertical">
@@ -164,10 +164,9 @@ import { workflowStages } from '../data/workflow';
     display: grid;
     grid-template-columns: minmax(240px, 300px) minmax(0, 1fr);
     overflow: hidden;
-    border: 2px solid var(--color-plum);
-    border-radius: 0 var(--radius-lg) var(--radius-lg) var(--radius-lg);
+    border: 1.5px solid var(--color-plum);
+    border-radius: 0 8px 8px 8px;
     background: var(--color-surface);
-    box-shadow: 9px 9px 0 rgba(108, 3, 69, 0.14);
   }
 
   .workflow__timeline {
@@ -183,16 +182,15 @@ import { workflowStages } from '../data/workflow';
     grid-template-columns: auto minmax(0, 1fr);
     gap: 12px;
     align-items: start;
-    min-height: 64px;
+    min-height: 60px;
     padding: 13px 14px;
-    border: 2px solid transparent;
-    border-bottom: 2px dashed rgba(255, 248, 220, 0.2);
-    border-radius: 3px;
+    border: 1.5px solid transparent;
+    border-bottom: 1px solid rgba(255, 248, 220, 0.18);
+    border-radius: 2px;
     color: rgba(255, 248, 220, 0.72);
     text-align: left;
     transition: background var(--transition), color var(--transition),
-      border-color var(--transition), box-shadow var(--transition),
-      transform var(--transition);
+      border-color var(--transition);
   }
 
   .workflow__stage:last-child {
@@ -203,15 +201,12 @@ import { workflowStages } from '../data/workflow';
     background: rgba(255, 248, 220, 0.1);
     border-color: rgba(255, 248, 220, 0.3);
     color: var(--color-cream);
-    transform: translateX(2px);
   }
 
   .workflow__stage[aria-selected='true'] {
     border-color: var(--color-plum);
     background: var(--color-mustard);
     color: var(--color-plum);
-    box-shadow: 4px 4px 0 var(--color-terracotta);
-    transform: translate(-2px, -2px);
   }
 
   .workflow__stage-number {
@@ -226,38 +221,22 @@ import { workflowStages } from '../data/workflow';
   }
 
   .workflow__stage-title {
-    font-family: var(--font-mono);
-    font-size: 0.68rem;
-    font-weight: 700;
+    font-family: var(--font-ui);
+    font-size: 0.84rem;
+    font-weight: 600;
     line-height: 1.4;
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
+    letter-spacing: 0;
+    text-transform: none;
   }
 
   .workflow__detail {
     padding: clamp(24px, 4vw, 42px);
-    border-left: 2px dashed rgba(108, 3, 69, 0.22);
+    border-left: 1px solid rgba(108, 3, 69, 0.18);
   }
 
   .workflow__panel {
     display: grid;
     gap: 26px;
-  }
-
-  .workflow__panel::after {
-    content: '';
-    display: block;
-    height: 16px;
-    background-image: repeating-linear-gradient(
-      90deg,
-      var(--color-plum-deep) 0 2px,
-      transparent 2px 4px,
-      var(--color-plum-deep) 4px 5px,
-      transparent 5px 9px,
-      var(--color-plum-deep) 9px 12px,
-      transparent 12px 15px
-    );
-    opacity: 0.35;
   }
 
   .workflow__panel-head {
@@ -277,16 +256,17 @@ import { workflowStages } from '../data/workflow';
   .workflow__panel h3 {
     font-family: var(--font-display);
     font-size: clamp(1.5rem, 3.4vw, 2.3rem);
-    font-weight: 800;
-    line-height: 0.92;
-    letter-spacing: -0.03em;
+    font-weight: 400;
+    line-height: 0.95;
+    letter-spacing: -0.01em;
     text-transform: uppercase;
   }
 
   .workflow__panel-head p {
     max-width: 62ch;
     color: var(--color-text-muted);
-    font-size: 0.96rem;
+    font-family: var(--font-ui);
+    font-size: 0.98rem;
     line-height: 1.7;
   }
 
@@ -298,20 +278,17 @@ import { workflowStages } from '../data/workflow';
 
   .workflow__block {
     padding: 18px;
-    border: 2px solid var(--color-plum);
+    border: 1.5px solid var(--color-plum);
     border-radius: 2px;
     background: var(--color-bg-alt);
-    box-shadow: 3px 3px 0 rgba(108, 3, 69, 0.16);
   }
 
   .workflow__block:nth-child(2) {
-    background: var(--color-peach);
-    transform: rotate(0.6deg);
+    background: var(--color-surface);
   }
 
   .workflow__block:nth-child(3) {
-    background: var(--color-surface);
-    transform: rotate(-0.6deg);
+    background: var(--color-bg-alt);
   }
 
   .workflow__block h4 {
@@ -333,7 +310,8 @@ import { workflowStages } from '../data/workflow';
     position: relative;
     padding-left: 14px;
     color: var(--color-text-muted);
-    font-size: 0.86rem;
+    font-family: var(--font-ui);
+    font-size: 0.88rem;
     line-height: 1.55;
   }
 
@@ -356,15 +334,15 @@ import { workflowStages } from '../data/workflow';
 
   .workflow__tools li {
     padding: 4px 9px;
-    border: 1.5px solid rgba(108, 3, 69, 0.45);
+    border: 1.5px solid rgba(108, 3, 69, 0.35);
     border-radius: 2px;
     background: var(--color-surface);
-    font-family: var(--font-mono);
-    font-size: 0.6rem;
-    font-weight: 700;
-    letter-spacing: 0.03em;
-    text-transform: uppercase;
-    color: var(--color-plum-soft);
+    font-family: var(--font-ui);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--color-plum);
   }
 
   .workflow__tools li::before {
@@ -374,12 +352,11 @@ import { workflowStages } from '../data/workflow';
   .workflow__hint {
     margin-top: 18px;
     padding-top: 14px;
-    border-top: 2px dashed rgba(108, 3, 69, 0.22);
-    font-family: var(--font-mono);
-    font-size: 0.62rem;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
+    border-top: 1px solid rgba(108, 3, 69, 0.18);
+    font-family: var(--font-ui);
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0;
     color: var(--color-text-muted);
     text-align: center;
   }
@@ -400,32 +377,23 @@ import { workflowStages } from '../data/workflow';
     .workflow__stage {
       flex: 0 0 220px;
       min-height: 58px;
-      border-right: 2px dashed rgba(255, 248, 220, 0.2);
-      border-bottom: 2px solid transparent;
+      border-right: 1px solid rgba(255, 248, 220, 0.18);
+      border-bottom: 1.5px solid transparent;
     }
 
     .workflow__stage:last-child {
       border-right: none;
     }
 
-    .workflow__stage[aria-selected='true'] {
-      box-shadow: 0 3px 0 var(--color-terracotta);
-    }
-
     .workflow__detail {
       border-left: none;
-      border-top: 2px dashed rgba(108, 3, 69, 0.22);
+      border-top: 1px solid rgba(108, 3, 69, 0.18);
     }
   }
 
   @media (max-width: 700px) {
     .workflow__panel-grid {
       grid-template-columns: 1fr;
-    }
-
-    .workflow__block:nth-child(2),
-    .workflow__block:nth-child(3) {
-      transform: none;
     }
 
     .workflow__folder > .folder__tab {

@@ -179,24 +179,14 @@ const searchText = [
     flex-direction: column;
     height: 100%;
     overflow: hidden;
-    border: 2px solid var(--color-plum);
-    border-radius: 4px;
+    border: 1.5px solid var(--color-plum);
+    border-radius: 3px;
     background: var(--color-surface);
-    box-shadow: 5px 5px 0 var(--color-plum);
-    transition: transform var(--transition), box-shadow var(--transition);
-  }
-
-  .project-card:nth-child(odd) {
-    transform: rotate(-0.9deg);
-  }
-
-  .project-card:nth-child(even) {
-    transform: rotate(0.9deg);
+    transition: border-color var(--transition);
   }
 
   .project-card:hover {
-    transform: translate(-2px, -4px) rotate(0deg) scale(1.02);
-    box-shadow: 8px 8px 0 var(--color-plum);
+    border-color: var(--color-terracotta);
   }
 
   .project-card__gallery {
@@ -209,25 +199,8 @@ const searchText = [
     position: relative;
     aspect-ratio: 16 / 10;
     overflow: hidden;
-    border-bottom: 2px solid var(--color-plum);
+    border-bottom: 1.5px solid var(--color-plum);
     background: var(--color-ink);
-  }
-
-  .project-card__media::before {
-    content: '';
-    position: absolute;
-    top: 10px;
-    left: 50%;
-    z-index: 2;
-    width: 108px;
-    height: 26px;
-    transform: translateX(-50%) rotate(-3deg);
-    border: 1px solid rgba(108, 3, 69, 0.18);
-    background-image: var(--tape-checker);
-    background-size: 12px 12px;
-    clip-path: polygon(1% 0, 99% 5%, 100% 94%, 0 100%);
-    opacity: 0.92;
-    pointer-events: none;
   }
 
   .project-card__media img {
@@ -235,11 +208,6 @@ const searchText = [
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .project-card:hover .project-card__media img {
-    transform: scale(1.04);
   }
 
   .project-card__play {
@@ -248,55 +216,35 @@ const searchText = [
     left: 50%;
     display: grid;
     place-items: center;
-    width: 54px;
-    height: 54px;
-    border: 2px solid var(--color-plum);
+    width: 46px;
+    height: 46px;
+    border: 1.5px solid var(--color-plum);
     border-radius: 50%;
     background: var(--color-cream);
     color: var(--color-plum);
     transform: translate(-50%, -50%);
-    box-shadow: 4px 4px 0 var(--color-plum);
   }
 
   .project-card__badge {
     position: absolute;
     right: 12px;
     bottom: 12px;
-    padding: 5px 11px;
-    border: 2px solid var(--color-plum);
+    padding: 5px 10px;
+    border: 1.5px solid var(--color-plum);
     border-radius: 2px;
-    background: var(--color-mustard);
+    background: var(--color-cream);
     color: var(--color-plum);
-    font-family: var(--font-mono);
-    font-size: 0.6rem;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    transform: rotate(-2deg);
+    font-family: var(--font-ui);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0;
   }
 
   .project-card__body {
     display: flex;
     flex: 1;
     flex-direction: column;
-    padding: 20px 20px 18px;
-  }
-
-  .project-card__body::after {
-    content: '';
-    display: block;
-    height: 16px;
-    margin-top: 14px;
-    background-image: repeating-linear-gradient(
-      90deg,
-      var(--color-plum-deep) 0 2px,
-      transparent 2px 4px,
-      var(--color-plum-deep) 4px 5px,
-      transparent 5px 9px,
-      var(--color-plum-deep) 9px 12px,
-      transparent 12px 15px
-    );
-    opacity: 0.45;
+    padding: clamp(26px, 3.4vw, 40px);
   }
 
   .project-card__topline {
@@ -318,10 +266,10 @@ const searchText = [
   .project-card h3 {
     margin-bottom: 12px;
     font-family: var(--font-display);
-    font-size: clamp(1.3rem, 2.3vw, 1.65rem);
-    font-weight: 800;
+    font-size: clamp(1.4rem, 2.3vw, 1.75rem);
+    font-weight: 400;
     line-height: 0.95;
-    letter-spacing: -0.03em;
+    letter-spacing: -0.01em;
     text-transform: uppercase;
   }
 
@@ -337,6 +285,7 @@ const searchText = [
   .project-card__focus {
     margin-bottom: 14px;
     color: var(--color-text-muted);
+    font-family: var(--font-ui);
     font-size: 0.94rem;
     line-height: 1.65;
   }
@@ -350,29 +299,18 @@ const searchText = [
     transition: outline var(--transition), background var(--transition);
   }
 
-  .project-card__roles li {
-    padding: 4px 9px;
-    border: 1.5px solid var(--color-plum);
-    border-radius: 2px;
-    background: var(--color-peach);
-    font-family: var(--font-mono);
-    font-size: 0.6rem;
-    font-weight: 700;
-    letter-spacing: 0.03em;
-    text-transform: uppercase;
-    color: var(--color-plum);
-  }
-
+  .project-card__roles li,
   .project-card__tools li {
     padding: 4px 9px;
-    border: 1.5px dashed rgba(108, 3, 69, 0.45);
+    border: 1.5px solid rgba(108, 3, 69, 0.35);
     border-radius: 2px;
-    font-family: var(--font-mono);
-    font-size: 0.6rem;
-    font-weight: 700;
-    letter-spacing: 0.03em;
-    text-transform: uppercase;
-    color: var(--color-plum-soft);
+    background: var(--color-surface);
+    font-family: var(--font-ui);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--color-plum);
   }
 
   .project-card__open {
@@ -380,36 +318,32 @@ const searchText = [
     align-items: center;
     justify-content: center;
     gap: 8px;
-    min-height: 44px;
+    min-height: 42px;
     margin-top: auto;
     padding: 10px 16px;
-    border: 2px solid var(--color-plum);
-    border-radius: 3px;
+    border: 1.5px solid var(--color-plum);
+    border-radius: 2px;
     background: var(--color-surface);
     color: var(--color-plum);
-    font-family: var(--font-mono);
-    font-size: 0.66rem;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    box-shadow: 3px 3px 0 var(--color-plum);
-    transition: background var(--transition), color var(--transition),
-      transform var(--transition), box-shadow var(--transition);
+    font-family: var(--font-ui);
+    font-size: 0.84rem;
+    font-weight: 600;
+    letter-spacing: 0;
+    text-transform: none;
+    transition: background var(--transition), color var(--transition);
   }
 
   .project-card__open:hover {
     background: var(--color-plum);
     color: var(--color-cream);
-    transform: translate(-1px, -1px);
-    box-shadow: 5px 5px 0 var(--color-plum);
   }
 
   .project-card__technical {
     display: flex;
     flex-direction: column;
-    gap: 18px;
+    gap: 20px;
     height: 100%;
-    padding: 24px;
+    padding: clamp(24px, 3vw, 40px);
   }
 
   .project-card__technical-head {
@@ -418,7 +352,7 @@ const searchText = [
     justify-content: space-between;
     gap: 16px;
     padding-bottom: 16px;
-    border-bottom: 2px dashed rgba(108, 3, 69, 0.28);
+    border-bottom: 1px solid rgba(108, 3, 69, 0.18);
   }
 
   .project-card__technical-head h3 {
@@ -426,23 +360,24 @@ const searchText = [
   }
 
   .project-card__technical-focus {
-    padding: 14px 16px;
-    border: 2px solid var(--color-plum);
-    border-left: 8px solid var(--color-terracotta);
+    padding: 16px 18px;
+    border: 1.5px solid var(--color-plum);
+    border-left: 4px solid var(--color-terracotta);
     border-radius: 2px;
-    background: var(--color-peach);
-    box-shadow: 3px 3px 0 rgba(108, 3, 69, 0.16);
+    background: var(--color-bg-alt);
   }
 
   .project-card__technical-focus strong {
     display: block;
     margin-bottom: 4px;
+    font-family: var(--font-ui);
     color: var(--color-text);
   }
 
   .project-card__technical-focus span {
     color: var(--color-text-muted);
-    font-size: 0.88rem;
+    font-family: var(--font-ui);
+    font-size: 0.9rem;
     line-height: 1.65;
   }
 
@@ -508,10 +443,9 @@ const searchText = [
 
   .project-card__metrics div {
     padding: 10px;
-    border: 2px solid var(--color-plum);
+    border: 1.5px solid var(--color-plum);
     border-radius: 2px;
-    background: var(--color-mustard);
-    box-shadow: 2px 2px 0 rgba(108, 3, 69, 0.18);
+    background: var(--color-bg-alt);
     text-align: center;
   }
 
@@ -526,9 +460,9 @@ const searchText = [
   }
 
   .project-card__metrics dd {
-    font-family: var(--font-display);
-    font-size: 1.15rem;
-    font-weight: 800;
+    font-family: var(--font-ui);
+    font-size: 1.1rem;
+    font-weight: 700;
     color: var(--color-plum);
   }
 
@@ -540,15 +474,14 @@ const searchText = [
     gap: 14px;
     margin-top: auto;
     padding-top: 16px;
-    border-top: 2px dashed rgba(108, 3, 69, 0.28);
+    border-top: 1px solid rgba(108, 3, 69, 0.18);
   }
 
   .project-card__areas {
-    font-family: var(--font-mono);
-    font-size: 0.62rem;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
+    font-family: var(--font-ui);
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0;
     color: var(--color-text-muted);
   }
 

@@ -138,8 +138,7 @@ import { navLinks, site } from '../data/site';
     z-index: 1000;
     height: var(--nav-height);
     background: rgba(255, 248, 220, 0.96);
-    border-bottom: 2px solid var(--color-plum);
-    box-shadow: 0 3px 0 rgba(247, 197, 102, 0.65);
+    border-bottom: 1.5px solid var(--color-plum);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
   }
@@ -161,24 +160,23 @@ import { navLinks, site } from '../data/site';
     gap: 7px;
     font-family: var(--font-display);
     font-size: 1.5rem;
-    font-weight: 800;
-    letter-spacing: -0.04em;
+    font-weight: 400;
+    letter-spacing: -0.01em;
     color: var(--color-plum);
-    transition: opacity var(--transition), transform var(--transition);
+    transition: opacity var(--transition);
   }
 
   .nav__logo::after {
     content: '';
-    width: 8px;
-    height: 8px;
-    border: 2px solid var(--color-plum);
+    width: 7px;
+    height: 7px;
+    border: 1.5px solid var(--color-plum);
     border-radius: 50%;
     background: var(--color-terracotta);
   }
 
   .nav__logo:hover {
     opacity: 0.75;
-    transform: rotate(-2deg);
   }
 
   .nav__menu {
@@ -190,18 +188,17 @@ import { navLinks, site } from '../data/site';
   .nav__link {
     position: relative;
     display: inline-block;
-    padding: 6px 10px;
-    border: 2px solid transparent;
-    border-radius: 3px;
-    font-family: var(--font-mono);
-    font-size: 0.66rem;
-    font-weight: 700;
-    letter-spacing: 0.07em;
-    text-transform: uppercase;
+    padding: 7px 11px;
+    border: 1.5px solid transparent;
+    border-radius: 2px;
+    font-family: var(--font-ui);
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: 0;
+    text-transform: none;
     color: var(--color-plum-soft);
     transition: color var(--transition), background var(--transition),
-      border-color var(--transition), box-shadow var(--transition),
-      transform var(--transition);
+      border-color var(--transition);
   }
 
   .nav__link:hover,
@@ -210,8 +207,6 @@ import { navLinks, site } from '../data/site';
     border-color: var(--color-plum);
     background: var(--color-mustard);
     color: var(--color-plum);
-    box-shadow: 2px 2px 0 var(--color-plum);
-    transform: translate(-1px, -1px);
   }
 
   .nav__toggle {
@@ -222,10 +217,9 @@ import { navLinks, site } from '../data/site';
     gap: 5px;
     width: 44px;
     height: 44px;
-    border: 2px solid var(--color-plum);
-    border-radius: 3px;
+    border: 1.5px solid var(--color-plum);
+    border-radius: 2px;
     background: var(--color-surface);
-    box-shadow: 2px 2px 0 var(--color-plum);
   }
 
   .nav__toggle span {
@@ -263,8 +257,7 @@ import { navLinks, site } from '../data/site';
       gap: 0;
       padding: 14px 24px 22px;
       background: var(--color-bg);
-      border-bottom: 2px solid var(--color-plum);
-      box-shadow: 0 8px 0 rgba(108, 3, 69, 0.14);
+      border-bottom: 1.5px solid var(--color-plum);
       opacity: 0;
       visibility: hidden;
       transform: translateY(-12px);
@@ -278,7 +271,7 @@ import { navLinks, site } from '../data/site';
     }
 
     .nav__menu li {
-      border-bottom: 2px dashed rgba(108, 3, 69, 0.22);
+      border-bottom: 1px solid rgba(108, 3, 69, 0.18);
     }
 
     .nav__menu li:last-child {
