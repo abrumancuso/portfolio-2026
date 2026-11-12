@@ -177,11 +177,14 @@ const managementReading = project.miradas.gestion;
     align-items: center;
     gap: 8px;
     margin-bottom: 28px;
-    font-family: var(--font-ui);
-    font-size: 0.82rem;
-    font-weight: 600;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
     color: var(--color-accent-deep);
     text-decoration: underline;
+    text-decoration-style: dashed;
     text-underline-offset: 4px;
   }
 
@@ -200,14 +203,20 @@ const managementReading = project.miradas.gestion;
 
   .project-page__year {
     font-family: var(--font-mono);
-    font-size: 0.78rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
     color: var(--color-text-muted);
   }
 
   .project-page h1 {
     margin-bottom: 16px;
-    font-size: clamp(2.2rem, 6vw, 4.2rem);
-    line-height: 1.02;
+    font-family: var(--font-display);
+    font-size: clamp(2.4rem, 7vw, 5rem);
+    font-weight: 800;
+    line-height: 0.86;
+    letter-spacing: -0.04em;
+    text-transform: uppercase;
   }
 
   .project-page__summary {
@@ -223,15 +232,15 @@ const managementReading = project.miradas.gestion;
     gap: 18px;
     margin-top: 28px;
     padding-top: 22px;
-    border-top: 1px solid var(--color-border);
+    border-top: 2px dashed rgba(108, 3, 69, 0.28);
   }
 
   .project-page__facts dt {
     margin-bottom: 4px;
-    font-family: var(--font-ui);
-    font-size: 0.68rem;
-    font-weight: 600;
-    letter-spacing: 0.1em;
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--color-text-muted);
   }
@@ -246,9 +255,9 @@ const managementReading = project.miradas.gestion;
     margin-bottom: clamp(32px, 5vw, 52px);
     padding: clamp(18px, 3vw, 26px);
     border: 2px solid var(--color-plum);
-    border-radius: var(--radius-lg);
+    border-radius: 3px;
     background: var(--color-surface);
-    box-shadow: var(--shadow-sticker-sm);
+    box-shadow: 5px 5px 0 rgba(108, 3, 69, 0.16);
   }
 
   .project-page__metrics dl {
@@ -260,9 +269,9 @@ const managementReading = project.miradas.gestion;
 
   .project-page__metrics dt {
     margin-bottom: 2px;
-    font-family: var(--font-ui);
-    font-size: 0.68rem;
-    font-weight: 600;
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--color-text-muted);
@@ -270,9 +279,10 @@ const managementReading = project.miradas.gestion;
 
   .project-page__metrics dd {
     margin: 0;
-    font-family: var(--font-ui);
+    font-family: var(--font-display);
     font-size: clamp(1.4rem, 3vw, 2rem);
-    font-weight: 700;
+    font-weight: 800;
+    letter-spacing: -0.03em;
     color: var(--color-plum);
   }
 
@@ -283,10 +293,10 @@ const managementReading = project.miradas.gestion;
 
   .project-page__eyebrow {
     margin-bottom: 8px;
-    font-family: var(--font-ui);
-    font-size: 0.7rem;
-    font-weight: 600;
-    letter-spacing: 0.14em;
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--color-accent-deep);
   }
@@ -294,7 +304,12 @@ const managementReading = project.miradas.gestion;
   .project-page__section h2,
   .project-page__readings h2 {
     margin-bottom: 14px;
-    font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+    font-family: var(--font-display);
+    font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
   }
 
   .project-page__section p {
@@ -314,14 +329,19 @@ const managementReading = project.miradas.gestion;
 
   .project-page__roles li,
   .project-page__tools li {
-    padding: 6px 12px;
-    border: 1.5px solid rgba(108, 3, 69, 0.28);
-    border-radius: var(--radius-pill);
+    padding: 6px 11px;
+    border: 1.5px solid rgba(108, 3, 69, 0.3);
+    border-radius: 2px;
     background: var(--color-surface);
-    font-family: var(--font-ui);
-    font-size: 0.74rem;
-    font-weight: 600;
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
     color: var(--color-plum-soft);
+  }
+
+  .project-page__tools li {
+    border-style: dashed;
   }
 
   .project-page__readings {
@@ -347,38 +367,46 @@ const managementReading = project.miradas.gestion;
   .project-page__reading {
     padding: clamp(20px, 3vw, 28px);
     border: 2px solid var(--color-plum);
-    border-radius: var(--radius-lg);
+    border-radius: 3px;
     background: var(--color-surface);
-    box-shadow: var(--shadow-sticker-sm);
+    box-shadow: 5px 5px 0 rgba(108, 3, 69, 0.16);
     transition: transform var(--transition), box-shadow var(--transition);
   }
 
   .project-page__reading:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-sticker);
+    transform: translate(-2px, -2px) rotate(0deg);
+    box-shadow: 7px 7px 0 rgba(108, 3, 69, 0.18);
   }
 
   .project-page__reading--product {
     border-top: 6px solid var(--color-terracotta);
+    transform: rotate(-0.5deg);
   }
 
   .project-page__reading--management {
     border-top: 6px solid var(--color-plum);
+    transform: rotate(0.5deg);
   }
 
   .project-page__reading-label {
     display: inline-block;
     margin-bottom: 12px;
-    font-family: var(--font-ui);
-    font-size: 0.68rem;
-    font-weight: 600;
-    letter-spacing: 0.12em;
+    padding: 4px 9px;
+    border: 1.5px solid var(--color-plum);
+    border-radius: 2px;
+    background: var(--color-mustard);
+    box-shadow: 2px 2px 0 var(--color-plum);
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
     text-transform: uppercase;
-    color: var(--color-accent-deep);
+    color: var(--color-plum-deep);
   }
 
   .project-page__reading--management .project-page__reading-label {
-    color: var(--color-ink);
+    background: var(--color-acid);
+    color: var(--color-plum-deep);
   }
 
   .project-page__focus {
@@ -423,8 +451,11 @@ const managementReading = project.miradas.gestion;
   }
 
   .project-page__process strong {
-    font-family: var(--font-ui);
-    font-size: 0.82rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
     color: var(--color-text);
   }
 
@@ -438,7 +469,7 @@ const managementReading = project.miradas.gestion;
     gap: 14px;
     margin: clamp(36px, 5vw, 56px) 0 28px;
     padding-top: 24px;
-    border-top: 1px solid var(--color-border);
+    border-top: 2px dashed rgba(108, 3, 69, 0.28);
   }
 
   .project-page__pagination-link {
@@ -446,30 +477,32 @@ const managementReading = project.miradas.gestion;
     gap: 4px;
     padding: 20px;
     border: 2px solid var(--color-plum);
-    border-radius: var(--radius-lg);
+    border-radius: 3px;
     background: var(--color-surface);
-    box-shadow: var(--shadow-sticker-sm);
+    box-shadow: 4px 4px 0 rgba(108, 3, 69, 0.14);
     transition: box-shadow var(--transition), transform var(--transition);
   }
 
   .project-page__pagination-link:hover {
     transform: translate(-2px, -2px);
-    box-shadow: var(--shadow-sticker);
+    box-shadow: 6px 6px 0 rgba(108, 3, 69, 0.18);
   }
 
   .project-page__pagination-link span {
-    font-family: var(--font-ui);
-    font-size: 0.68rem;
-    font-weight: 600;
-    letter-spacing: 0.1em;
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--color-text-muted);
   }
 
   .project-page__pagination-link strong {
-    font-family: var(--font-ui);
-    font-size: 0.95rem;
-    font-weight: 600;
+    font-family: var(--font-display);
+    font-size: 1.02rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
     color: var(--color-text);
   }
 
@@ -513,6 +546,11 @@ const managementReading = project.miradas.gestion;
 
     .project-page__pagination-link--next {
       text-align: left;
+    }
+
+    .project-page__reading--product,
+    .project-page__reading--management {
+      transform: none;
     }
 
     .project-page__footer {

@@ -1,21 +1,27 @@
 /* ============================================================
    ABRIL MANCUSO — PORTFOLIO MULTIMEDIAL
-   Sistema visual global · Edición "Ciruela & Durazno"
+   Sistema visual global · Edición "Editorial Scrapbook"
    ------------------------------------------------------------
-   Paleta estricta de cuatro colores:
+   Dirección de arte: carpeta de archivo manila + zine editorial
+   + neo-brutalismo lúdico. Paleta estricta de cuatro colores:
      crema vainilla #FFF8DC · ciruela profundo #6C0345
      naranja terracota #DC6B19 · mostaza durazno #F7C566
-   Las variantes derivadas (ciruela profunda, terracota oscura,
-   durazno) existen sólo para garantizar contraste AA en textos
-   y estados interactivos.
+   Acentos pop puntuales (sólo decorativos):
+     rosa chicle #F4A8D4 · verde ácido #C8F560
+   Las variantes derivadas existen sólo para garantizar contraste
+   AA en textos y estados interactivos.
    ============================================================ */
 
 :root {
-  /* --- Paleta base de la imagen --- */
+  /* --- Paleta base --- */
   --color-cream: #fff8dc;
   --color-plum: #6c0345;
   --color-terracotta: #dc6b19;
   --color-mustard: #f7c566;
+
+  /* --- Acentos pop decorativos --- */
+  --color-bubblegum: #f4a8d4;
+  --color-acid: #c8f560;
 
   /* --- Derivados funcionales --- */
   --color-cream-deep: #fdf0cf;
@@ -46,30 +52,37 @@
   --color-ink-muted: #f3d3c4;
 
   /* --- Tipografía --- */
-  --font-display: 'Fraunces', 'Playfair Display', Georgia, serif;
-  --font-body: 'DM Sans', system-ui, -apple-system, sans-serif;
-  --font-ui: 'Space Grotesk', system-ui, -apple-system, sans-serif;
-  --font-mono: ui-monospace, 'SFMono-Regular', 'Cascadia Code', monospace;
+  --font-display: 'Syne', 'Archivo Black', system-ui, sans-serif;
+  --font-script: 'Instrument Serif', 'Playfair Display', Georgia, serif;
+  --font-body: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-ui: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-mono: 'Space Mono', ui-monospace, 'SFMono-Regular', monospace;
 
-  /* --- Forma --- */
-  --radius-xs: 10px;
-  --radius-sm: 14px;
-  --radius-md: 20px;
-  --radius-lg: 28px;
-  --radius-xl: 36px;
+  /* --- Forma (menos redondeo, más papel recortado) --- */
+  --radius-xs: 5px;
+  --radius-sm: 9px;
+  --radius-md: 13px;
+  --radius-lg: 18px;
+  --radius-xl: 22px;
   --radius-pill: 999px;
 
-  /* --- Sombras "sticker": duras, con relieve --- */
+  /* --- Sombras duras neo-brutalistas --- */
   --shadow-sticker-sm: 3px 3px 0 var(--color-plum);
-  --shadow-sticker: 6px 6px 0 var(--color-plum);
-  --shadow-sticker-lg: 10px 10px 0 var(--color-plum);
-  --shadow-sticker-soft: 6px 6px 0 rgba(108, 3, 69, 0.16);
-  --shadow-sticker-mustard: 6px 6px 0 var(--color-mustard);
+  --shadow-sticker: 5px 5px 0 var(--color-plum);
+  --shadow-sticker-lg: 9px 9px 0 var(--color-plum);
+  --shadow-sticker-soft: 5px 5px 0 rgba(108, 3, 69, 0.16);
+  --shadow-sticker-mustard: 5px 5px 0 var(--color-mustard);
 
   /* --- Movimiento --- */
   --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   --container-width: 1200px;
   --nav-height: 76px;
+
+  /* --- Retícula de collage --- */
+  --tape-checker: repeating-conic-gradient(
+    var(--color-plum-deep) 0 25%,
+    var(--color-cream) 0 50%
+  );
 }
 
 /* --- Reset --- */
@@ -91,11 +104,16 @@ body {
   font-family: var(--font-body);
   background-color: var(--color-bg);
   background-image:
-    linear-gradient(rgba(108, 3, 69, 0.055) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(108, 3, 69, 0.055) 1px, transparent 1px);
-  background-size: 34px 34px;
+    radial-gradient(ellipse 70% 50% at 12% 0%, rgba(247, 197, 102, 0.34), transparent 62%),
+    radial-gradient(ellipse 52% 42% at 92% 96%, rgba(220, 107, 25, 0.1), transparent 64%),
+    repeating-linear-gradient(
+      0deg,
+      rgba(108, 3, 69, 0.018) 0 1px,
+      transparent 1px 5px
+    );
   color: var(--color-text);
   line-height: 1.65;
+  overflow-x: clip;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -135,9 +153,9 @@ h2,
 h3,
 h4 {
   font-family: var(--font-display);
-  font-weight: 600;
-  line-height: 1.08;
-  letter-spacing: -0.015em;
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
   color: var(--color-plum);
   font-optical-sizing: auto;
 }
@@ -146,11 +164,20 @@ p {
   text-wrap: pretty;
 }
 
+/* --- Utilidad de acento caligráfico --- */
+.script {
+  font-family: var(--font-script);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
 /* --- Accesibilidad: foco visible y movimiento reducido --- */
 :focus-visible {
   outline: 3px solid var(--color-terracotta);
   outline-offset: 3px;
-  border-radius: 6px;
+  border-radius: 4px;
 }
 
 ::selection {
@@ -177,11 +204,15 @@ p {
   z-index: 4000;
   transform: translateY(-200%);
   padding: 12px 20px;
-  border-radius: var(--radius-pill);
+  border: 2px solid var(--color-plum);
+  border-radius: var(--radius-xs);
   background: var(--color-plum);
   color: var(--color-cream);
-  font-family: var(--font-ui);
-  font-weight: 600;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
   box-shadow: var(--shadow-sticker-sm);
   transition: transform var(--transition);
 }
@@ -202,6 +233,18 @@ p {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* --- Grano de papel (SVG feTurbulence en BaseLayout) --- */
+.paper-grain {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  width: 100%;
+  height: 100%;
+  opacity: 0.04;
+  mix-blend-mode: multiply;
+  pointer-events: none;
 }
 
 /* --- Layout compartido --- */
@@ -235,26 +278,27 @@ p {
   color: var(--color-ink-text);
 }
 
+/* --- Encabezado de sección tipo póster --- */
 .section-header {
-  max-width: 760px;
+  max-width: 860px;
   margin: 0 auto clamp(34px, 5vw, 58px);
-  text-align: center;
+  text-align: left;
 }
 
 .section-header__eyebrow {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  margin-bottom: 18px;
-  padding: 6px 14px;
+  gap: 8px;
+  margin-bottom: 20px;
+  padding: 6px 13px;
   border: 2px solid var(--color-plum);
-  border-radius: var(--radius-pill);
-  background: var(--color-mustard);
-  box-shadow: var(--shadow-sticker-sm);
-  font-family: var(--font-ui);
-  font-size: 0.72rem;
+  border-radius: 3px;
+  background: var(--color-surface);
+  box-shadow: 3px 3px 0 var(--color-plum);
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--color-plum);
 }
@@ -267,41 +311,48 @@ p {
 }
 
 .section-header h2 {
-  font-size: clamp(2rem, 4.8vw, 3.3rem);
-  margin-bottom: 16px;
+  margin-bottom: 18px;
+  font-size: clamp(2.4rem, 6vw, 4.4rem);
+  line-height: 0.9;
+  letter-spacing: -0.035em;
+  text-transform: uppercase;
+  text-wrap: balance;
 }
 
 .section-header p {
+  max-width: 62ch;
   color: var(--color-text-muted);
   font-size: clamp(1rem, 1.6vw, 1.1rem);
+  line-height: 1.7;
 }
 
 .section--ink .section-header p {
   color: var(--color-ink-muted);
 }
 
-/* --- Botones tipo sticker --- */
+/* --- Botones tipo sello / etiqueta --- */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
   min-height: 48px;
-  padding: 12px 24px;
+  padding: 12px 22px;
   border: 2px solid var(--color-plum);
-  border-radius: var(--radius-pill);
-  font-family: var(--font-ui);
-  font-size: 0.88rem;
-  font-weight: 600;
-  letter-spacing: 0.005em;
-  box-shadow: var(--shadow-sticker-sm);
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  box-shadow: 4px 4px 0 var(--color-plum);
   transition: transform var(--transition), box-shadow var(--transition),
     background var(--transition), color var(--transition);
 }
 
 .btn:hover {
   transform: translate(-2px, -2px) rotate(-1deg);
-  box-shadow: 5px 5px 0 var(--color-plum);
+  box-shadow: 6px 6px 0 var(--color-plum);
 }
 
 .btn:active {
@@ -331,41 +382,45 @@ p {
   border-color: var(--color-cream);
   background: transparent;
   color: var(--color-cream);
-  box-shadow: 3px 3px 0 var(--color-mustard);
+  box-shadow: 4px 4px 0 var(--color-mustard);
 }
 
 .btn--on-dark:hover {
   background: var(--color-cream);
   color: var(--color-plum);
-  box-shadow: 5px 5px 0 var(--color-mustard);
+  box-shadow: 6px 6px 0 var(--color-mustard);
 }
 
 .btn--behance {
   background: var(--color-plum);
   color: var(--color-cream);
-  box-shadow: 3px 3px 0 var(--color-terracotta);
+  box-shadow: 4px 4px 0 var(--color-terracotta);
 }
 
 .btn--behance:hover {
   background: var(--color-plum-deep);
-  box-shadow: 5px 5px 0 var(--color-terracotta);
+  box-shadow: 6px 6px 0 var(--color-terracotta);
 }
 
-/* --- Etiquetas --- */
+/* --- Etiquetas técnicas --- */
 .tag {
   display: inline-flex;
   align-items: center;
-  min-height: 30px;
-  padding: 5px 13px;
-  border-radius: var(--radius-pill);
+  min-height: 26px;
+  padding: 4px 10px;
+  border: 1.5px solid var(--color-plum);
+  border-radius: 3px;
   background: var(--color-mustard);
   color: var(--color-plum);
-  font-family: var(--font-ui);
-  font-size: 0.76rem;
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
   font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
 }
 
 .tag--dark {
+  border-color: rgba(255, 248, 220, 0.4);
   background: rgba(255, 248, 220, 0.16);
   color: var(--color-cream);
 }
@@ -376,6 +431,181 @@ p {
   border-radius: var(--radius-lg);
   background: var(--color-surface);
   box-shadow: var(--shadow-sticker);
+}
+
+/* ============================================================
+   UTILIDADES DE COLLAGE
+   ============================================================ */
+
+/* --- Carpeta de archivo con pestaña superior --- */
+.folder {
+  position: relative;
+  padding-top: 36px;
+}
+
+.folder__tab {
+  position: absolute;
+  top: 0;
+  left: clamp(12px, 3vw, 34px);
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px 7px;
+  border: 2px solid var(--color-plum);
+  border-bottom: none;
+  border-radius: 12px 12px 0 0;
+  background: var(--color-mustard);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-plum);
+  box-shadow: 4px -2px 0 rgba(108, 3, 69, 0.12);
+}
+
+.folder__tab--terracotta {
+  background: var(--color-terracotta);
+  color: var(--color-cream);
+}
+
+.folder__tab--bubblegum {
+  background: var(--color-bubblegum);
+  color: var(--color-plum-deep);
+}
+
+.folder__tab--acid {
+  background: var(--color-acid);
+  color: var(--color-plum-deep);
+}
+
+.folder__tab--cream {
+  background: var(--color-surface);
+  color: var(--color-plum);
+}
+
+.folder__body {
+  position: relative;
+  border: 2px solid var(--color-plum);
+  border-radius: 0 var(--radius-lg) var(--radius-lg) var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sticker);
+}
+
+/* --- Cinta washi (damero / translúcida) --- */
+.washi {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  z-index: 3;
+  width: 128px;
+  height: 30px;
+  transform: translateX(-50%) rotate(-3deg);
+  border: 1px solid rgba(108, 3, 69, 0.18);
+  clip-path: polygon(1% 0, 99% 5%, 100% 94%, 0 100%);
+  pointer-events: none;
+}
+
+.washi--checker {
+  background-image: var(--tape-checker);
+  background-size: 12px 12px;
+  opacity: 0.9;
+}
+
+.washi--translucent {
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(247, 197, 102, 0.62) 0 9px,
+      rgba(251, 227, 196, 0.5) 9px 18px
+    );
+  backdrop-filter: blur(1px);
+}
+
+/* --- Clip metálico --- */
+.paper-clip {
+  position: absolute;
+  top: -16px;
+  right: 22px;
+  z-index: 4;
+  width: 26px;
+  height: 42px;
+  border: 3px solid #2b0a1c;
+  border-radius: 11px 11px 7px 7px;
+  background: linear-gradient(180deg, #f1f1f1, #9c9c9c);
+  box-shadow: 2px 2px 0 rgba(108, 3, 69, 0.28);
+  pointer-events: none;
+}
+
+.paper-clip::before {
+  content: '';
+  position: absolute;
+  inset: 7px 4px auto;
+  height: 15px;
+  border: 2px solid #2b0a1c;
+  border-radius: 6px;
+  background: linear-gradient(180deg, #cfcfcf, #efefef);
+}
+
+/* --- Nota tipo post-it --- */
+.post-it {
+  position: relative;
+  border: 2px solid var(--color-plum);
+  background: var(--color-mustard);
+  box-shadow: var(--shadow-sticker);
+}
+
+.post-it--acid {
+  background: var(--color-acid);
+}
+
+.post-it--bubblegum {
+  background: var(--color-bubblegum);
+}
+
+/* --- Código de barras / ticket --- */
+.barcode {
+  display: block;
+  width: 100%;
+  height: 26px;
+  background-image: repeating-linear-gradient(
+    90deg,
+    var(--color-plum-deep) 0 2px,
+    transparent 2px 4px,
+    var(--color-plum-deep) 4px 5px,
+    transparent 5px 9px,
+    var(--color-plum-deep) 9px 12px,
+    transparent 12px 15px
+  );
+}
+
+.ticket-label {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-plum);
+}
+
+/* --- Divisor ondulado de sección --- */
+.wave-divider {
+  display: block;
+  width: 100%;
+  height: 18px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='18' viewBox='0 0 64 18'%3E%3Cpath d='M0 9c8-6 16-6 24 0s16 6 24 0 16-6 16 0' fill='none' stroke='%236C0345' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: repeat-x;
+  background-size: 64px 18px;
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+/* --- Línea de corte punteada --- */
+.cut-line {
+  border: none;
+  border-top: 2px dashed var(--color-plum);
+  opacity: 0.4;
 }
 
 /* --- Utilidad de ocultamiento --- */

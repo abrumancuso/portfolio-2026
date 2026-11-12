@@ -27,6 +27,7 @@ const defaultMirada: MiradaId = 'producto';
       </div>
 
       <aside class="projects__note" aria-label="Sobre esta selección de proyectos">
+        <span class="washi washi--translucent projects__note-tape" aria-hidden="true"></span>
         <p>
           <strong>La selección presentada reúne algunos de los proyectos</strong> en
           los que apliqué diseño de experiencia, estrategia y desarrollo. El portfolio
@@ -46,7 +47,10 @@ const defaultMirada: MiradaId = 'producto';
       </aside>
     </header>
 
-    <div class="explorer" data-explorer data-view="galeria">
+    <div class="explorer__folder">
+      <span class="folder__tab folder__tab--bubblegum">Archivo de proyectos</span>
+
+      <div class="explorer" data-explorer data-view="galeria">
       <div class="explorer__mode-switch" data-mode-switch>
         <div class="explorer__mode-head">
           <span class="explorer__label" id="mirada-label">Leer proyectos desde</span>
@@ -69,6 +73,24 @@ const defaultMirada: MiradaId = 'producto';
         <p class="explorer__mode-description" data-mode-description>
           {miradaDescriptions[defaultMirada]}
         </p>
+
+        <svg class="explorer__arrow" aria-hidden="true" viewBox="0 0 110 64" width="96" height="56">
+          <path
+            d="M102 8c-26 3-46 17-56 42"
+            fill="none"
+            stroke="#DC6B19"
+            stroke-width="3"
+            stroke-linecap="round"
+          />
+          <path
+            d="M36 42c2 6 6 10 12 13M48 55c-6 0-11-2-15-6"
+            fill="none"
+            stroke="#DC6B19"
+            stroke-width="3"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
       </div>
 
       <div class="explorer__toolbar">
@@ -147,6 +169,7 @@ const defaultMirada: MiradaId = 'producto';
             Ir a Behance
           </a>
         </div>
+      </div>
       </div>
     </div>
   </div>
@@ -344,11 +367,19 @@ const defaultMirada: MiradaId = 'producto';
   }
 
   .projects__note {
-    padding: 24px;
+    position: relative;
+    padding: 28px 24px 24px;
     border: 2px solid var(--color-plum);
-    border-radius: var(--radius-lg);
+    border-radius: 2px;
     background: var(--color-peach);
-    box-shadow: var(--shadow-sticker-sm);
+    box-shadow: var(--shadow-sticker);
+    transform: rotate(-0.8deg);
+  }
+
+  .projects__note-tape {
+    top: -13px;
+    width: 124px;
+    transform: translateX(-50%) rotate(-4deg);
   }
 
   .projects__note p {
@@ -362,12 +393,21 @@ const defaultMirada: MiradaId = 'producto';
     color: var(--color-text);
   }
 
+  .explorer__folder {
+    position: relative;
+    padding-top: 34px;
+  }
+
+  .explorer__folder > .folder__tab {
+    left: clamp(14px, 3vw, 30px);
+  }
+
   .explorer {
     padding: clamp(18px, 3vw, 28px);
     border: 2px solid var(--color-plum);
-    border-radius: var(--radius-xl);
+    border-radius: 0 var(--radius-lg) var(--radius-lg) var(--radius-lg);
     background: var(--color-bg-alt);
-    box-shadow: 10px 10px 0 rgba(108, 3, 69, 0.1);
+    box-shadow: 9px 9px 0 rgba(108, 3, 69, 0.14);
   }
 
   .explorer__toolbar {
@@ -383,87 +423,135 @@ const defaultMirada: MiradaId = 'producto';
   }
 
   .explorer__label {
-    font-family: var(--font-ui);
-    font-size: 0.72rem;
-    font-weight: 600;
-    letter-spacing: 0.1em;
+    font-family: var(--font-mono);
+    font-size: 0.63rem;
+    font-weight: 700;
+    letter-spacing: 0.09em;
     text-transform: uppercase;
     color: var(--color-text-muted);
   }
 
-  .explorer__chips,
-  .explorer__view {
+  .explorer__chips {
     display: flex;
     flex-wrap: wrap;
-    gap: 6px;
+    align-items: flex-end;
+    padding-top: 3px;
   }
 
-  .explorer__chip,
-  .explorer__view button {
+  .explorer__chip {
+    position: relative;
     min-height: 40px;
-    padding: 8px 14px;
-    border: 1.5px solid rgba(108, 3, 69, 0.3);
-    border-radius: var(--radius-pill);
+    padding: 9px 15px 8px;
+    margin-right: -7px;
+    border: 2px solid var(--color-plum);
+    border-radius: 9px 9px 0 0;
     background: var(--color-surface);
-    font-family: var(--font-ui);
-    font-size: 0.78rem;
-    font-weight: 600;
-    color: var(--color-plum-soft);
-    transition: background var(--transition), color var(--transition),
-      border-color var(--transition), transform var(--transition);
-  }
-
-  .explorer__chip:hover,
-  .explorer__view button:hover {
-    border-color: var(--color-plum);
+    font-family: var(--font-mono);
+    font-size: 0.63rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
     color: var(--color-plum);
-    transform: translateY(-1px);
+    box-shadow: 2px -2px 0 rgba(108, 3, 69, 0.12);
+    transition: background var(--transition), color var(--transition),
+      transform var(--transition), box-shadow var(--transition);
   }
 
-  .explorer__chip[aria-pressed='true'],
-  .explorer__view button[aria-pressed='true'] {
-    border-color: var(--color-plum);
+  .explorer__chip:nth-child(2) {
+    background: var(--color-mustard);
+  }
+
+  .explorer__chip:nth-child(3) {
+    background: var(--color-bubblegum);
+  }
+
+  .explorer__chip:nth-child(4) {
+    background: var(--color-acid);
+  }
+
+  .explorer__chip:nth-child(5) {
+    background: var(--color-peach);
+  }
+
+  .explorer__chip:last-child {
+    margin-right: 0;
+  }
+
+  .explorer__chip:hover {
+    transform: translateY(-3px);
+    z-index: 2;
+  }
+
+  .explorer__chip[aria-pressed='true'] {
+    z-index: 3;
     background: var(--color-plum);
     color: var(--color-cream);
+    transform: translateY(-3px);
+    box-shadow: 3px -3px 0 var(--color-mustard);
   }
 
   .explorer__view {
-    padding: 4px;
-    border: 1.5px solid rgba(108, 3, 69, 0.3);
-    border-radius: var(--radius-pill);
+    display: inline-flex;
+    overflow: hidden;
+    border: 2px solid var(--color-plum);
+    border-radius: 3px;
     background: var(--color-surface);
-    gap: 2px;
+    box-shadow: 3px 3px 0 rgba(108, 3, 69, 0.16);
   }
 
   .explorer__view button {
+    min-height: 42px;
+    padding: 8px 13px;
     border: none;
+    border-radius: 0;
     background: transparent;
-    border-radius: var(--radius-pill);
+    font-family: var(--font-mono);
+    font-size: 0.61rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-plum);
+    transition: background var(--transition), color var(--transition);
+  }
+
+  .explorer__view button + button {
+    border-left: 2px solid var(--color-plum);
+  }
+
+  .explorer__view button:hover {
+    background: var(--color-mustard);
+    color: var(--color-plum);
+    transform: none;
   }
 
   .explorer__view button[aria-pressed='true'] {
     background: var(--color-plum);
+    color: var(--color-cream);
   }
 
   .explorer__search {
     width: 100%;
     min-height: 46px;
-    padding: 10px 18px;
-    border: 2px solid rgba(108, 3, 69, 0.3);
-    border-radius: var(--radius-pill);
+    padding: 10px 16px;
+    border: 2px solid var(--color-plum);
+    border-radius: 3px;
     background: var(--color-surface);
+    font-family: var(--font-body);
     font-size: 0.9rem;
+    box-shadow: 2px 2px 0 rgba(108, 3, 69, 0.12);
     transition: border-color var(--transition), box-shadow var(--transition);
   }
 
   .explorer__search:focus {
-    border-color: var(--color-plum);
+    border-color: var(--color-terracotta);
     box-shadow: var(--shadow-sticker-sm);
     outline: none;
   }
 
   .explorer__search::placeholder {
     color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
   }
 
   .explorer__statusbar {
@@ -472,36 +560,45 @@ const defaultMirada: MiradaId = 'producto';
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    margin: 18px 0 12px;
+    margin: 20px 0 14px;
     padding-top: 16px;
-    border-top: 2px dashed rgba(108, 3, 69, 0.25);
+    border-top: 2px dashed rgba(108, 3, 69, 0.28);
   }
 
   .explorer__status {
-    font-size: 0.82rem;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
     color: var(--color-text-muted);
   }
 
   .explorer__reset {
     min-height: 36px;
     padding: 6px 10px;
-    border-radius: var(--radius-sm);
-    font-family: var(--font-ui);
-    font-size: 0.76rem;
-    font-weight: 600;
+    border-radius: 3px;
+    font-family: var(--font-mono);
+    font-size: 0.64rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
     color: var(--color-accent-deep);
     text-decoration: underline;
-    text-underline-offset: 3px;
+    text-decoration-style: dashed;
+    text-underline-offset: 4px;
   }
 
   .explorer__mode-switch {
+    position: relative;
     display: grid;
     gap: 12px;
-    margin-bottom: 18px;
+    margin-bottom: 22px;
     padding: clamp(16px, 2.5vw, 22px);
-    border: 1.5px solid rgba(108, 3, 69, 0.25);
-    border-radius: var(--radius-lg);
+    border: 2px solid var(--color-plum);
+    border-radius: 3px;
     background: var(--color-surface);
+    box-shadow: var(--shadow-sticker-sm);
   }
 
   .explorer__mode-head {
@@ -510,60 +607,85 @@ const defaultMirada: MiradaId = 'producto';
     align-items: baseline;
     justify-content: space-between;
     gap: 8px;
+    padding-right: clamp(0px, 8vw, 96px);
   }
 
   .explorer__mode-current {
-    font-family: var(--font-ui);
-    font-size: 0.9rem;
-    font-weight: 600;
+    font-family: var(--font-script);
+    font-style: italic;
+    font-size: 1.16rem;
+    font-weight: 400;
     color: var(--color-accent-deep);
   }
 
   .explorer__mode-options {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 6px;
-    padding: 4px;
-    border: 1.5px solid rgba(108, 3, 69, 0.25);
-    border-radius: var(--radius-md);
-    background: var(--color-bg-alt);
+    gap: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
   }
 
   .explorer__mode-button {
-    min-height: 48px;
-    padding: 10px 14px;
-    border-radius: var(--radius-sm);
-    font-family: var(--font-ui);
-    font-size: 0.8rem;
-    font-weight: 600;
+    position: relative;
+    min-height: 50px;
+    padding: 11px 16px 10px;
+    border: 2px solid var(--color-plum);
+    border-radius: 10px 10px 0 0;
+    background: var(--color-bg-alt);
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
     line-height: 1.35;
-    color: var(--color-text-muted);
+    text-transform: uppercase;
+    color: var(--color-plum);
     text-align: left;
+    box-shadow: 2px -2px 0 rgba(108, 3, 69, 0.1);
     transition: background var(--transition), color var(--transition),
-      box-shadow var(--transition);
+      transform var(--transition), box-shadow var(--transition);
+  }
+
+  .explorer__mode-button + .explorer__mode-button {
+    margin-left: -8px;
+    background: var(--color-mustard);
   }
 
   .explorer__mode-button:hover {
     background: var(--color-peach);
     color: var(--color-plum);
+    transform: translateY(-2px);
   }
 
   .explorer__mode-button[aria-pressed='true'] {
+    z-index: 2;
     background: var(--color-plum);
     color: var(--color-cream);
-    box-shadow: var(--shadow-sticker-sm);
+    transform: translateY(-3px);
+    box-shadow: 3px -3px 0 var(--color-terracotta);
   }
 
   .explorer__mode-description {
+    max-width: 62ch;
     color: var(--color-text-muted);
     font-size: 0.82rem;
-    line-height: 1.6;
+    line-height: 1.65;
+  }
+
+  .explorer__arrow {
+    position: absolute;
+    right: clamp(6px, 2vw, 22px);
+    bottom: -26px;
+    transform: rotate(-4deg);
+    pointer-events: none;
   }
 
   .explorer__grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 18px;
+    gap: clamp(18px, 2.6vw, 30px);
+    padding: 6px 4px 10px;
   }
 
   .explorer[data-view='ficha'] .explorer__grid {
@@ -584,17 +706,20 @@ const defaultMirada: MiradaId = 'producto';
 
   .explorer__empty {
     padding: clamp(28px, 5vw, 48px);
-    border: 2px dashed var(--color-plum);
-    border-radius: var(--radius-lg);
-    background: var(--color-surface);
+    border: 2px solid var(--color-plum);
+    border-radius: 2px;
+    background: var(--color-mustard);
+    box-shadow: var(--shadow-sticker);
     text-align: center;
+    transform: rotate(-0.6deg);
   }
 
   .explorer__empty-title {
     margin-bottom: 8px;
-    font-family: var(--font-ui);
+    font-family: var(--font-display);
     font-size: 1.2rem;
-    font-weight: 600;
+    font-weight: 800;
+    text-transform: uppercase;
   }
 
   .explorer__empty > p:not(.explorer__empty-title) {
@@ -617,12 +742,20 @@ const defaultMirada: MiradaId = 'producto';
       grid-template-columns: 1fr;
     }
 
+    .projects__note {
+      transform: none;
+    }
+
     .explorer__toolbar {
       grid-template-columns: 1fr 1fr;
     }
 
     .explorer__control:last-child {
       grid-column: 1 / -1;
+    }
+
+    .explorer__arrow {
+      display: none;
     }
   }
 
@@ -647,12 +780,23 @@ const defaultMirada: MiradaId = 'producto';
       grid-template-columns: 1fr;
     }
 
+    .explorer__mode-button + .explorer__mode-button {
+      margin-left: 0;
+      margin-top: -2px;
+    }
+
     .explorer__empty-actions {
       flex-direction: column;
     }
 
     .explorer__empty-actions .btn {
       width: 100%;
+    }
+
+    .explorer__folder > .folder__tab {
+      left: 14px;
+      padding-inline: 14px;
+      font-size: 0.6rem;
     }
   }
 </style>
