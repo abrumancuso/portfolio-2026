@@ -12,6 +12,30 @@ import { site } from '../data/site';
       diseño e identidad está disponible en Behance.
     </p>
 
+    <div class="contact-feature">
+      <div class="contact-feature__card">
+        <span class="contact-feature__tape contact-feature__tape--left" aria-hidden="true"></span>
+        <span class="contact-feature__tape contact-feature__tape--right" aria-hidden="true"></span>
+        <svg class="contact-feature__flower" viewBox="0 0 100 100" width="52" height="52" aria-hidden="true" focusable="false">
+          <g fill="#F7C566" stroke="#6C0345" stroke-width="2" stroke-linejoin="round">
+            <path d="M50 50C41 44 37 27 50 14c13 13 9 30 0 36Z" />
+            <path d="M50 50C41 44 37 27 50 14c13 13 9 30 0 36Z" transform="rotate(72 50 50)" />
+            <path d="M50 50C41 44 37 27 50 14c13 13 9 30 0 36Z" transform="rotate(144 50 50)" />
+            <path d="M50 50C41 44 37 27 50 14c13 13 9 30 0 36Z" transform="rotate(216 50 50)" />
+            <path d="M50 50C41 44 37 27 50 14c13 13 9 30 0 36Z" transform="rotate(288 50 50)" />
+          </g>
+          <circle cx="50" cy="50" r="6" fill="#6C0345" />
+        </svg>
+
+        <p class="contact-feature__kicker">Cierre · Perfil</p>
+        <p class="contact-feature__text">
+          Diseño con <span class="script">criterio</span>, gestiono con
+          <span class="script">método</span> y ejecuto con <span class="script">foco</span>.
+        </p>
+        <p class="contact-feature__meta">Diseño UX/UI · Digital PM · Estrategia · Ejecución</p>
+      </div>
+    </div>
+
     <div class="footer__actions">
       <a class="btn btn--primary" href={`mailto:${site.email}`}>
         {site.email}
@@ -116,6 +140,105 @@ import { site } from '../data/site';
     font-family: var(--font-ui);
     font-size: 1.02rem;
     line-height: 1.7;
+  }
+
+  /* --- Cierre destacado: panel con patrón + tarjeta inclinada --- */
+  .contact-feature {
+    position: relative;
+    max-width: 720px;
+    margin: 0 auto 36px;
+    padding: clamp(30px, 5vw, 52px) clamp(18px, 3.4vw, 32px);
+    overflow: hidden;
+    border: 1.5px solid var(--color-plum);
+    border-radius: 3px;
+    background-color: var(--color-terracotta);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='64' viewBox='0 0 320 64'%3E%3Crect width='320' height='64' fill='%23DC6B19'/%3E%3Ctext x='0' y='26' font-family='Anton, sans-serif' font-size='20' fill='%23FFF8DC' fill-opacity='0.18' letter-spacing='2'%3EDISE%C3%91O UX/UI %C2%B7 DIGITAL PM%3C/text%3E%3Ctext x='-70' y='56' font-family='Anton, sans-serif' font-size='20' fill='%23FFF8DC' fill-opacity='0.10' letter-spacing='2'%3EESTRATEGIA %C2%B7 EJECUCI%C3%93N%3C/text%3E%3C/svg%3E");
+    background-size: 320px 64px;
+  }
+
+  .contact-feature__card {
+    position: relative;
+    width: min(100%, 520px);
+    margin: 0 auto;
+    padding: clamp(28px, 4vw, 40px) clamp(24px, 4vw, 38px);
+    border: 1.5px solid var(--color-plum);
+    border-radius: 3px;
+    background: var(--color-cream);
+    text-align: center;
+    transform: rotate(1.2deg);
+    box-shadow: 4px 4px 0 rgba(75, 2, 48, 0.28);
+  }
+
+  .contact-feature__tape {
+    position: absolute;
+    top: -12px;
+    z-index: 2;
+    width: 86px;
+    height: 22px;
+    background: repeating-conic-gradient(
+      rgba(108, 3, 69, 0.35) 0 25%,
+      rgba(255, 248, 220, 0.9) 0 50%
+    );
+    background-size: 12px 12px;
+    border-left: 1px solid rgba(108, 3, 69, 0.16);
+    border-right: 1px solid rgba(108, 3, 69, 0.16);
+    box-shadow: 0 2px 4px rgba(75, 2, 48, 0.16);
+  }
+
+  .contact-feature__tape--left {
+    left: 22px;
+    transform: rotate(-6deg);
+  }
+
+  .contact-feature__tape--right {
+    right: 22px;
+    transform: rotate(6deg);
+  }
+
+  .contact-feature__flower {
+    position: absolute;
+    right: -16px;
+    bottom: -18px;
+    z-index: 3;
+    transform: rotate(-12deg);
+    pointer-events: none;
+  }
+
+  .contact-feature__kicker {
+    margin-bottom: 12px;
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-terracotta-deep);
+  }
+
+  .contact-feature__text {
+    font-family: var(--font-ui);
+    font-size: clamp(1.2rem, 2.4vw, 1.55rem);
+    font-weight: 500;
+    line-height: 1.4;
+    color: var(--color-plum);
+  }
+
+  .contact-feature__text .script {
+    font-family: var(--font-script);
+    font-style: italic;
+    font-size: 1.15em;
+    color: var(--color-terracotta);
+  }
+
+  .contact-feature__meta {
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(108, 3, 69, 0.18);
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
   }
 
   .footer__actions {

@@ -58,7 +58,7 @@ const defaultMirada: MiradaId = 'producto';
     <div class="explorer__folder">
       <span class="folder__tab folder__tab--mustard">Archivo de proyectos</span>
 
-      <div class="explorer" data-explorer data-view="galeria">
+      <div class="explorer" data-explorer data-view="ficha">
       <div class="explorer__mode-switch" data-mode-switch>
         <div class="explorer__mode-head">
           <span class="explorer__label" id="mirada-label">Leer proyectos desde</span>
@@ -136,11 +136,11 @@ const defaultMirada: MiradaId = 'producto';
         <div class="explorer__control">
           <span class="explorer__label" id="vista-label">Modo de visualización</span>
           <div class="explorer__view" role="group" aria-labelledby="vista-label">
-            <button type="button" data-view="galeria" aria-pressed="true">
-              Galería visual
+            <button type="button" data-view="ficha" aria-pressed="true">
+              Archivo editorial
             </button>
-            <button type="button" data-view="ficha" aria-pressed="false">
-              Ficha técnica
+            <button type="button" data-view="galeria" aria-pressed="false">
+              Galería visual
             </button>
           </div>
         </div>
@@ -156,7 +156,7 @@ const defaultMirada: MiradaId = 'producto';
       </div>
 
       <div class="explorer__grid" data-grid>
-        {projects.map((project) => <ProjectCard project={project} />)}
+        {projects.map((project, index) => <ProjectCard project={project} index={index} />)}
       </div>
 
       <div class="explorer__empty" data-empty hidden>
@@ -203,7 +203,7 @@ const defaultMirada: MiradaId = 'producto';
     const state = {
       area: 'todas',
       query: '',
-      view: 'galeria' as 'galeria' | 'ficha',
+      view: 'ficha' as 'galeria' | 'ficha',
     };
 
     const root = document.documentElement;
@@ -303,7 +303,7 @@ const defaultMirada: MiradaId = 'producto';
           item.setAttribute('aria-pressed', String(item.dataset.view === view));
         });
         if (status) {
-          status.textContent = `Vista ${view === 'galeria' ? 'galería visual' : 'ficha técnica'} activada. Mostrando ${visibleCount} de ${cards.length} proyectos.`;
+          status.textContent = `Vista ${view === 'galeria' ? 'galería visual' : 'archivo editorial'} activada. Mostrando ${visibleCount} de ${cards.length} proyectos.`;
         }
       });
     });
@@ -317,11 +317,11 @@ const defaultMirada: MiradaId = 'producto';
       button.addEventListener('click', () => {
         state.area = 'todas';
         state.query = '';
-        state.view = 'galeria';
-        explorer.dataset.view = 'galeria';
+        state.view = 'ficha';
+        explorer.dataset.view = 'ficha';
         if (searchInput) searchInput.value = '';
         viewButtons.forEach((item) => {
-          item.setAttribute('aria-pressed', String(item.dataset.view === 'galeria'));
+          item.setAttribute('aria-pressed', String(item.dataset.view === 'ficha'));
         });
         applyFilters();
         if (status) status.textContent = `Filtros restablecidos. Mostrando ${cards.length} de ${cards.length} proyectos · Área: Todas`;
@@ -666,20 +666,12 @@ const defaultMirada: MiradaId = 'producto';
     padding: 6px 4px 10px;
   }
 
-  .explorer[data-view='ficha'] .explorer__grid {
-    grid-template-columns: 1fr;
-  }
-
-  .explorer[data-view='galeria'] :global(.project-card__technical) {
-    display: none;
-  }
-
   .explorer[data-view='ficha'] :global(.project-card__gallery) {
     display: none;
   }
 
-  .explorer[data-view='ficha'] :global(.project-card:hover) {
-    transform: none;
+  .explorer[data-view='galeria'] :global(.project-card__ficha) {
+    display: none;
   }
 
   .explorer__empty {

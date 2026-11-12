@@ -50,6 +50,7 @@ export interface Project {
   id: string;
   title: string;
   tag: string;
+  format: string;
   year: string;
   areas: AreaId[];
   roles: string[];
@@ -91,6 +92,7 @@ export const projects: Project[] = [
     id: 'billie-animation',
     title: 'Billie Eilish Argentina Tour',
     tag: 'Motion Graphics',
+    format: 'Video · Motion',
     year: '2024',
     areas: ['audiovisual'],
     roles: ['Dirección de arte', 'Animación de personaje', 'Edición y sonido'],
@@ -146,6 +148,7 @@ export const projects: Project[] = [
     id: 'macbook-3d',
     title: 'MacBook Pro Model',
     tag: '3D Product Visualization',
+    format: '3 renders · 3D',
     year: '2025',
     areas: ['3d'],
     roles: ['Modelado 3D', 'Texturizado PBR', 'Iluminación y render'],
@@ -204,6 +207,7 @@ export const projects: Project[] = [
     id: 'maimoconecta',
     title: 'MaimoConecta',
     tag: 'Diseño Estratégico',
+    format: '45 imágenes · Caso UX',
     year: '2025',
     areas: ['diseno', 'gestion'],
     roles: ['Research', 'Ideación', 'Presentación'],
@@ -258,6 +262,7 @@ export const projects: Project[] = [
     id: 'manual-marea',
     title: 'Tini — Manual de Marca',
     tag: 'Identidad Visual',
+    format: '9 páginas · Identidad',
     year: '2025',
     areas: ['diseno'],
     roles: ['Dirección de arte', 'Sistema de marca', 'Diseño editorial'],
