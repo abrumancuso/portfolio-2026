@@ -35,7 +35,7 @@ export const heroLastName = 'Mancuso';
 export const heroRole = 'Project Manager & Diseñadora UX/UI';
 
 export const heroBody =
-  'Diseño experiencias y <strong>gestiono procesos</strong>. Integro <strong>estrategia de producto</strong>, interfaz visual y ejecución técnica: investigo fricciones, prototipo soluciones claras y coordino al equipo para que el proyecto avance sin trabas. <em>UX/UI, dirección de arte y Project Management</em> en un mismo ciclo.';
+  'Diseño experiencias y <strong>gestiono procesos</strong>. Integro <strong>estrategia de producto</strong>, interfaz visual y ejecución técnica: investigo fricciones, prototipo soluciones claras y coordino al equipo para que el proyecto avance sin trabas. <strong>UX/UI, dirección de arte y Project Management</strong> en un mismo ciclo.';
 
 export const heroAreas = [
   { number: '01', label: 'Gestión de Proyectos Digitales' },
@@ -47,7 +47,7 @@ export const about = {
   paragraphs: [
     'Soy <strong>Abril Mancuso</strong>, Project Manager y Diseñadora UX/UI. Cursando 4.º año de la <strong>Lic. en Tecnología Multimedial (UMAI)</strong>, construí un perfil que cruza <strong>gestión, experiencia y desarrollo</strong>.',
     'Lidero el <strong>ciclo completo</strong> de un producto digital: investigo el problema, defino el alcance, diseño flujos e interfaces y acompaño la entrega. Ese criterio técnico asegura que la <strong>calidad visual y la accesibilidad</strong> lleguen intactas.',
-    'Trabajo con equipos multidisciplinarios, documento cada decisión y traduzco objetivos de negocio en <em>experiencias claras</em>.',
+    'Trabajo con equipos multidisciplinarios, documento cada decisión y traduzco objetivos de negocio en <strong>experiencias claras</strong>.',
   ],
   tags: [
     'FIGMA',

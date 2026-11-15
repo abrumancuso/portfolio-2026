@@ -48,7 +48,7 @@ const managementReading = project.miradas.gestion;
           </div>
           <div>
             <dt>Mi rol</dt>
-            <dd>{project.role}</dd>
+            <dd set:html={project.role}></dd>
           </div>
           <div>
             <dt>Herramientas</dt>
@@ -345,10 +345,11 @@ const managementReading = project.miradas.gestion;
   }
 
   .project-page :global(p em) {
-    font-family: var(--font-script);
-    font-style: italic;
-    font-size: 1.08em;
+    font-family: var(--font-body);
+    font-style: normal;
+    font-weight: 700;
     color: var(--color-terracotta-deep);
+    box-shadow: inset 0 -0.35em 0 rgba(220, 107, 25, 0.22);
   }
 
   .project-page__roles,

@@ -52,7 +52,6 @@ if (images.length > 0) {
 }
 
 const total = images.length;
-const pad = (value: number) => String(value).padStart(2, '0');
 const speeds = [0.052, 0.03];
 ---
 
@@ -77,7 +76,6 @@ const speeds = [0.052, 0.03];
             loading={rowIndex === 0 && itemIndex === 0 ? 'eager' : 'lazy'}
             decoding="async"
           />
-          <span class="gallery__num" aria-hidden="true">{pad(item.index)}</span>
         </figure>
       ))}
     </div>
@@ -222,22 +220,6 @@ const speeds = [0.052, 0.03];
 
   .gallery.is-active .gallery__frame img {
     transform: translate3d(0, var(--gallery-y, 0px), 0) scale(var(--gallery-scale, 1));
-  }
-
-  .gallery__num {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    z-index: 2;
-    padding: 3px 8px;
-    border: 1.5px solid var(--color-plum);
-    border-radius: 2px;
-    background: var(--color-cream);
-    font-family: var(--font-mono);
-    font-size: 0.58rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    color: var(--color-plum);
   }
 
   @media (max-width: 820px) {
