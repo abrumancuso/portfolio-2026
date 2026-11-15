@@ -52,6 +52,7 @@ if (images.length > 0) {
 }
 
 const total = images.length;
+const pad = (value: number) => String(value).padStart(2, '0');
 const speeds = [0.052, 0.03];
 ---
 
@@ -70,12 +71,18 @@ const speeds = [0.052, 0.03];
           data-parallax
           data-speed={String(row.kind === 'full' ? 0.038 : speeds[itemIndex % speeds.length])}
         >
-          <img
-            src={item.src}
-            alt={`${project.media.alt} — imagen ${item.index} de ${total}`}
-            loading={rowIndex === 0 && itemIndex === 0 ? 'eager' : 'lazy'}
-            decoding="async"
-          />
+          <div class="gallery__shot">
+            <img
+              src={item.src}
+              alt={`${project.media.alt} — imagen ${item.index} de ${total}`}
+              loading={rowIndex === 0 && itemIndex === 0 ? 'eager' : 'lazy'}
+              decoding="async"
+            />
+          </div>
+          <figcaption class="gallery__caption">
+            <span class="gallery__caption-num">Lámina #{pad(item.index)}</span>
+            <span class="gallery__caption-star" aria-hidden="true">✦</span>
+          </figcaption>
         </figure>
       ))}
     </div>
@@ -192,11 +199,16 @@ const speeds = [0.052, 0.03];
 
   .gallery__frame {
     position: relative;
-    overflow: hidden;
     margin: 0;
-    border: 1.5px solid var(--color-plum);
-    border-radius: 3px;
-    background: var(--color-ink);
+  }
+
+  .gallery__shot {
+    position: relative;
+    overflow: hidden;
+    border: 2px solid var(--color-plum);
+    border-radius: 2px;
+    background: var(--color-plum);
+    box-shadow: var(--shadow-sticker);
   }
 
   .gallery__frame img {
@@ -204,6 +216,26 @@ const speeds = [0.052, 0.03];
     width: 100%;
     height: auto;
     transform-origin: center center;
+  }
+
+  /* Pie de lámina fuera de la imagen: nunca tapa la entrega. */
+  .gallery__caption {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 9px 2px 0;
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .gallery__caption-star {
+    font-size: 0.82rem;
+    color: var(--color-terracotta);
   }
 
   /* Sólo con JS activo: parallax + revelado. Sin JS no se recorta nada. */
