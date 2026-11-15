@@ -31,11 +31,9 @@ const defaultMirada: MiradaId = 'producto';
           </span>
         </h2>
         <p>
-          Una selección de trabajos que muestra distintas capas de mi práctica:
-          motion graphics, visualización 3D, diseño estratégico e identidad visual.
-          El selector de enfoque permite leer cada caso desde la gestión de proyectos
-          o desde el diseño de experiencia. Cada proyecto se abre en su propia página
-          para ver el caso completo, las dos lecturas y el proceso técnico.
+          <strong>Motion, 3D, estrategia e identidad</strong> en una sola selección.
+          Cambiá de enfoque para leer cada caso desde la <em>gestión</em> o desde
+          la <em>experiencia</em>, y abrí cada proyecto para ver el caso completo.
         </p>
       </div>
 
@@ -48,9 +46,8 @@ const defaultMirada: MiradaId = 'producto';
           <path d="M47 37 54 42 57 33" />
         </svg>
         <p>
-          <strong>La selección presentada reúne algunos de los proyectos</strong> en
-          los que apliqué diseño de experiencia, estrategia y desarrollo. El portfolio
-          completo de diseño e identidad está disponible en Behance.
+          <strong>Una selección, no la totalidad.</strong> El portfolio completo de
+          diseño e identidad vive en Behance.
         </p>
         <a
           class="btn btn--behance"
@@ -436,6 +433,21 @@ const defaultMirada: MiradaId = 'producto';
     color: var(--color-text-muted);
     font-size: 1.02rem;
     line-height: 1.7;
+  }
+
+  .projects__intro p :global(strong),
+  .projects__note p :global(strong) {
+    color: var(--color-plum);
+    font-weight: 700;
+    box-shadow: inset 0 -0.45em 0 var(--color-mustard);
+  }
+
+  .projects__intro p :global(em),
+  .projects__note p :global(em) {
+    font-family: var(--font-script);
+    font-style: italic;
+    font-size: 1.1em;
+    color: var(--color-terracotta-deep);
   }
 
   .projects__note {

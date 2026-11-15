@@ -35,7 +35,7 @@ El portfolio es una experiencia de una sola página con seis bloques y páginas 
 5. **Rituales** (`#rituales`): calculadora interactiva de rituales ágiles con hora y clima en vivo de Open-Meteo.
 6. **Contacto** (`#contacto`): email, Behance, LinkedIn y GitHub.
 
-Cada proyecto tiene además una **página propia** en `/proyectos/[id]` con el caso completo, la galería o el video, las dos lecturas del proyecto, el proceso técnico, las métricas, los aprendizajes y la navegación al proyecto anterior y siguiente.
+Cada proyecto tiene además una **página propia** en `/proyectos/[id]` con el caso completo, una galería con parallax o el video, las dos lecturas del proyecto, el proceso técnico, las métricas, los aprendizajes, un cierre con llamado a la acción y la navegación al proyecto anterior y siguiente.
 
 La sección de proyectos aclara de forma visible que se trata de **una selección de algunos proyectos**, no de la totalidad. El portfolio completo de diseño e identidad está disponible en Behance.
 
@@ -83,7 +83,7 @@ Astro permite construir un sitio **estático, rápido y con muy poco JavaScript*
 
 - Tipos para `Project`, `MiradaId`, `WorkflowStage`, `Hub`, `CityWeather`, `Ritual` y `Plan`.
 - Datos centralizados y tipados en `src/data/`; la configuración de la calculadora se serializa a JSON desde el frontmatter del componente.
-- Scripts de cliente para el selector de proyectos, filtros, vistas, tabs del proceso, búsqueda de ciudades con debounce, cálculo de husos y solapamiento, diagnóstico del ritual y carrusel de imágenes.
+- Scripts de cliente para el selector de proyectos, filtros, vistas, tabs del proceso, búsqueda de ciudades con debounce, cálculo de husos y solapamiento, diagnóstico del ritual y parallax de la galería de proyectos.
 
 ### APIs nativas del navegador
 
@@ -97,6 +97,12 @@ Astro permite construir un sitio **estático, rápido y con muy poco JavaScript*
 - Historial de commits progresivos que documenta la construcción.
 - Repositorio local nuevo, sin arrastrar el historial anterior.
 - GitHub se mantiene como perfil profesional y enlace de contacto, pero no se usa como fuente de datos del portfolio.
+
+### Archivos para crawlers y agentes
+
+- `public/robots.txt`: reglas de indexación, referencia al sitemap y a `llm.txt`.
+- `public/llm.txt` y `public/llms.txt`: resumen del portfolio en texto plano para que asistentes y agentes de IA puedan entender el perfil, la formación, las herramientas, los proyectos y los datos de contacto sin interpretar el HTML.
+- Ambos archivos son **idénticos**: se mantiene el nombre `llms.txt` por convención y `llm.txt` como alias corto.
 
 ### ¿Por qué no React, Next.js o una SPA?
 
@@ -128,7 +134,7 @@ La presentación se resolvió en **Hero + una sola sección “Sobre mí”**. N
 | Datos | `src/data/site.ts`, `projects.ts`, `miradas.ts`, `workflow.ts` | Contenido editorial, proyectos, enfoques de lectura y etapas del proceso. |
 | Layout | `src/layouts/BaseLayout.astro` | Documento, fuentes, skip link, navegación y footer. |
 | Presentación | `src/components/Hero.astro`, `About.astro` | Hero y sección única “Sobre mí”. |
-| Proyectos | `ProjectExplorer.astro`, `ProjectCard.astro`, `ProjectMedia.astro` | Selector de enfoque, filtros, búsqueda, vistas, tarjetas, galería y video. |
+| Proyectos | `ProjectExplorer.astro`, `ProjectCard.astro`, `ProjectMedia.astro`, `ProjectGallery.astro` | Selector de enfoque, filtros, búsqueda, vistas, tarjetas, galería con parallax y video. |
 | Páginas de proyecto | `src/pages/proyectos/[id].astro` | Caso completo, dos lecturas, métricas, aprendizajes y navegación entre proyectos. |
 | Proceso | `WorkflowSimulator.astro` | Tablero/timeline interactivo de las cinco etapas de trabajo. |
 | API | `AgileRitualCalculator.astro` | Búsqueda de ciudades, husos horarios, solapamiento, diagnóstico del ritual y respaldo local. |
@@ -403,7 +409,8 @@ Forecast:
 - Carga con `aria-busy`, errores con `role="alert"` y anuncios con `aria-live="polite"`.
 - Imágenes con `alt` descriptivo; imágenes decorativas con `aria-hidden`.
 - Video con nota explícita de ausencia de subtítulos y audiodescripción.
-- `prefers-reduced-motion` para reducir animaciones.
+- `prefers-reduced-motion` para reducir animaciones; el parallax de la galería se desactiva por completo con esa preferencia y por debajo de 820 px.
+- La galería mantiene el orden de lectura y no recorta imágenes en mobile: el parallax solo aplica como mejora progresiva en desktop.
 - Áreas táctiles de al menos 44 px en controles principales.
 - Uso de `svh`/`dvh` para evitar saltos en mobile.
 
@@ -412,7 +419,7 @@ Forecast:
 - Hero a dos columnas en desktop y una columna en mobile.
 - Sobre mí con imagen sticky en desktop y estática en mobile.
 - Explorador de proyectos con toolbar flexible, selector de dos columnas y grillas de 2/1 columnas.
-- Páginas de proyecto con hero, métricas y lecturas en dos columnas; una columna en mobile.
+- Páginas de proyecto con hero, métricas y lecturas en dos columnas; una columna en mobile. La galería alterna filas a ancho completo y pares de imágenes en desktop, y pasa a una columna sin desplazamiento en mobile.
 - Proceso con timeline vertical en desktop y horizontal scrollable en mobile.
 - Calculadora con tarjetas de ciudad apiladas y diagnóstico en una columna por debajo de 980 px; carriles y leyenda se reacomodan en 700 y 560 px.
 - Menú de navegación desplegable por debajo de 900 px.
@@ -438,7 +445,8 @@ Forecast:
 6. **Reemplazo del laboratorio de identidad** por la calculadora de rituales ágiles conectada a Open-Meteo.
 7. **Rediseño visual integral**: paleta crema, ciruela, terracota y mostaza, tipografías Fraunces / Space Grotesk / DM Sans, stickers y tarjetas con sombra dura.
 8. **Ajustes de responsive y accesibilidad**.
-9. **Documentación y cierre**.
+9. **Síntesis de textos y cierre de proyecto**: reducción de copys con palabras clave destacadas, `robots.txt` + `llm.txt`/`llms.txt` y rediseño de las páginas de proyecto con galería parallax y bloque de cierre con llamado a la acción.
+10. **Documentación y cierre**.
 
 El detalle de cada fase, las decisiones descartadas y una guía para la defensa en vivo están en [`PROCESO.md`](./PROCESO.md).
 
@@ -467,6 +475,7 @@ El repositorio tiene commits progresivos que separan:
 8. Refactorización: presentación unificada, selector de proyectos, WorkflowSimulator y primer dashboard de API.
 9. `feat: add itunes album identity lab`: manual de identidad instantáneo, extracción de paleta, tipografía curada y posicionamiento profesional de Abril Mancuso.
 10. `feat: redesign portfolio and add agile rituals calculator`: nueva identidad visual y reemplazo del manual de identidad por la calculadora de rituales con Open-Meteo.
+11. `feat: synthesize copy, add llm.txt/robots.txt and parallax project pages`: textos sintetizados con palabras clave, archivos para crawlers y agentes, galería con parallax y cierre con CTA en cada caso.
 
 ---
 
@@ -480,7 +489,10 @@ portfolio/
 │   │   ├── macbook/
 │   │   ├── maimoconecta/
 │   │   └── tini/
-│   └── perfil.jpg
+│   ├── llm.txt
+│   ├── llms.txt
+│   ├── perfil.jpg
+│   └── robots.txt
 ├── src/
 │   ├── components/
 │   │   ├── About.astro
@@ -490,6 +502,7 @@ portfolio/
 │   │   ├── Nav.astro
 │   │   ├── ProjectCard.astro
 │   │   ├── ProjectExplorer.astro
+│   │   ├── ProjectGallery.astro
 │   │   ├── ProjectMedia.astro
 │   │   ├── SectionHeading.astro
 │   │   └── WorkflowSimulator.astro
@@ -569,6 +582,8 @@ El proyecto es estático y puede publicarse en:
 Si se publica en GitHub Pages como project page, hay que configurar el `base` correspondiente en `astro.config.mjs` y ajustar las rutas absolutas de los assets.
 
 > El deploy no se realizó desde este entorno. Completar la URL en la sección 1 al publicar.
+>
+> `public/robots.txt` referencia el sitemap con el placeholder `<COMPLETAR_URL_DEL_DEPLOY>`: al publicar, reemplazarlo por el dominio real (por ejemplo `https://portfolio-abril.vercel.app`) para que la directiva `Sitemap:` apunte a una URL válida.
 
 ---
 

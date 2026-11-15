@@ -1,0 +1,13 @@
+# robots.txt — Portfolio de Abril Mancuso
+# Sitio estático generado con AstroJS. Todas las rutas son públicas.
+
+User-agent: *
+Allow: /
+
+# Contenido estructurado para motores de búsqueda con IA y agentes LLM:
+# perfil profesional, formación, proyectos y funcionalidades del sitio.
+#   /llm.txt   (versión principal)
+#   /llms.txt  (copia idéntica, por estándar)
+
+# Sitemap: completar el dominio real al publicar (Vercel, Netlify o dominio propio).
+Sitemap: <COMPLETAR_URL_DEL_DEPLOY>/sitemap.xml

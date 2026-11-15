@@ -54,6 +54,11 @@ export interface Project {
   year: string;
   areas: AreaId[];
   roles: string[];
+  /**
+   * `summary` es texto plano (se usa en <meta description>).
+   * Los campos de caso de estudio admiten HTML acotado (<strong>, <em>) para
+   * destacar palabras clave; se renderizan con `set:html`.
+   */
   summary: string;
   problem: string;
   role: string;
@@ -97,18 +102,18 @@ export const projects: Project[] = [
     areas: ['audiovisual'],
     roles: ['Dirección de arte', 'Animación de personaje', 'Edición y sonido'],
     summary:
-      'Aviso de gira para el tour HIT ME HARD AND SOFT de Billie Eilish. Animación de personaje y motion graphics en formato vertical.',
+      'Aviso de gira para el tour HIT ME HARD AND SOFT: animación de personaje y motion graphics en formato vertical.',
     problem:
-      'Proyecto final de Técnicas de Animación. Había que comunicar una fecha de gira en pocos segundos y con un formato pensado para consumo móvil.',
+      'Proyecto final de Técnicas de Animación: comunicar una fecha de gira en <strong>pocos segundos</strong> y para <strong>consumo móvil</strong>.',
     role:
-      'Diseñé y animé el personaje en After Effects desde cero, sincronicé el audio en Premiere Pro y resolví el ritmo del aviso desde la edición.',
+      'Animé el personaje en <strong>After Effects</strong> desde cero, sincronicé el audio en <strong>Premiere Pro</strong> y resolví el ritmo desde la edición.',
     decisions: [
-      'Construir el personaje como un sistema de piezas reutilizables para sostener el movimiento en distintos planos.',
-      'Trabajar el ritmo desde el audio: los cortes y las transiciones responden a la canción, no a una grilla fija.',
-      'Usar una paleta reducida y alto contraste para que la información de la gira se lea en formato vertical.',
+      'Personaje como <strong>sistema de piezas reutilizables</strong> para sostener el movimiento.',
+      'Ritmo desde el audio: cortes y transiciones responden a la canción.',
+      'Paleta reducida y alto contraste para leer la fecha en <strong>9:16</strong>.',
     ],
     learnings:
-      'Aprendí animación de personaje, motion graphics y el pipeline completo de una pieza audiovisual: idea, animación, edición y audio.',
+      'Aprendí <strong>animación de personaje</strong> y el pipeline completo: idea, animación, edición y audio.',
     metrics: [
       { value: '01', label: 'pieza audiovisual' },
       { value: '9:16', label: 'formato vertical' },
@@ -130,16 +135,16 @@ export const projects: Project[] = [
     },
     miradas: {
       producto: {
-        focus: 'La pieza se diseña para consumo móvil: lectura rápida, alto contraste y un único foco por plano.',
+        focus: 'Pieza pensada para móvil: lectura rápida, alto contraste y un foco por plano.',
         highlight: 'Legibilidad en 9:16, jerarquía y ritmo de lectura.',
         detail:
-          'Cada plano tiene una función: presentar el personaje, ubicar el tour y cerrar con la fecha. La animación acompaña esa lectura, no la tapa.',
+          'Cada plano cumple una función: presentar el personaje, ubicar el tour y cerrar con la fecha. La animación acompaña esa lectura, <strong>no la tapa</strong>.',
       },
       gestion: {
-        focus: 'Gestión del pipeline audiovisual: alcance breve, entregables por etapa y coordinación de animación, edición y audio.',
+        focus: 'Pipeline audiovisual: alcance breve, entregables por etapa y coordinación de animación, edición y audio.',
         highlight: 'Alcance, cronograma y pipeline técnico.',
         detail:
-          'Organicé el trabajo en referencias, storyboard, animación y edición. Cada etapa tuvo un entregable verificable para no rehacer la pieza completa si cambiaba el ritmo. Stack: After Effects y Premiere Pro.',
+          'Organicé el trabajo en referencias, storyboard, animación y edición, con un <strong>entregable verificable</strong> por etapa. Stack: <strong>After Effects</strong> y <strong>Premiere Pro</strong>.',
       },
     },
     behanceUrl: behance,
@@ -153,18 +158,18 @@ export const projects: Project[] = [
     areas: ['3d'],
     roles: ['Modelado 3D', 'Texturizado PBR', 'Iluminación y render'],
     summary:
-      'Proyecto final de Producción 3D: modelado, texturizado y renderizado de producto con pipeline completo.',
+      'Producción 3D completa: modelado, texturizado PBR, iluminación y render de producto en tres vistas.',
     problem:
-      'Proyecto final de Producción 3D. El desafío era construir un producto reconocible y sostener su materialidad en distintas vistas.',
+      'Proyecto final de Producción 3D: construir un producto <strong>reconocible</strong> y sostener su <strong>materialidad</strong> en distintas vistas.',
     role:
-      'Modelé en Maya, construí materiales PBR en Substance Painter y resolví la iluminación y el render final con Arnold.',
+      'Modelé en <strong>Maya</strong>, construí materiales <strong>PBR</strong> en Substance Painter y resolví luz y render con <strong>Arnold</strong>.',
     decisions: [
-      'Modelar por bloques y respetar proporciones reales antes de agregar detalles.',
-      'Construir materiales PBR pensados para responder distinto según la luz y el ángulo.',
-      'Usar iluminación de estudio para que las tres vistas compartan una misma lógica visual.',
+      'Modelar por bloques y respetar <strong>proporciones reales</strong> antes de agregar detalles.',
+      'Materiales PBR que responden distinto según la luz y el ángulo.',
+      'Iluminación de estudio para que las tres vistas compartan lógica visual.',
     ],
     learnings:
-      'Domine el pipeline completo de producción 3D: modelado, texturizado, lighting y render. Aprendí a pensar el objeto como una serie de decisiones técnicas y visuales.',
+      'Dominé el <strong>pipeline 3D</strong> completo: modelado, texturizado, lighting y render.',
     metrics: [
       { value: '03', label: 'renders de producto' },
       { value: 'PBR', label: 'materiales' },
@@ -189,16 +194,16 @@ export const projects: Project[] = [
     },
     miradas: {
       producto: {
-        focus: 'La lectura del producto se construye desde el encuadre: qué se muestra primero y qué detalle se destaca en cada vista.',
+        focus: 'La lectura se construye desde el encuadre: qué se muestra primero y qué detalle se destaca.',
         highlight: 'Jerarquía visual, reconocibilidad y consistencia.',
         detail:
-          'Elegí vistas que permiten reconocer el objeto de inmediato y, al mismo tiempo, descubrir detalles de construcción. La luz guía la mirada hacia las superficies clave.',
+          'Elegí vistas que reconocen el objeto de inmediato y, al mismo tiempo, muestran detalles de construcción. La <strong>luz guía la mirada</strong> hacia las superficies clave.',
       },
       gestion: {
-        focus: 'Pipeline 3D y control de calidad: bloqueo, modelado, texturizado PBR, iluminación y render.',
+        focus: 'Pipeline 3D con control de calidad: bloqueo, modelado, texturizado PBR, luz y render.',
         highlight: 'Maya, Substance Painter y Arnold.',
         detail:
-          'Cada etapa tiene un archivo y un criterio de salida. El texturizado se construyó para funcionar en las tres vistas sin rehacer materiales entre renders. El alcance se cerró en tres piezas finales.',
+          'Cada etapa tuvo un archivo y un criterio de salida. Los materiales funcionaron en las tres vistas <strong>sin rehacer texturas</strong>. Alcance cerrado en tres piezas.',
       },
     },
     behanceUrl: behance,
@@ -212,18 +217,18 @@ export const projects: Project[] = [
     areas: ['diseno', 'gestion'],
     roles: ['Research', 'Ideación', 'Presentación'],
     summary:
-      'Podcast institucional para conectar estudiantes de Maimónides. Proyecto de Diseño Estratégico con investigación y prototipado.',
+      'Podcast institucional para conectar estudiantes de Maimónides: investigación, ideación y prototipado.',
     problem:
-      'Proyecto de Diseño Estratégico. Los estudiantes de Maimónides carecían de un canal propio para conectarse entre sí y compartir experiencias.',
+      'Proyecto de Diseño Estratégico: los estudiantes de Maimónides no tenían un <strong>canal propio</strong> para conectarse y compartir experiencias.',
     role:
-      'En equipo aplicamos Design Thinking: investigamos usuarios, ideamos la propuesta y la presentamos como un sistema de comunicación institucional.',
+      'En equipo aplicamos <strong>Design Thinking</strong>: investigación de usuarios, ideación y presentación del sistema de comunicación.',
     decisions: [
-      'Convertir el podcast en un canal institucional, no en una pieza aislada: identidad, episodios y continuidad.',
-      'Prototipar la propuesta como una narrativa de 45 slides para hacer visible el proceso completo.',
-      'Trabajar con roles y entregas parciales para sostener el proyecto en equipo.',
+      'Convertir el podcast en <strong>canal institucional</strong>: identidad, episodios y continuidad.',
+      'Prototipar la propuesta como narrativa de <strong>45 slides</strong> para mostrar el proceso.',
+      'Roles y entregas parciales para sostener el trabajo en equipo.',
     ],
     learnings:
-      'Fue mi primer proyecto en equipo real. Aprendí a aplicar Design Thinking, a investigar antes de proponer y a defender una idea con evidencia y narrativa.',
+      'Mi primer proyecto en equipo real: aprendí a <strong>investigar antes de proponer</strong> y a defender una idea con evidencia.',
     metrics: [
       { value: '45', label: 'slides de proceso' },
       { value: '01', label: 'propuesta de canal' },
@@ -244,16 +249,16 @@ export const projects: Project[] = [
     },
     miradas: {
       producto: {
-        focus: 'La investigación de usuarios define el problema y el formato: un podcast pensado desde las necesidades de conexión de los estudiantes.',
+        focus: 'La investigación define el problema y el formato: un podcast pensado desde la necesidad de conexión.',
         highlight: 'Design Thinking, UX Research y narrativa de presentación.',
         detail:
-          'El proceso partió de entrevistas y observación. La propuesta se validó con el equipo y se comunicó con una narrativa visual clara para que la audiencia académica entendiera el valor.',
+          'Partimos de entrevistas y observación. La propuesta se validó en equipo y se comunicó con una <strong>narrativa visual clara</strong> para que la audiencia académica entendiera el valor.',
       },
       gestion: {
-        focus: 'La gestión del proyecto se ve en el alcance, los roles y los entregables: investigación, ideación, prototipo y presentación.',
+        focus: 'La gestión se ve en alcance, roles y entregables: investigación, ideación, prototipo y presentación.',
         highlight: 'Alcance, roles, entregables y presentación.',
         detail:
-          'Cada etapa dejó un entregable verificable: hallazgos, mapa de oportunidad, concepto y presentación de 45 slides. Esa estructura permitió sostener el trabajo en equipo y que la idea sobreviva al cambio de contexto.',
+          'Cada etapa dejó un <strong>entregable verificable</strong>: hallazgos, mapa de oportunidad, concepto y presentación de 45 slides. Esa estructura sostuvo el trabajo en equipo.',
       },
     },
     behanceUrl: behance,
@@ -269,16 +274,16 @@ export const projects: Project[] = [
     summary:
       'Manual de marca para un álbum musical: tipografía, paleta, logo, aplicaciones y guías de uso.',
     problem:
-      'Proyecto de Identidad Visual. Un álbum musical necesitaba una identidad coherente que pudiera aplicarse en distintos soportes.',
+      'Proyecto de Identidad Visual: un álbum necesitaba una identidad <strong>coherente</strong> aplicable en distintos soportes.',
     role:
-      'Construí el sistema visual completo: tipografía, paleta, logo, aplicaciones y criterios de uso. Después lo documenté en un manual editorial.',
+      'Construí el <strong>sistema visual</strong> completo —tipografía, paleta, logo, aplicaciones— y lo documenté en un manual editorial.',
     decisions: [
-      'Partir de una paleta y una tipografía acotadas para que la identidad se reconozca en cualquier aplicación.',
-      'Pensar el manual como una herramienta de uso, no solo como una pieza de presentación.',
-      'Mostrar aplicaciones concretas para demostrar que el sistema funciona fuera de la lámina.',
+      'Paleta y tipografía acotadas para reconocer la marca en <strong>cualquier aplicación</strong>.',
+      'Pensar el manual como <strong>herramienta de uso</strong>, no como pieza de presentación.',
+      'Mostrar aplicaciones reales para probar el sistema fuera de la lámina.',
     ],
     learnings:
-      'Practiqué diseño de sistemas y construcción de identidad de marca. Aprendí que un manual vale cuando otra persona puede usarlo sin preguntarme.',
+      'Practiqué <strong>diseño de sistemas</strong> e identidad de marca. Un manual vale cuando otra persona puede usarlo sin preguntarme.',
     metrics: [
       { value: '09', label: 'páginas de manual' },
       { value: '01', label: 'sistema visual' },
@@ -299,16 +304,16 @@ export const projects: Project[] = [
     },
     miradas: {
       producto: {
-        focus: 'El manual se diseña para ser usado: jerarquía clara, ejemplos y criterios que reducen la ambigüedad al aplicar la marca.',
+        focus: 'El manual se diseña para ser usado: jerarquía clara, ejemplos y criterios que reducen la ambigüedad.',
         highlight: 'Usabilidad del sistema y documentación.',
         detail:
-          'Cada sección responde a una pregunta concreta de quien tiene que aplicar la identidad. El diseño editorial ordena la información para que el manual funcione como herramienta.',
+          'Cada sección responde a una pregunta concreta de quien aplica la identidad. El <strong>diseño editorial</strong> ordena la información para que el manual funcione como herramienta.',
       },
       gestion: {
-        focus: 'La lógica de sistema está en las reglas y en la documentación: tokens de color, escalas tipográficas, aplicaciones y criterios de uso.',
+        focus: 'La lógica de sistema está en las reglas: tokens de color, escalas tipográficas y criterios de uso.',
         highlight: 'Reglas, escalas, documentación y consistencia.',
         detail:
-          'Aunque el entregable sea editorial, la lógica es la misma que la de un sistema de diseño: definir variables, documentar usos y probar que el sistema resista contextos distintos. El manual funciona como handoff para que otra persona aplique la marca sin depender de mí.',
+          'Misma lógica que un <strong>sistema de diseño</strong>: definir variables, documentar usos y probar que resista contextos distintos. El manual funciona como <strong>handoff</strong> para otra persona.',
       },
     },
     behanceUrl: behance,

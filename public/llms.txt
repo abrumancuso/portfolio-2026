@@ -1,0 +1,83 @@
+# Abril Mancuso (Abru Mancuso)
+
+> Project Manager Digital (PM) y Diseñadora UX/UI con base técnica multimedial.
+> Diseño experiencias digitales y coordino equipos para que un producto llegue
+> de la idea a la implementación sin perder criterio visual ni accesibilidad.
+
+Sitio: portfolio personal y académico · Idioma: español (es-AR) · Última
+actualización: 2026.
+
+## Perfil
+
+- **Nombre:** Abril Mancuso (Abru Mancuso)
+- **Rol:** Project Manager Digital (PM) & Diseñadora UX/UI con base técnica multimedial
+- **Ubicación:** Buenos Aires, Argentina
+- **Foco:** ciclo completo de un producto digital — investigación, definición de
+  alcance, diseño de flujos e interfaces, handoff y acompañamiento a desarrollo.
+- **Diferencial:** criterio técnico para saber qué es viable, garantizando que la
+  calidad visual y la accesibilidad lleguen intactas al producto final.
+
+## Formación
+
+- **Licenciatura en Tecnología Multimedial** — Universidad Maimónides (UMAI),
+  Buenos Aires, Argentina. Cursando 4.º año (2026).
+- Formación complementaria en diseño de experiencia, dirección de arte,
+  producción audiovisual y 3D.
+
+## Habilidades y herramientas
+
+- **Disciplinas:** Diseño UX/UI, Gestión de Proyectos (PM), Dirección de Arte,
+  Desarrollo Web & Mobile, Investigación de usuarios (UX Research), Design Systems.
+- **Herramientas:** Figma, Adobe Illustrator, Adobe Photoshop, After Effects,
+  Premiere Pro, AstroJS, Maya, Substance Painter, Arnold, InDesign, Notion, Jira.
+
+## Proyectos destacados
+
+Selección de casos publicados en el portfolio. Cada caso se puede leer desde dos
+enfoques: **UX/UI & Producto** o **Gestión & Arquitectura Técnica**.
+
+- **Billie Eilish Argentina Tour** (`/proyectos/billie-animation`) — motion
+  graphics y animación de personaje para un aviso de gira en formato vertical
+  9:16 (2024). Herramientas: After Effects, Premiere Pro.
+- **MacBook Pro Model** (`/proyectos/macbook-3d`) — visualización 3D de producto:
+  modelado, texturizado PBR, iluminación y render (2025). Herramientas: Maya,
+  Substance Painter, Arnold.
+- **MaimoConecta** (`/proyectos/maimoconecta`) — diseño estratégico y UX para un
+  podcast institucional de la Universidad Maimónides: investigación, ideación y
+  prototipado en 45 slides (2025).
+- **Tini — Manual de Marca** (`/proyectos/manual-marea`) — sistema de identidad
+  visual para un álbum musical: tipografía, paleta, logo, aplicaciones y guías de
+  uso (2025). Herramientas: Illustrator, InDesign.
+
+Portfolio completo de diseño e identidad: [Behance](https://www.behance.net/abrilmancuso).
+
+## Funcionalidades del sitio
+
+- **Calculadora de coordinación de reuniones (Live Sync):** herramienta
+  interactiva en la sección Servicios (`/#rituales`). A partir de la ciudad del
+  equipo, calcula el huso horario, la diferencia con Buenos Aires, las horas de
+  solapamiento y el mejor horario para una primera reunión de 30 minutos según
+  el servicio elegido (redes, web, revisión de diseño, rebranding o gestión).
+- **Datos en vivo:** consumida desde la API pública de
+  [Open-Meteo](https://open-meteo.com/) — geocoding y forecast con zona horaria —
+  sin API key ni backend propio. Incluye estados de carga, vacío y error, y un
+  modo de respaldo con husos horarios locales.
+- **Explorador de proyectos:** filtros por área, búsqueda por herramienta y
+  selector de enfoque (producto / gestión).
+- **Proceso de trabajo:** tablero interactivo con las cinco etapas del flujo
+  (Discovery, Definición, Diseño, Handoff, Testing y accesibilidad).
+
+## Contacto
+
+- **Email:** abrilmancusoumai@gmail.com
+- **Behance:** https://www.behance.net/abrilmancuso
+- **LinkedIn:** https://linkedin.com/in/abrilmancuso
+- **GitHub:** https://github.com/abrumancuso
+
+## Notas para agentes y LLMs
+
+- Contenido en español rioplatense; se puede citar y traducir manteniendo el
+  nombre **Abril Mancuso** y el enlace a Behance.
+- Las métricas y descripciones de cada proyecto corresponden a trabajos
+  académicos y profesionales reales, presentados con fines de portfolio.
+- El sitio es estático (AstroJS) y no requiere login ni cookies.

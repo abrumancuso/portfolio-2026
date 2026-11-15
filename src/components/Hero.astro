@@ -52,7 +52,7 @@ import { heroAreas, heroBody, heroEyebrow, heroFirstName, heroLastName, heroRole
       <span class="hero__tagline" aria-hidden="true">✦ Creative &amp; Product Mind</span>
 
       <p class="hero__role">{heroRole}</p>
-      <p class="hero__thesis">{heroBody}</p>
+      <p class="hero__thesis" set:html={heroBody}></p>
 
       <p class="hero__stickers">
         <span class="hero__sticker">4.º año · UMAI</span>
@@ -199,6 +199,20 @@ import { heroAreas, heroBody, heroEyebrow, heroFirstName, heroLastName, heroRole
     font-family: var(--font-ui);
     font-size: clamp(1.02rem, 1.5vw, 1.2rem);
     line-height: 1.7;
+  }
+
+  /* Palabras clave destacadas dentro del texto del hero. */
+  .hero__thesis :global(strong) {
+    color: var(--color-plum);
+    font-weight: 700;
+    box-shadow: inset 0 -0.45em 0 var(--color-mustard);
+  }
+
+  .hero__thesis :global(em) {
+    font-family: var(--font-script);
+    font-style: italic;
+    font-size: 1.1em;
+    color: var(--color-terracotta-deep);
   }
 
   .hero__stickers {

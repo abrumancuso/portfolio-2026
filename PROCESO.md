@@ -123,15 +123,15 @@ Cada página se genera con `getStaticPaths()` desde `src/data/projects.ts` y con
 
 - Título, tag, año y resumen.
 - Datos del proyecto: áreas, rol y herramientas.
-- Video o carrusel de imágenes.
+- Video o galería de imágenes con parallax.
 - Métricas.
 - El desafío.
 - Mi rol.
 - Dos lecturas: UX/UI & Producto / Gestión & Arquitectura Técnica.
 - Proceso técnico y herramientas.
 - Aprendizajes.
+- Cierre con CTA: coordinación de reunión, Behance y siguiente proyecto.
 - Navegación al proyecto anterior y siguiente.
-- Link a Behance y vuelta a la selección.
 
 ### Flujo de datos
 
@@ -449,7 +449,7 @@ La accesibilidad no es un extra: es parte del trabajo de UX/UI. Un portfolio que
 | `900px` | Menú mobile, proceso horizontal. |
 | `820px` | Sobre mí y páginas de proyecto a una columna. |
 | `700px` | Rituales en una columna, diagnóstico apilado y leyenda a ancho completo. |
-| `640px` | Carrusel de imágenes y controles apilados. |
+| `640px` | Galería de imágenes en una columna, sin parallax; controles apilados. |
 | `620px` | Tarjetas de proyecto a una columna. |
 | `560px` | Hero, footer y páginas de proyecto con padding reducido; buscador y barra de estado apilados. |
 
@@ -459,7 +459,7 @@ La accesibilidad no es un extra: es parte del trabajo de UX/UI. Un portfolio que
 - `clamp()` para tipografía y espaciado.
 - `minmax()` para grillas fluidas.
 - Sin alturas fijas innecesarias.
-- Carrusel de imágenes con controles de 44 px.
+- Galería con parallax desactivado por debajo de 820 px y con `prefers-reduced-motion`.
 
 ---
 
@@ -475,6 +475,17 @@ No hay tests automatizados.
 - [x] Los links de navegación usan rutas absolutas (`/#...`) y el menú apunta a `#rituales`.
 - [x] El componente declara los cinco estados y los controles de reintento, respaldo y offline.
 - [x] La configuración de hubs y rituales se serializa a JSON desde el frontmatter.
+
+### Verificación de la iteración final
+
+- [x] Copys de Hero, Sobre mí, Proyectos, Proceso y Servicios reducidos con palabras clave destacadas (`<strong>` / `<em>`).
+- [x] Los campos con HTML limitado se renderizan con `set:html`; `summary` y `focus` siguen en texto plano para `<meta description>` y tarjetas.
+- [x] `ProjectCard` limpia las etiquetas HTML antes de construir `data-search`.
+- [x] `public/robots.txt`, `public/llm.txt` y `public/llms.txt` existen y se copian a `dist/` en la build.
+- [x] La galería de `ProjectGallery.astro` reemplaza el carrusel en proyectos con imágenes; el proyecto con video no cambió.
+- [x] El parallax usa `requestAnimationFrame`, respeta `prefers-reduced-motion` y se desactiva por debajo de 820 px.
+- [x] Cada página de proyecto cierra con CTA a `/#rituales`, Behance y siguiente proyecto.
+- [x] `npm run build` genera 5 páginas sin errores y sin fugas de HTML escapado.
 
 ### Verificación de la API
 
@@ -502,12 +513,12 @@ Se verificó:
 - [ ] Menú mobile: abrir, cerrar y navegar.
 - [ ] Selector de Mirada: cambio, persistencia y resaltados.
 - [ ] Filtros, búsqueda y estado vacío de proyectos.
-- [ ] Carrusel de imágenes con botones y teclado.
+- [ ] Galería de imágenes con parallax en desktop y fallback en mobile.
 - [ ] Tabs del proceso con flechas, Home y End.
 - [ ] Revisión de scroll horizontal en 360, 768 y 1280 px.
 - [ ] Auditoría con lector de pantalla.
 - [ ] Tests automatizados.
-- [ ] Build de producción final.
+- [x] Build de producción final.
 - [ ] Deploy y URL pública.
 - [ ] Completar la URL de deploy en README.
 
@@ -527,6 +538,7 @@ Se verificó:
 | 8 | `refactor: unify presentation and rebuild interactive components` | Hero + Sobre mí unificados, ProjectExplorer, WorkflowSimulator y primer dashboard de API. |
 | 9 | `feat: add itunes album identity lab` | Manual de identidad instantáneo, extracción de paleta, tipografía curada y documentación final. |
 | 10 | `feat: redesign portfolio and add agile rituals calculator` | Nueva identidad visual y calculadora de rituales ágiles con Open-Meteo en lugar del manual de identidad. |
+| 11 | `feat: synthesize copy, add llm.txt/robots.txt and parallax project pages` | Textos sintetizados con palabras clave, archivos para crawlers y agentes, galería con parallax y cierre con CTA. |
 
 ---
 
@@ -548,6 +560,7 @@ Se verificó:
    - Explicar que cambia el foco, no el contenido.
    - Abrir un caso y mostrar que tiene **URL propia**.
    - Recorrer la página: media, métricas, dos lecturas, proceso y navegación.
+   - Cerrar con el bloque de CTA: coordinar reunión, Behance y siguiente proyecto.
    - Volver con el botón del navegador.
    - Mostrar filtros y estado vacío.
 
@@ -605,12 +618,15 @@ Cada búsqueda incrementa `searchSeq` y cada carga de ciudad incrementa `loadSeq
 No hay claves. Los datos de la API se insertan con `textContent` y APIs del DOM, nunca con `innerHTML`. Se valida la estructura antes de renderizar.
 
 **¿Por qué los proyectos ahora son páginas y no modales?**
-
 Porque un caso completo necesita URL propia, scroll, navegación y posibilidad de inspección. El modal servía para una vista rápida, pero no para leer un caso de punta a punta.
 
 **¿Por qué Astro?**
 
 Porque el sitio es contenido con interacciones acotadas. Astro entrega HTML estático y carga JavaScript solo donde hace falta. Una SPA agregaría complejidad sin beneficio.
+
+**¿Para qué agregaste `robots.txt` y `llm.txt`?**
+
+`robots.txt` ordena la indexación y referencia el sitemap y el resumen. `llm.txt` y `llms.txt` entregan un perfil en texto plano —formación, herramientas, proyectos y contacto— para que un agente de IA entienda el portfolio sin parsear el HTML. No cambian la experiencia visual: son metadatos para máquinas.
 
 **¿Qué hace accesible al proyecto?**
 
@@ -678,14 +694,14 @@ Subtítulos y audiodescripción del video, auditoría con lector de pantalla, te
 - [x] Commits progresivos.
 - [x] URL de repositorio.
 - [ ] URL de deploy.
-- [ ] Build de producción final.
+- [x] Build de producción final.
 - [ ] Auditoría formal con lector de pantalla.
 
 ---
 
 ## 13. Próximos pasos
 
-1. Completar `README.md` con la URL de deploy.
+1. Completar `README.md` con la URL de deploy y reemplazar el placeholder de sitemap en `public/robots.txt`.
 2. Ejecutar la prueba manual en navegador de los estados de la calculadora.
 3. Publicar en Vercel, Netlify o GitHub Pages.
 4. Agregar subtítulos y audiodescripción al video.
@@ -703,13 +719,16 @@ Subtítulos y audiodescripción del video, auditoría con lector de pantalla, te
 - `src/components/AgileRitualCalculator.astro`: calculadora de rituales, husos, solapamiento, diagnóstico y API.
 - `src/components/ProjectExplorer.astro`: explorador y selector de Mirada.
 - `src/components/ProjectCard.astro`: tarjetas de proyecto con enlace a la página individual.
-- `src/components/ProjectMedia.astro`: video y carrusel de imágenes.
-- `src/pages/proyectos/[id].astro`: página individual de cada proyecto.
+- `src/components/ProjectGallery.astro`: galería con parallax, grilla asimétrica y fallback responsive.
+- `src/components/ProjectMedia.astro`: video y delegación a la galería de imágenes.
+- `src/pages/proyectos/[id].astro`: página individual de cada proyecto, con dos lecturas y CTA de cierre.
 - `src/components/WorkflowSimulator.astro`: proceso interactivo.
 - `src/components/Hero.astro`: presentación profesional.
 - `src/components/About.astro`: Sobre mí.
 - `src/layouts/BaseLayout.astro`: documento, navegación y footer.
 - `src/pages/index.astro`: composición de la página.
 - `src/styles/global.css`: tokens, reset y accesibilidad.
+- `public/robots.txt`: reglas de indexación y referencia al sitemap y a `llm.txt`.
+- `public/llm.txt` / `public/llms.txt`: resumen del portfolio en texto plano para agentes de IA.
 - `README.md`: documentación principal.
 - `PROCESO.md`: este documento.

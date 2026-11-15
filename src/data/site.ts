@@ -35,7 +35,7 @@ export const heroLastName = 'Mancuso';
 export const heroRole = 'Project Manager & Diseñadora UX/UI';
 
 export const heroBody =
-  'Diseño experiencias, gestiono procesos. Integro la estrategia de producto, la interfaz visual y la ejecución técnica. Me dedico a investigar fricciones, prototipar soluciones claras y coordinar el avance del proyecto para que el equipo trabaje sin trabas. y sentido. Me muevo entre el Diseño UX/UI, la dirección visual y el Project Management: investigo qué necesita realmente el usuario, diseño interfaces que enamoran y organizo al equipo para que el producto se haga realidad sin perder su esencia en el camino.';
+  'Diseño experiencias y <strong>gestiono procesos</strong>. Integro <strong>estrategia de producto</strong>, interfaz visual y ejecución técnica: investigo fricciones, prototipo soluciones claras y coordino al equipo para que el proyecto avance sin trabas. <em>UX/UI, dirección de arte y Project Management</em> en un mismo ciclo.';
 
 export const heroAreas = [
   { number: '01', label: 'Gestión de Proyectos Digitales' },
@@ -45,9 +45,9 @@ export const heroAreas = [
 
 export const about = {
   paragraphs: [
-    'Soy <strong>Abril Mancuso</strong>, Project Manager y Diseñadora UX/UI. Estoy cursando el cuarto año de la <strong>Licenciatura en Tecnología Multimedial en la Universidad Maimónides (UMAI)</strong>, donde construí un perfil que integra gestión de proyectos, diseño de experiencia y desarrollo.',
-    'Mi diferencial es liderar el ciclo completo de un producto digital: investigar el problema, definir el alcance, organizar los tiempos, diseñar flujos e interfaces y acompañar la entrega al equipo de desarrollo. Esta combinación me da el criterio técnico para saber qué es viable, asegurando que la calidad visual y la accesibilidad lleguen intactas al producto final',
-    'Trabajo con equipos multidisciplinarios, documento decisiones y traduzco objetivos de negocio en experiencias claras. Busco aportar una mirada estratégica y operativa: que el proyecto avance, que el equipo tenga claridad y que la persona usuaria encuentre una interfaz que le resuelva el problema.',
+    'Soy <strong>Abril Mancuso</strong>, Project Manager y Diseñadora UX/UI. Cursando 4.º año de la <strong>Lic. en Tecnología Multimedial (UMAI)</strong>, construí un perfil que cruza <strong>gestión, experiencia y desarrollo</strong>.',
+    'Lidero el <strong>ciclo completo</strong> de un producto digital: investigo el problema, defino el alcance, diseño flujos e interfaces y acompaño la entrega. Ese criterio técnico asegura que la <strong>calidad visual y la accesibilidad</strong> lleguen intactas.',
+    'Trabajo con equipos multidisciplinarios, documento cada decisión y traduzco objetivos de negocio en <em>experiencias claras</em>.',
   ],
   tags: [
     'FIGMA',

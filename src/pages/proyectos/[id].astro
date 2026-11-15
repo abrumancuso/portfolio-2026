@@ -74,13 +74,13 @@ const managementReading = project.miradas.gestion;
       <section class="project-page__section" aria-labelledby="desafio-title">
         <p class="project-page__eyebrow">El desafío</p>
         <h2 id="desafio-title">Qué había que resolver</h2>
-        <p>{project.problem}</p>
+        <p set:html={project.problem}></p>
       </section>
 
       <section class="project-page__section" aria-labelledby="rol-title">
         <p class="project-page__eyebrow">Mi rol</p>
         <h2 id="rol-title">Qué hice y con quién</h2>
-        <p>{project.role}</p>
+        <p set:html={project.role}></p>
         <ul class="project-page__roles" aria-label="Responsabilidades del proyecto">
           {project.roles.map((role) => <li>{role}</li>)}
         </ul>
@@ -91,28 +91,27 @@ const managementReading = project.miradas.gestion;
           <p class="project-page__eyebrow">Dos lecturas</p>
           <h2 id="lecturas-title">El mismo proyecto desde dos enfoques</h2>
           <p>
-            La misma evidencia se puede leer desde la experiencia de producto o desde
-            la gestión y la arquitectura técnica. Acá están las dos, sin esconder
-            ninguna.
+            La misma evidencia, leída desde la <strong>experiencia de producto</strong> o
+            desde la <strong>gestión</strong>. Acá están las dos.
           </p>
         </div>
 
         <div class="project-page__readings-grid">
           <article class="project-page__reading project-page__reading--product">
             <span class="project-page__reading-label">UX/UI & Producto</span>
-            <p class="project-page__focus">{productReading.focus}</p>
-            <p>{productReading.detail}</p>
+            <p class="project-page__focus" set:html={productReading.focus}></p>
+            <p set:html={productReading.detail}></p>
 
             <h3>Decisiones de diseño</h3>
             <ul>
-              {project.decisions.map((decision) => <li>{decision}</li>)}
+              {project.decisions.map((decision) => <li set:html={decision}></li>)}
             </ul>
           </article>
 
           <article class="project-page__reading project-page__reading--management">
             <span class="project-page__reading-label">Gestión & Arquitectura Técnica</span>
-            <p class="project-page__focus">{managementReading.focus}</p>
-            <p>{managementReading.detail}</p>
+            <p class="project-page__focus" set:html={managementReading.focus}></p>
+            <p set:html={managementReading.detail}></p>
 
             <h3>Proceso técnico</h3>
             <ol class="project-page__process">
@@ -135,7 +134,32 @@ const managementReading = project.miradas.gestion;
       <section class="project-page__section" aria-labelledby="aprendizajes-title">
         <p class="project-page__eyebrow">Aprendizajes</p>
         <h2 id="aprendizajes-title">Qué me dejó el proyecto</h2>
-        <p>{project.learnings}</p>
+        <p set:html={project.learnings}></p>
+      </section>
+
+      <section class="project-page__cta" aria-labelledby="cierre-title">
+        <p class="project-page__eyebrow">Siguiente paso</p>
+        <h2 id="cierre-title">¿Te gustó este enfoque? Llevémoslo a tu próximo proyecto.</h2>
+        <p class="project-page__cta-copy">
+          Coordinamos <strong>30 minutos</strong> y salís con una propuesta concreta:
+          alcance, próximos pasos y horario que funcione para los dos.
+        </p>
+
+        <div class="project-page__cta-actions">
+          <a class="btn btn--primary" href="/#rituales">
+            Coordinar una reunión (Live Sync)
+            <span aria-hidden="true">→</span>
+          </a>
+          <a class="btn btn--behance" href={project.behanceUrl} target="_blank" rel="noopener noreferrer">
+            Ver más en mi Behance
+            <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+
+        <a class="project-page__next" href={`/proyectos/${next.id}`}>
+          <span class="project-page__next-label">Siguiente proyecto</span>
+          <strong>{next.title} <span aria-hidden="true">→</span></strong>
+        </a>
       </section>
 
       <nav class="project-page__pagination" aria-label="Otros proyectos">
@@ -148,16 +172,6 @@ const managementReading = project.miradas.gestion;
           <strong>{next.title}</strong>
         </a>
       </nav>
-
-      <footer class="project-page__footer">
-        <a class="btn btn--behance" href={project.behanceUrl} target="_blank" rel="noopener noreferrer">
-          Ver en Behance
-          <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M7 17 17 7M8 7h9v9" stroke-linecap="round" stroke-linejoin="round" />
-          </svg>
-        </a>
-        <a class="btn btn--ghost" href="/#proyectos">Volver a la selección</a>
-      </footer>
     </div>
   </article>
 </BaseLayout>
@@ -320,6 +334,21 @@ const managementReading = project.miradas.gestion;
     color: var(--color-text-muted);
     font-family: var(--font-ui);
     line-height: 1.75;
+  }
+
+  /* Palabras clave destacadas del caso de estudio. */
+  .project-page :global(p strong),
+  .project-page__reading ul :global(strong) {
+    color: var(--color-plum);
+    font-weight: 700;
+    box-shadow: inset 0 -0.45em 0 var(--color-mustard);
+  }
+
+  .project-page :global(p em) {
+    font-family: var(--font-script);
+    font-style: italic;
+    font-size: 1.08em;
+    color: var(--color-terracotta-deep);
   }
 
   .project-page__roles,
@@ -511,12 +540,77 @@ const managementReading = project.miradas.gestion;
     text-align: right;
   }
 
-  .project-page__footer {
+  .project-page__cta {
+    margin-top: clamp(36px, 5vw, 56px);
+    padding: clamp(26px, 4vw, 44px);
+    border: 1.5px solid var(--color-plum);
+    border-top: 4px solid var(--color-mustard);
+    border-radius: 3px;
+    background: var(--color-surface);
+  }
+
+  .project-page__cta h2 {
+    max-width: 24ch;
+    margin-bottom: 12px;
+    font-family: var(--font-display);
+    font-size: clamp(1.7rem, 3.4vw, 2.5rem);
+    font-weight: 400;
+    line-height: 0.95;
+    text-transform: uppercase;
+  }
+
+  .project-page__cta-copy {
+    max-width: 52ch;
+    margin-bottom: 22px;
+    color: var(--color-text-muted);
+    font-family: var(--font-ui);
+    line-height: 1.7;
+  }
+
+  .project-page__cta-actions {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
-    justify-content: center;
-    padding-top: 12px;
+  }
+
+  .project-page__next {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: clamp(24px, 3.5vw, 34px);
+    padding-top: 18px;
+    border-top: 1px solid rgba(108, 3, 69, 0.18);
+    text-decoration: none;
+    transition: border-color var(--transition);
+  }
+
+  .project-page__next:hover {
+    border-color: var(--color-terracotta);
+  }
+
+  .project-page__next-label {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .project-page__next strong {
+    font-family: var(--font-ui);
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--color-plum);
+    transition: color var(--transition);
+  }
+
+  .project-page__next:hover strong {
+    color: var(--color-terracotta-deep);
   }
 
   @media (max-width: 820px) {
@@ -554,12 +648,17 @@ const managementReading = project.miradas.gestion;
       transform: none;
     }
 
-    .project-page__footer {
+    .project-page__cta-actions {
       flex-direction: column;
     }
 
-    .project-page__footer .btn {
+    .project-page__cta-actions .btn {
       width: 100%;
+    }
+
+    .project-page__next {
+      flex-direction: column;
+      align-items: flex-start;
     }
   }
 </style>

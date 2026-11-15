@@ -23,7 +23,10 @@ const searchText = [
   ...project.tools,
   ...project.decisions,
   ...Object.values(project.miradas).map((mirada) => `${mirada.focus} ${mirada.highlight} ${mirada.detail}`),
-].join(' ');
+]
+  // Los campos de caso admiten <strong>/<em>: se buscan como texto plano.
+  .join(' ')
+  .replace(/<[^>]+>/g, ' ');
 ---
 
 <article
