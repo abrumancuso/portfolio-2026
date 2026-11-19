@@ -2,7 +2,7 @@
 
 Soy Abril Mancuso, estoy cursando 4.º año de la Licenciatura en Tecnología Multimedial (UMAI) y me presento como Project Manager & Diseñadora UX/UI. Este es mi proyecto individual para Programación Multimedial IV (2026).
 
-Armé el sitio con AstroJS. Tengo la presentación, cuatro casos reales, el proceso de trabajo y una herramienta que cruza mi huso con el de otra ciudad para armar una propuesta de servicios. Cada proyecto tiene su propia URL, así que puedo mandarlo sin obligar a nadie a pasar por un modal.
+Armé el sitio con AstroJS. Tengo la presentación, cuatro casos reales, el proceso de trabajo y una herramienta que cruza mi huso con el de otra ciudad para armar una propuesta de servicios. Cada proyecto tiene su propia URL, así que puedo mandarlo sin obligar a nadie a pasar por un modal. Está pensado para recruiters y equipos de producto, diseño y tecnología que buscan un perfil híbrido de PM y UX/UI. También sirve para que clientes o estudios conozcan cómo trabajo antes de coordinar una reunión.
 
 ## Datos rápidos
 
@@ -17,6 +17,7 @@ Armé el sitio con AstroJS. Tengo la presentación, cuatro casos reales, el proc
 | Stack | AstroJS 6.4.8, HTML, CSS, TypeScript/JavaScript |
 | API externa | Open-Meteo (geocoding + forecast de zona horaria) |
 | Componentes propios | `ProjectExplorer`, `WorkflowSimulator`, `AgileRitualCalculator` |
+| Evidencia de proceso | [PROCESO.md](./PROCESO.md) |
 
 El repositorio ya está publicado. El deploy todavía no: cuando lo suba completo la URL de arriba y el `Sitemap:` de `public/robots.txt`.
 
@@ -62,7 +63,7 @@ src/
 public/             media/, perfil.jpg, favicon.svg, robots.txt, llm.txt, llms.txt
 ```
 
-También dejé `robots.txt`, `llm.txt` y `llms.txt` (idénticos, con los dos nombres por convención) para que buses y asistentes encuentren el perfil, los proyectos y los contactos sin interpretar el HTML.
+También dejé `robots.txt`, `llm.txt` y `llms.txt` (idénticos, con los dos nombres por convención) para que buscadores y asistentes encuentren el perfil, los proyectos y los contactos sin interpretar el HTML.
 
 ## Los tres componentes propios
 
@@ -134,6 +135,17 @@ Tres errores reales que me tiró y tuve que arreglar:
 
 El detalle de las decisiones descartadas y una guía para la defensa en vivo están en [`PROCESO.md`](./PROCESO.md).
 
+## Limitaciones y posibles mejoras
+
+Hoy el video de Billie no tiene subtítulos ni audiodescripción, y eso está avisado en la página del caso. La herramienta de Servicios toma la jornada de 9 a 18 hs como referencia estándar, así que la franja sugerida puede necesitar un ajuste manual. Dependemos de Open-Meteo para los datos en vivo y no hay caché en servidor: cada visita consulta la API. La accesibilidad la revisé a mano, sin una auditoría completa con lector de pantalla.
+
+Después quiero seguir por estos pasos:
+
+- Agregar subtítulos al video de Billie y, si puedo, una audiodescripción corta.
+- Conectar el botón final de Servicios a un calendario real (Cal.com o Calendly) en vez de abrir el cliente de mail.
+- Sumar una versión en inglés del portfolio.
+- Cargar próximos casos de UX Research.
+
 ## Cómo correrlo
 
 Necesitás Node.js `>= 22.12.0`, que es lo que pide `package.json`. Astro 6.4.8 es la versión que dejé funcionando con ese entorno.
@@ -149,6 +161,6 @@ El servidor de desarrollo abre en `http://localhost:4321`. La build sale en `dis
 
 El sitio es estático, así que sirve para Vercel, Netlify o GitHub Pages. En GitHub Pages, si el repo queda como project page, hay que ajustar el `base` en `astro.config.mjs` y las rutas absolutas de los assets. Todavía no publiqué el deploy desde acá.
 
-## Contacto
+## Contacto, créditos y licencias
 
-Me podés escribir a [abrilmancusoumai@gmail.com](mailto:abrilmancusoumai@gmail.com). También estoy en [Behance](https://www.behance.net/abrilmancuso), [LinkedIn](https://linkedin.com/in/abrilmancuso) y [GitHub](https://github.com/abrumancuso). Los proyectos, las imágenes y los textos son míos. Las tipografías vienen de Google Fonts y los datos en vivo de [Open-Meteo](https://open-meteo.com/).
+Me podés escribir a [abrilmancusoumai@gmail.com](mailto:abrilmancusoumai@gmail.com). También estoy en [Behance](https://www.behance.net/abrilmancuso), [LinkedIn](https://linkedin.com/in/abrilmancuso) y [GitHub](https://github.com/abrumancuso). Los proyectos, las imágenes y los textos son míos. Las tipografías vienen de Google Fonts y los datos en vivo de [Open-Meteo](https://open-meteo.com/). Las tipografías de Google Fonts están bajo la SIL Open Font License 1.1. Los datos de Open-Meteo se usan con fines públicos y no comerciales, bajo licencia CC BY 4.0.
