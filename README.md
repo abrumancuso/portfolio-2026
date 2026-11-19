@@ -1,165 +1,135 @@
-# Portfolio multimedial de Abril Mancuso
+# Portfolio Web Interactivo — Abril Mancuso
 
-Soy Abril Mancuso, estoy cursando 4.º año de la Licenciatura en Tecnología Multimedial (UMAI) y me presento como Project Manager & Diseñadora UX/UI. Este es mi proyecto individual para Programación Multimedial IV (2026).
+Proyecto individual desarrollado con **AstroJS** para el examen final de **Programación Multimedial IV** (Universidad Maimónides).
 
-Armé el sitio con AstroJS. Tengo la presentación, cuatro casos reales, el proceso de trabajo y una herramienta que cruza mi huso con el de otra ciudad para armar una propuesta de servicios. Cada proyecto tiene su propia URL, así que puedo mandarlo sin obligar a nadie a pasar por un modal. Está pensado para recruiters y equipos de producto, diseño y tecnología que buscan un perfil híbrido de PM y UX/UI. También sirve para que clientes o estudios conozcan cómo trabajo antes de coordinar una reunión.
+- **Portfolio en producción:** [mancuso-abril-portfolio.vercel.app](https://mancuso-abril-portfolio.vercel.app/)
+- **Repositorio:** [github.com/abrumancuso/portfolio-2026](https://github.com/abrumancuso/portfolio-2026)
+- **Evidencia de proceso:** [`PROCESO.md`](./PROCESO.md)
+- **Stack técnico:** AstroJS 6.4.8 (generación estática), HTML semántico, CSS nativo, TypeScript y JavaScript
+- **API externa:** Open-Meteo (geocoding y zonas horarias)
 
-## Datos rápidos
+---
 
-| Campo | Valor |
-| --- | --- |
-| Autora | Abril Mancuso |
-| Materia | Programación Multimedial IV |
-| Año | 2026 |
-| Tipo | Proyecto individual |
-| Repositorio | [github.com/abrumancuso/portfolio-2026](https://github.com/abrumancuso/portfolio-2026) |
-| Deploy | `<COMPLETAR_URL_DEL_DEPLOY>` |
-| Stack | AstroJS 6.4.8, HTML, CSS, TypeScript/JavaScript |
-| API externa | Open-Meteo (geocoding + forecast de zona horaria) |
-| Componentes propios | `ProjectExplorer`, `WorkflowSimulator`, `AgileRitualCalculator` |
-| Evidencia de proceso | [PROCESO.md](./PROCESO.md) |
+## 1. Propuesta y público objetivo
 
-El repositorio ya está publicado. El deploy todavía no: cuando lo suba completo la URL de arriba y el `Sitemap:` de `public/robots.txt`.
+Este proyecto presenta mi perfil profesional con foco en **Gestión de Proyectos Digitales** y **Diseño UX/UI**, respaldado por mi formación técnica multimedial. Bajo una estética editorial, el sitio integra mi presentación, una selección de cuatro proyectos con páginas propias, un simulador interactivo de mi proceso de trabajo y una herramienta conectada a una API externa para calcular cruces horarios y proponer reuniones según la ciudad del equipo.
 
-## Qué hay en el sitio
+Está dirigido a **recruiters y equipos de producto, diseño y tecnología** que buscan un perfil híbrido entre diseño y gestión, así como a **potenciales clientes o estudios** interesados en conocer mi metodología de trabajo antes de coordinar una reunión inicial.
 
-La home tiene seis anclas: `#inicio`, `#sobre-mi`, `#proyectos`, `#proceso`, `#rituales` y `#contacto`. En la navegación, el ancla `#rituales` se llama Servicios. La navegación queda fija y marca la sección activa.
+---
 
-La presentación vive en el Hero y en una sola sección "Sobre mí". No separé perfil, enfoque y trayectoria en tres bloques porque terminaba repitiendo lo mismo. El proceso de trabajo tiene su propio componente interactivo.
+## 2. Estructura y contenidos
 
-En Proyectos dejo claro que muestro una selección de algunos trabajos, no todos. El portfolio completo de diseño e identidad está en [Behance](https://www.behance.net/abrilmancuso).
+La página principal se divide en seis secciones conectadas a una navegación fija con indicador de sección activa: **Inicio**, **Sobre mí**, **Proyectos**, **Proceso**, **Servicios** y **Contacto**. La presentación se unificó entre el Hero y una única sección **Sobre mí** para evitar repeticiones, mientras que la metodología de trabajo se resolvió en un componente interactivo aparte.
 
-| Proyecto | Año | Formato | Ruta |
-| --- | --- | --- | --- |
-| Billie Eilish Argentina Tour | 2024 | Video · Motion | `/proyectos/billie-animation` |
-| MacBook Pro Model | 2025 | 3 renders · 3D | `/proyectos/macbook-3d` |
-| MaimoConecta | 2025 | 45 imágenes · Caso UX | `/proyectos/maimoconecta` |
-| Tini — Manual de Marca | 2025 | 9 páginas · Identidad | `/proyectos/manual-marea` |
+En **Proyectos** se aclara que se muestra una selección curada y no la totalidad de mi producción (el portfolio completo de diseño e identidad está en [Behance](https://www.behance.net/abrilmancuso)). Los casos incluidos son:
 
-Las rutas salen de `getStaticPaths()` leyendo `src/data/projects.ts`. Cada página trae el caso completo, el video o la galería con parallax, las dos lecturas del proyecto (UX/UI & Producto y Gestión & Arquitectura Técnica), métricas, aprendizajes, un cierre con contacto y los links al proyecto anterior y siguiente.
+- **Billie Eilish Argentina Tour (2024):** Video y Motion Graphics — `/proyectos/billie-animation`
+- **MacBook Pro Model (2025):** Visualización y renders 3D — `/proyectos/macbook-3d`
+- **MaimoConecta (2025):** Caso UX y diseño estratégico — `/proyectos/maimoconecta`
+- **Tini — Manual de Marca (2025):** Sistema de identidad visual — `/proyectos/manual-marea`
 
-## Tecnología y estructura
+Cada caso cuenta con su propia ruta estática generada en tiempo de compilación mediante `getStaticPaths()` desde `src/data/projects.ts`. Esta decisión reemplaza el uso de modales para permitir compartir enlaces directos a cada proyecto. Las vistas internas incluyen galería con efecto parallax (o reproductor de video), dos lecturas del proyecto (UX/UI y Gestión), aprendizajes clave, bloque de cierre orientado al contacto y navegación entre proyectos.
 
-Elegí AstroJS 6.4.8 porque el contenido pesa más que la aplicación. El sitio se genera en HTML estático y el JavaScript aparece recién donde hace falta interactividad. No necesité React, Next.js ni una SPA: me habrían sumado hidratación y estado global sin mejorar lo que el portfolio necesita mostrar.
+---
 
-| Parte | Qué usé | Para qué |
-| --- | --- | --- |
-| Sitio | AstroJS 6.4.8 con `output: 'static'` | HTML, CSS y JS listos para cualquier hosting de archivos. |
-| Datos y lógica | TypeScript y JavaScript | Tipos para proyectos, etapas y resultados de la API, más los scripts de cliente. |
-| Estilos | CSS con custom properties | Paleta, tipografía, grid, flexbox, `clamp()` y `prefers-reduced-motion` sin dependencias. |
-| Navegador | `fetch`, `Intl.DateTimeFormat`, `localStorage`, `<video>` | Consultar la API, calcular husos, recordar la mirada elegida y reproducir el caso de motion. |
-| Historial | Git y GitHub | Commits por etapas y perfil profesional. GitHub no alimenta el sitio. |
+## 3. Arquitectura y decisiones técnicas
 
-Los archivos que más se usan son estos:
+Se eligió **AstroJS** en modo estático (`output: 'static'`) por tratarse de un sitio centrado en el contenido con interacciones puntuales. Esto permite servir HTML liviano y ejecutar JavaScript únicamente en los componentes interactivos, evitando la sobrecarga de frameworks como React o Next.js.
 
-```text
-src/
-├── components/     Hero, About, Nav, Footer, ProjectExplorer, WorkflowSimulator,
-│                   AgileRitualCalculator, ProjectCard, ProjectMedia, ProjectGallery
-├── data/           site.ts, projects.ts, miradas.ts, workflow.ts
-├── layouts/        BaseLayout.astro
-├── pages/          index.astro y proyectos/[id].astro
-└── styles/         global.css
-public/             media/, perfil.jpg, favicon.svg, robots.txt, llm.txt, llms.txt
-```
+- **Datos y lógica:** TypeScript y JavaScript para tipar proyectos, etapas de proceso y respuestas de la API, junto con la interactividad en cliente.
+- **Estilos:** CSS nativo sin librerías externas, organizado mediante *custom properties* para tokens de color y tipografía, layout con Grid y Flexbox, escalado fluido con `clamp()` y soporte para `prefers-reduced-motion`.
+- **APIs del navegador:** `fetch` para el consumo externo, `Intl.DateTimeFormat` para el cálculo local de husos horarios, `localStorage` para persistencia de preferencias y etiqueta HTML `<video>` para la pieza audiovisual.
+- **Indexación:** archivos `robots.txt`, `llm.txt` y `llms.txt` en `public/` para facilitar el rastreo de buscadores y la lectura estructurada por agentes de IA.
 
-También dejé `robots.txt`, `llm.txt` y `llms.txt` (idénticos, con los dos nombres por convención) para que buscadores y asistentes encuentren el perfil, los proyectos y los contactos sin interpretar el HTML.
+La arquitectura de carpetas separa responsabilidades en `src/components/` (componentes de interfaz e interactivos), `src/data/` (datos tipados de sitio, proyectos, miradas y proceso), `src/layouts/` (plantilla base), `src/pages/` (home y rutas dinámicas de proyectos), `src/styles/` (estilos globales) y `public/` (recursos multimedia y archivos de indexación).
 
-## Los tres componentes propios
+---
 
-### ProjectExplorer
+## 4. Componentes propios relevantes
 
-Acá se exploran los cuatro casos. Arriba hay un selector con dos miradas: "UX/UI & Producto" y "Gestión & Arquitectura Técnica". Según cuál elija, cambian los textos destacados y los metadatos que se resaltan. Guardo la elección en `localStorage` con la clave `portfolio-mirada`, para que no se pierda al recargar.
+### `ProjectExplorer`
+Gestiona la exploración de los proyectos e implementa la interacción principal del sitio mediante un selector de enfoque con dos modos: **UX/UI & Producto** y **Gestión & Arquitectura Técnica**. La elección modifica los textos y metadatos destacados y se guarda en `localStorage` (`portfolio-mirada`). Incluye filtros por área, buscador por palabra clave, cambio entre vista de ficha técnica y galería visual, contador dinámico (`aria-live`) y estado vacío con limpieza de filtros.
 
-Después están los filtros por área, la búsqueda por título, herramienta o rol, y dos vistas: galería visual y ficha técnica. El contador de resultados se anuncia con `aria-live` y hay un estado vacío con botón para limpiar filtros. Cada tarjeta abre la página individual del proyecto.
+### `WorkflowSimulator`
+Tablero interactivo de cinco etapas de trabajo (*Discovery & UX Research*, *Definición & Priorización*, *Wireframing & UI Design*, *Handoff & Desarrollo* y *Testing & Accesibilidad*). Al seleccionar cada etapa se actualizan los entregables, herramientas y preguntas clave. Sigue el patrón de pestañas accesibles con navegación por teclado (flechas, `Home` y `End`).
 
-### WorkflowSimulator
+### `AgileRitualCalculator`
+Evolucionó de una calculadora de rituales ágiles a un coordinador de servicios y reuniones. En el Paso 1 el usuario selecciona o busca la ciudad de su equipo y en el Paso 2 elige el servicio (*Manejo de redes*, *Diseño de web*, *Revisión de diseño*, *Rebranding* o *Gestión de proyectos*). A partir de esos datos, calcula la diferencia horaria con Buenos Aires, arma una propuesta con puntos de abordaje y entregable, sugiere una franja de 30 minutos y habilita un botón que prearma un correo electrónico con el servicio y el horario elegidos.
 
-Es un tablero de cinco etapas: Discovery & UX Research, Definición & Priorización, Wireframing & UI Design, Handoff & Desarrollo y Testing & Accesibilidad. Al pasar de etapa se ven los entregables, las herramientas y las preguntas que se resuelven en cada momento.
+---
 
-Los tabs funcionan con teclado (flechas, Home y End) y el panel activo se anuncia. Puse las etapas en este orden porque es el recorrido que sigo cuando explico cómo trabajo en el final.
+## 5. Integración de API externa (Open-Meteo)
 
-### AgileRitualCalculator
+Ubicada en la sección **Servicios**, consume directamente desde el cliente —sin backend, sin API key y sin almacenar búsquedas— dos endpoints públicos de [Open-Meteo](https://open-meteo.com/):
 
-El nombre quedó de cuando esto era una calculadora de rituales ágiles. Hoy es un generador de propuestas de servicio. En el Paso 1 indicás la ciudad del equipo y en el Paso 2 elegís qué necesitás: Manejo de redes, Diseño de web, Revisión de diseño, Rebranding o Gestión de proyectos.
+- **Geocoding** (`https://geocoding-api.open-meteo.com/v1/search`): alimenta el buscador de ciudades en español y devuelve coordenadas y zona horaria.
+- **Forecast** (`https://api.open-meteo.com/v1/forecast`): se utiliza exclusivamente para obtener `utc_offset_seconds` y `timezone_abbreviation`.
 
-Con eso la herramienta muestra la hora de las dos ciudades, la diferencia de husos, el texto de la propuesta, los tres puntos del abordaje, el entregable y una franja de 30 minutos sugerida. El botón final arma un mail con el servicio y el horario ya cargados. Todo termina en contacto directo, que es lo que busco con esta sección.
+El algoritmo cruza jornadas laborales de referencia (9:00 a 18:00 en ambas ciudades) y evalúa las horas compartidas junto con el servicio elegido para recomendar una reunión sincrónica de 30 minutos, una instancia breve híbrida o modalidad asincrónica.
 
-## La API: dónde está y qué hace
+La interfaz contempla estados de **carga**, **contenido disponible**, **selección**, **vacío** (ciudad inexistente), **error de conexión** (con simulación offline y reintento) y **respaldo local** calculado en el navegador con `Intl.DateTimeFormat` si la API no responde.
 
-Está en la sección Servicios (`#rituales`), después de Proceso y antes del footer. Arriba del panel se ven el badge de estado y el texto `Open-Meteo · geocoding + zonas horarias · sin API key`. No hay backend ni credenciales: las consultas las hace el navegador.
+---
 
-```text
-GET https://geocoding-api.open-meteo.com/v1/search?name={ciudad}&count=5&language=es&format=json
-GET https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}&timezone={zona IANA}
-```
+## 6. Diseño visual, responsive y accesibilidad
 
-El geocoding alimenta el buscador y devuelve hasta cinco ciudades con nombre en español. El forecast se usa solo por `utc_offset_seconds` y `timezone_abbreviation`. Saqué el clima de una versión anterior porque me daba datos lindos pero no cambiaba la recomendación, y prefiero no explicar algo que después no incide en la decisión.
+El sistema visual se apoya en una paleta de cuatro colores —crema (`#FFF8DC`), ciruela (`#6C0345`), terracota (`#DC6B19`) y mostaza (`#F7C566`), con tinta (`#3B0A24`)— y combina **Anton** (titulares), **Instrument Serif** en itálica (acentos), **Plus Jakarta Sans** (cuerpo e interfaz) y **Space Mono** (etiquetas).
 
-Para calcular tomo la ventana de 9:00 a 18:00 en cada ciudad y la corro según la diferencia de husos. El índice de 0 a 100 suma hasta 55 puntos por horas compartidas, hasta 25 por el servicio elegido y hasta 20 por estar en horario laboral en las dos ciudades. Con 60 o más muestro reunión inicial, entre 35 y 59 la dejo para una franja corta con el resto por escrito, y abajo de 35 o sin solapamiento paso a async. Cuando hay bloque, elijo los 30 minutos a partir de las 10:00 de Buenos Aires y lo traduzco a la hora del equipo.
+En **mobile**, el Hero y las grillas pasan a una columna, la navegación se convierte en menú desplegable y el tablero de proceso pasa a desplazamiento horizontal. El efecto parallax de las galerías internas se desactiva por debajo de `820px` y ante `prefers-reduced-motion`.
 
-| Estado | Badge | Cuándo aparece |
-| --- | --- | --- |
-| Carga | `Cargando datos…` | Al entrar, al cambiar de ciudad o al reintentar. |
-| Éxito | `Contenido disponible` | La API respondió y ya hay propuesta. |
-| Selección | `Servicio seleccionado` | Cambiaste el servicio y se recalculó el panel. |
-| Vacío | `Sin resultados` | El buscador no encontró esa ciudad. |
-| Error | `Error de conexión` | Falló la red, el HTTP no fue OK o activaste el offline simulado. |
-| Respaldo | `Contenido disponible` | Usaste husos calculados en el navegador, sin datos en vivo. |
+En **accesibilidad** se implementaron *skip link*, HTML semántico, foco visible, `aria-current` en navegación, control por teclado en pestañas y combobox, regiones `aria-live`, `aria-busy` en cargas y textos alternativos en imágenes.
 
-Para demostrar los estados dejé seis hubs sugeridos (San Francisco, Madrid, Ciudad de México, Londres, Berlín y São Paulo), búsqueda libre con debounce de 380 ms, el botón "Simular modo offline", "Reintentar conexión" y "Usar husos de respaldo". El reloj se refresca cada 30 segundos mientras el panel está en éxito o selección.
+---
 
-Antes de quedarme con Open-Meteo probé otras APIs (color, proto-personas, Hacker News e iTunes). Funcionaban, pero me obligaban a explicar contenido ajeno al portfolio. Esta es pública, no pide token, junta geocoding y husos en un mismo lugar y puedo defenderla en vivo sin depender de credenciales.
+## 7. Uso de inteligencia artificial y correcciones realizadas
 
-Sé que es un servicio externo: puede fallar o tardar, y no hay caché compartida porque no hay backend. La ventana de 9:00 a 18:00 es una referencia, no la jornada real de cada equipo. El respaldo usa `Intl.DateTimeFormat` y, si no conoce la zona, estima por longitud. No guardo búsquedas ni datos personales.
+El repositorio se construyó mediante commits progresivos (detallados en [`PROCESO.md`](./PROCESO.md)). Se utilizaron **OpenCode** y **Gemini** como apoyo técnico para el andamiaje inicial en Astro, tipado en TypeScript, maquetado repetitivo y depuración de lógica asíncrona. La dirección de arte, la selección de proyectos, los textos finales y la validación funcional fueron realizados por mí.
 
-## Diseño y accesibilidad
+Errores generados por la IA que detecté y corregí manualmente:
 
-Me quedé con una paleta de cuatro colores: crema `#FFF8DC`, ciruela `#6C0345`, terracota `#DC6B19` y mostaza `#F7C566`, más tinta `#3B0A24` para el texto. Las tipografías son Anton para los títulos, Instrument Serif en itálica para los acentos, Plus Jakarta Sans para cuerpo e interfaz y Space Mono para etiquetas. Elegí ese contraste y esos recortes, cintas y dibujos a mano para que el portfolio se reconozca como algo mío y no como un template.
+1. **Tipografía e interlineado:** fuentes demasiado anchas que desbordaban contenedores, cursivas de baja legibilidad en párrafos y un interlineado cerrado que cortaba la virgulilla de la letra `Ñ` en títulos en mayúscula (resuelto ajustando la escala y fijando `line-height: 1.12` con `overflow: visible`).
+2. **HTML crudo en pantalla:** visualización literal de la etiqueta `<strong>` en las fichas de proyecto por el escape automático de Astro (corregido aplicando `set:html`).
+3. **Conflicto de especificidad CSS:** en el Paso 2 de Servicios, una regla `:nth-child` pisaba el color de fondo de las tarjetas activas con `aria-pressed="true"` dejándolas en blanco (resuelto excluyendo el estado seleccionado).
+4. **Sobrecarga textual y visual:** textos iniciales demasiado extensos y adornos superpuestos sobre imágenes de proyectos, corregidos sintetizando copys y limpiando los marcos.
 
-En accesibilidad cubro lo que se ve y se navega: skip link, landmarks, jerarquía de encabezados, foco visible, `aria-current` en la navegación, tabs y combobox con teclado, anuncios con `aria-live` y `aria-busy` en la carga. El parallax se apaga con `prefers-reduced-motion` y por debajo de 820 px.
+---
 
-En mobile paso el Hero a una columna, el menú a desplegable, las tarjetas a una columna y el tablero del proceso a scroll horizontal. Me falta una auditoría formal con lector de pantalla. El video de Billie tampoco tiene subtítulos ni audiodescripción, y lo aviso en la propia página del caso.
+## 8. Limitaciones y líneas de mejora
 
-## Proceso, IA y errores que corregí
+### Limitaciones actuales
+- El video de *Billie Eilish Argentina Tour* aún no cuenta con subtítulos ni audiodescripción (informado en la página del caso).
+- El cálculo horario usa una jornada estándar de 9:00 a 18:00 como referencia.
+- Las consultas a Open-Meteo se ejecutan desde el cliente sin caché en servidor.
+- La accesibilidad fue validada de forma manual y por teclado, sin auditoría con lector de pantalla.
 
-Trabajé por etapas y dejé commits separados: estructura base, identidad visual, datos y explorador, componentes, páginas de proyecto, accesibilidad y responsive, rediseño editorial y cierre de textos y archivos para agentes. Después hice otros commits puntuales para corregir los problemas que aparecieron en la revisión visual.
+### Próximas mejoras
+- Sumar subtítulos al material audiovisual.
+- Conectar el botón final de Servicios a una herramienta de agendamiento real (como Cal.com o Calendly).
+- Desarrollar una versión en inglés.
+- Incorporar nuevos casos de UX Research.
 
-La IA me ayudó a escribir más rápido el andamiaje inicial de Astro, los tipos de TypeScript, el HTML repetitivo de tarjetas y la documentación. También me sirvió para revisar estados asíncronos y para pensar cómo demostrar el error y el respaldo de la API. Yo elegí los proyectos, escribí los textos, definí la paleta y decidí qué APIs probar y cuál descartar. Cada cambio lo leí y lo probé en el servidor de desarrollo antes de commitearlo.
+---
 
-Tres errores reales que me tiró y tuve que arreglar:
+## 9. Ejecución local
 
-1. Las tarjetas del Paso 2 quedaban blancas cuando las seleccionaba. Había una regla con `:nth-child` que pisaba el color del estado `aria-pressed="true"`. La corregí excluyendo justo las tarjetas seleccionadas y reforcé el fondo mostaza.
-2. Los títulos con Ñ se cortaban contra la línea de arriba. El interlineado de la tipografía display era demasiado ajustado. Subí `line-height` a 1.12 y dejé `overflow: visible` en los encabezados.
-3. En la cabecera de los proyectos se veía el texto literal `<strong>` en vez de la palabra destacada. Los datos vienen con HTML acotado y yo lo estaba escapando. Lo rendericé con `set:html` en los campos que corresponden.
-
-El detalle de las decisiones descartadas y una guía para la defensa en vivo están en [`PROCESO.md`](./PROCESO.md).
-
-## Limitaciones y posibles mejoras
-
-Hoy el video de Billie no tiene subtítulos ni audiodescripción, y eso está avisado en la página del caso. La herramienta de Servicios toma la jornada de 9 a 18 hs como referencia estándar, así que la franja sugerida puede necesitar un ajuste manual. Dependemos de Open-Meteo para los datos en vivo y no hay caché en servidor: cada visita consulta la API. La accesibilidad la revisé a mano, sin una auditoría completa con lector de pantalla.
-
-Después quiero seguir por estos pasos:
-
-- Agregar subtítulos al video de Billie y, si puedo, una audiodescripción corta.
-- Conectar el botón final de Servicios a un calendario real (Cal.com o Calendly) en vez de abrir el cliente de mail.
-- Sumar una versión en inglés del portfolio.
-- Cargar próximos casos de UX Research.
-
-## Cómo correrlo
-
-Necesitás Node.js `>= 22.12.0`, que es lo que pide `package.json`. Astro 6.4.8 es la versión que dejé funcionando con ese entorno.
+Requiere **Node.js `>= 22.12.0`** y **npm `>= 10`**. No utiliza variables de entorno ni claves privadas.
 
 ```bash
+# Instalar dependencias
 npm install
+
+# Levantar el servidor de desarrollo (http://localhost:4321)
 npm run dev
+
+# Compilar para producción (genera dist/)
 npm run build
+
+# Previsualizar la compilación
 npm run preview
 ```
 
-El servidor de desarrollo abre en `http://localhost:4321`. La build sale en `dist/`. No hay variables de entorno ni secretos.
-
-El sitio es estático, así que sirve para Vercel, Netlify o GitHub Pages. En GitHub Pages, si el repo queda como project page, hay que ajustar el `base` en `astro.config.mjs` y las rutas absolutas de los assets. Todavía no publiqué el deploy desde acá.
+---
 
 ## Contacto, créditos y licencias
 
